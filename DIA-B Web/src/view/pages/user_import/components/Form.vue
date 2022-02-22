@@ -7,7 +7,6 @@
             v-model="file"
             accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             @change="onUpload"
-            truncate-length="15"
             label="File input"
           >
           </v-file-input>

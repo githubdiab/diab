@@ -5,7 +5,9 @@
         <b-col>
           <div class="card card-custom gutter-b">
             <div class="card-body mt-0">
-              <p v-if="column">Tổng số bản ghi: {{ tableLength }}</p>          
+              <p > Tổng số bản ghi: {{ tableLength }}</p>       
+               <div>
+              </div> 
               <template-table
                 :column="column"
                 :data="staff_list"
@@ -16,6 +18,7 @@
                 @sortBy="sortRequest"
               >
                 <template v-slot:body="{ item }">
+                    <td>{{ item.stt }}</td>
                   <td>{{ item.user_name }}</td>
                   <td>{{ item.user_code }}</td>
                   <td >{{item.survey_type }}</td>
@@ -27,8 +30,9 @@
                     {{ $moment(item.survey_day).format('DD/MM/YYYY') }}
                   </td>
                   <td>{{ item.user_province }}</td>
+                  <td>{{ item.user_phone }}</td>
                   <td>{{ item.user_career }}</td>
-                  <td>{{ item.stt }}</td>
+                
                   <td>{{ item.user_address }}</td>
                   <td>{{ item.user_hoobit }}</td>
                   <td>{{ item.story_success }}</td>
@@ -86,7 +90,7 @@
         </b-col>
       </b-row>
     </b-container>
-    <user-import-modal/>
+    <user-import-modal v-bind:staff_list="staff_list"/>
 
   </div>
   
@@ -130,6 +134,8 @@ p {
 export default {
 components: { 'user-import-modal': () => import('./components/messages/messageNoError.vue') },
 
+
+
   props: {
     staff_list: {
       type: Array,
@@ -151,6 +157,11 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
         order: null,
       },
       column: [
+         {
+          key: 'stt',
+          label: 'Số thứ tự',
+          sortable: false,
+        },
         {
           key: 'user_name',
           label: 'Bệnh nhân',
@@ -196,17 +207,17 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
           label: 'Tỉnh thành',
           sortable: false,
         },
-
+        {
+          key: 'user_phone',
+          label: 'Số điện thoại',
+          sortable: false,
+        },
         {
           key: 'user_career',
           label: 'Nghề nghiệp',
           sortable: false,
         },
-        {
-          key: 'stt',
-          label: 'Số thứ tự',
-          sortable: false,
-        },
+       
         {
           key: 'user_address',
           label: 'Địa chỉ',
@@ -321,7 +332,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
     },
     tableLength: function () {
      
-      let totalcount = this.staff_list.length  ;
+      let totalcount = this.staff_list.length ;
     //  var totalcount = this.column[2].key
       return totalcount;
     },
@@ -337,6 +348,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
     sort: {},
   },
   methods: {
+   
     handleClick() {   
      
       this.$router.push({
@@ -363,11 +375,11 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
        var mess_error='';
         for(let i=0;i<Number(this.staff_list.length);i++)
        {
-         if(this.staff_list[i].user_name =='')
+         if(this.staff_list[i].user_name ==''||this.staff_list[i].user_name.length<5||this.staff_list[i].user_name.length>30)
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].user_code =='')
+          if(this.staff_list[i].user_code ==''||this.staff_list[i].user_code.length>10)
          {        
           mess_error='error'
          }
@@ -387,15 +399,15 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].user_gender =='')
+          if(this.staff_list[i].user_gender ==''||this.staff_list[i].user_gender!='Nam'&&this.staff_list[i].user_gender!='Nữ')
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].user_phone =='')
+          if(this.staff_list[i].user_phone ==''||this.staff_list[i].user_phone.length!=10)
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].survey_day =='')
+          if(this.staff_list[i].survey_day ==''||this.staff_list[i].survey_day=='Invalid date')
          {        
           mess_error='error'
          }
@@ -419,7 +431,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].story_success =='')
+          if(this.staff_list[i].story_success ==''|| this.staff_list[i].story_success.length>1000)
          {        
           mess_error='error'
          }
@@ -467,7 +479,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].import_day =='')
+          if(this.staff_list[i].import_day ==''||this.staff_list[i].import_day=='Invalid date')
          {        
           mess_error='error'
          }
@@ -495,19 +507,28 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
         {
            this.$router.push({
         name: 'validate',
+         method:{
+            
+          },
         params: {
           
-            staff_list : this.staff_list           
+            staff_list : this.staff_list         
         },
           });   
+         
         }
        else
        {
        this.$nextTick(() => {
       this.$bvModal.show('user-import-modal');
       
-      });
+      },
+      
+      );
        }
+
+
+ 
     },
     
   },

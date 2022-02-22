@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaB.Data", "DiaB.Data\DiaB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaB.Common", "DiaB.Common\DiaB.Common.csproj", "{3B488D38-B41D-4744-8D19-F81781360198}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaB.Import", "DiaB.Import\DiaB.Import.csproj", "{DC9123B4-5659-43EA-9315-206D5B0FAF33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiaB.Import", "DiaB.Import\DiaB.Import.csproj", "{DC9123B4-5659-43EA-9315-206D5B0FAF33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiaB.Test", "DiaB.Test\DiaB.Test.csproj", "{9C840619-2B83-4999-B811-CB5D7D480F62}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{DC9123B4-5659-43EA-9315-206D5B0FAF33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DC9123B4-5659-43EA-9315-206D5B0FAF33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DC9123B4-5659-43EA-9315-206D5B0FAF33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C840619-2B83-4999-B811-CB5D7D480F62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C840619-2B83-4999-B811-CB5D7D480F62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C840619-2B83-4999-B811-CB5D7D480F62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C840619-2B83-4999-B811-CB5D7D480F62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

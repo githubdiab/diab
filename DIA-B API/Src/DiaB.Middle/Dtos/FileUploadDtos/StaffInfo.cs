@@ -11,8 +11,8 @@ namespace DiaB.Middle.Dtos.FileUploadDtos
         {
             public partial class StaffInfo : BaseItemDto
             {
-           // public string Count { get; set; }
-               public int user_code { get; set; }
+            // public string Count { get; set; }
+            public int  user_code { get; set; }
             public string user_name { get; set; }
             public string user_gender { get; set; }
 
