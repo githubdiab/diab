@@ -1,8 +1,8 @@
 <template>
          
   <b-modal
-    id="user-import-modal"
-    ref="user-import-modal"
+    id="user-import-modal2"
+    ref="user-import-modal2"
     
     
   >
@@ -47,6 +47,7 @@
       
     </template>
   </b-modal>
+ 
 </template>
 
 <script>
@@ -110,7 +111,7 @@ export default {
             staff_list: result,
           },
         });
-        this.$bvModal.hide('user-import-modal');
+        this.$bvModal.hide('user-import-modal2');
       } catch (error) {
         this.$toastr.e({
           title: 'Lỗi!',
@@ -122,7 +123,7 @@ export default {
       // this.loading = false;
     },
     goback() {
-      this.$bvModal.hide('user-import-modal');
+      this.$bvModal.hide('user-import-modal2');
     },
   },
 };

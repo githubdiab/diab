@@ -46,13 +46,15 @@ namespace DiaB.Middle.Services
                 else
                 {
                     //read excel file data and add data in  model.StaffInfoViewModel.StaffList
+
                     var rowCount = worksheet.Dimension.Rows;
+
                     for (int row = 2; row <= rowCount; row++)
                     {
                         result.StaffList.Add(new FileUploadDtos.StaffInfo
                         {
                             user_name = (worksheet.Cells[row, 1].Value ?? string.Empty).ToString().Trim(),
-                            user_code = Int32.Parse(worksheet.Cells[row, 2].Value.ToString()),
+                            user_code = Int32.Parse(worksheet.Cells[row,2].Value.ToString()) ,
                             survey_type = (worksheet.Cells[row, 3].Value ?? string.Empty).ToString().Trim(),
                             survey_code = (worksheet.Cells[row, 4].Value ?? string.Empty).ToString().Trim(),
                             survey_name = (worksheet.Cells[row, 5].Value ?? string.Empty).ToString().Trim(),

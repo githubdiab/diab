@@ -12,7 +12,7 @@
              </span>
             </div>
            
-        <div style="text-align:center;font-family: Nunito;font-style: normal;font-weight: normal;font-size: 18px;line-height: 20px;">
+        <div style="text-align:center;font-family: Nunito;font-style: normal;font-weight: normal;font-size: 14px;line-height: 20px;">
 
           
             Bạn có muốn Import các khách hàng đủ điều kiện
@@ -81,56 +81,7 @@ export default {
   },
   methods: {
     handleClick() {
-      this.$refs.form.importForm();
-    },
-    onUpload(payload) {
-      this.isSelectFile = payload;
-    },
-    importForm(payload) {
-      this.handleSubmit(payload);
-    },
-    async handleSubmit(payload) {
-      this.loading = true;
-      let result = [];
-      try {
-        //if (true) {
-        await this.$api
-          .post('Admin/Import/staff', payload, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then(({ data }) => {
-            result = data.staffList;
-          })
-          .finally(() => {
-            this.$store.commit('context/setLoading', false);
-          });
-        //}
-        this.$toastr.s({
-          title: 'Thành công!',
-          msg: `Import thành công`,
-        });
-
-        // TODO
-        // this.$emit('loadData', result);
-        //console.log("aa");
-        this.$router.push({
-          name: 'loading',
-          params: {
-            staff_list: result,
-          },
-        });
-        this.$bvModal.hide('user-import-modal');
-      } catch (error) {
-        this.$toastr.e({
-          title: 'Lỗi!',
-          msg: error,
-        });
-      } finally {
-        this.loading = false;
-      }
-      // this.loading = false;
+    
     },
     goback() {
       this.$bvModal.hide('user-import-modal');

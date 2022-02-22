@@ -135,6 +135,8 @@
 <script>
 export default {
   components: { 'user-import-modal': () => import('./components/Modal') },
+  
+
   data() {
     return {
       paging: {

@@ -12,10 +12,10 @@
              </span>
             </div>
            
-         <div style="text-align:center;font-family: Nunito;font-style: normal;font-weight: normal;font-size: 14px;">
+         <div  style="text-align:center;font-family: Nunito;font-style: normal;font-weight: normal;font-size: 14px;">
 
           
-            {{10+"/"+10}} bản ghi  thỏa mãn điều kiện. Bạn có muốn tiếp tục Import dữ liệu?
+         {{this.staff_list.length+"/"+staff_list.length}} bản ghi  thỏa mãn điều kiện. Bạn có muốn tiếp tục Import dữ liệu?
          
           </div>
     <template #modal-footer style="text-align:center">
@@ -61,14 +61,23 @@
 </template>
 
 <script>
+
 export default {
-  name: 'Modal',
- 
-  computed: {},
-  watch: {},
-  // mounted() {this.$root.$on('Modal',()=>{
-  //   this.handleClick()
-  // })},
+  name: 'Modal',   
+ props: {
+    staff_list: {
+      type: Array,
+      default: () => [],
+    },
+  },
+  computed:{
+   tableLength: function () {
+     
+     
+    //  var totalcount = this.column[2].key
+      return this.num;
+    },
+  },
   data() {
     return {
       isMounted: false,
@@ -80,58 +89,9 @@ export default {
     };
   },
   methods: {
-    handleClick() {
-      this.$refs.form.importForm();
-    },
-    onUpload(payload) {
-      this.isSelectFile = payload;
-    },
-    importForm(payload) {
-      this.handleSubmit(payload);
-    },
-    async handleSubmit(payload) {
-      this.loading = true;
-      let result = [];
-      try {
-        //if (true) {
-        await this.$api
-          .post('Admin/Import/staff', payload, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then(({ data }) => {
-            result = data.staffList;
-          })
-          .finally(() => {
-            this.$store.commit('context/setLoading', false);
-          });
-        //}
-        this.$toastr.s({
-          title: 'Thành công!',
-          msg: `Import thành công`,
-        });
-
-        // TODO
-        // this.$emit('loadData', result);
-        //console.log("aa");
-        this.$router.push({
-          name: 'loading',
-          params: {
-            staff_list: result,
-          },
-        });
-        this.$bvModal.hide('user-import-modal');
-      } catch (error) {
-        this.$toastr.e({
-          title: 'Lỗi!',
-          msg: error,
-        });
-      } finally {
-        this.loading = false;
-      }
-      // this.loading = false;
-    },
+  //  onClickButton (event) {
+  //        this.$emit('clicked', 'someValue')
+  //    },
     goback() {
       this.$bvModal.hide('user-import-modal');
     },
