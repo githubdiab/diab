@@ -8,7 +8,7 @@ namespace DiaB.Middle.Dtos.SurveyImportDtos
     {
         public partial class Filter
         {
-            public int? UserCode { get; set; }
+            public string UserCode { get; set; }
 
             public string Username { get; set; }
 

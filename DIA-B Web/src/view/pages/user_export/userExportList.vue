@@ -28,7 +28,7 @@
                   <basic-input
                     label="Mã bệnh nhân"
                     placeholder="Nhập mã bệnh nhân"
-                    name="code"
+                    name="userCode"
                     :value.sync="filter.UserCode"
                   ></basic-input>
                 </b-col>
@@ -44,7 +44,7 @@
                   <basic-input
                     label="Số điện thoại"
                     placeholder="Nhập số điện thoại"
-                    name="name"
+                    name="userPhone"
                     inputType="number"
                     :value.sync="filter.UserPhone"
                   ></basic-input>
@@ -55,32 +55,27 @@
                   <basic-select
                     label="Loại khảo sát"
                     placeholder="--- Chọn loại khảo sát ---"
-                    name="userGroup"
-                    :options="[]"
+                    name="surveyType"
+                    :options="isSurveyTypes"
                     :value.sync="filter.SurveyType"
                     :solid="false"
                     :allowEmpty="true"
                   />
                 </b-col>
                 <b-col>
-                  <basic-select
+                  <basic-input
                     label="Tên khảo sát"
-                    placeholder="--- Chọn tên khảo sát ---"
-                    name="nation"
-                    :apiPath="'/Division/Nations'"
-                    :searchField="'searchTerm'"
+                    placeholder="Nhập tên khảo sát"
+                    name="name"
                     :value.sync="filter.SurveyName"
-                    :solid="false"
-                    :allowEmpty="true"
-                  />
+                  ></basic-input>
                 </b-col>
                 <b-col>
                   <basic-select
                     label="Tình trạng báo cáo"
                     placeholder="--- Chọn tình trạng báo cáo ---"
-                    name="province"
-                    :apiPath="'/Division/Provinces'"
-                    :searchField="'searchTerm'"
+                    name="surveyStatus"
+                    :options="isSurveyStatuss"
                     :value.sync="filter.SurveyStatus"
                     :solid="false"
                     :allowEmpty="true"
@@ -125,18 +120,17 @@
           <span class="svg-icon">
             <inline-svg src="/media/svg/icons/Neolex/Basic/upload-cloud.svg" />
           </span>
-          Import danh sách
+          Phân loại khách hàng
         </b-button>
         <b-button
           class="btn btn-success ml-2"
           type="button"
-          @click="createItem"
-          v-if="isAdmin"
+          @click="importItems"
         >
           <span class="svg-icon">
-            <inline-svg src="/media/svg/icons/Neolex/Basic/plus.svg" />
+            <inline-svg src="/media/svg/icons/Neolex/Basic/upload-cloud.svg" />
           </span>
-          Thêm tài khoản
+          Xuất file
         </b-button>
       </template>
     </basic-subheader>
@@ -158,33 +152,23 @@
                   @sortBy="sortRequest"
                 >
                   <template v-slot:body="{ item }">
+                    <td
+                      class="datatable-cell-center datatable-cell datatable-cell-check"
+                      style="width: 20px"
+                    >
+                      <span style="width: 20px">
+                        <label class="checkbox checkbox-single">
+                          <input
+                            type="checkbox"
+                            :value="item"
+                            v-model="selected"
+                          />&nbsp;
+                          <span></span>
+                        </label>
+                      </span>
+                    </td>
                     <td>
-                      <div class="d-flex align-items-center mt-5">
-                        <avatar
-                          size="40px"
-                          :text="item.fullName"
-                          :src="item.avatar && item.avatar.url"
-                          :rounded="true"
-                        ></avatar>
-                        <div class="d-flex flex-column ml-5">
-                          <p
-                            class="mb-0"
-                            style="
-                              font-weight: 600;
-                              font-size: 13px;
-                              color: #515356;
-                            "
-                          >
-                            {{ item.fullName }}
-                          </p>
-                          <p
-                            class="mt-2 mb-0"
-                            style="font-size: 12px; color: #888c9f"
-                          >
-                            {{ item.username }}
-                          </p>
-                        </div>
-                      </div>
+                      {{ item.username }}
                     </td>
                     <td style="width: 20px">
                       <action-dropdown
@@ -249,6 +233,7 @@ import { mapGetters } from 'vuex';
 export default {
   data() {
     return {
+      selected: [],
       paging: {
         page: 1,
         pageSize: 10,
@@ -266,18 +251,24 @@ export default {
         by: null,
         order: null,
       },
-      isActiveOpts: [
-        { id: true, name: 'Active' },
-        { id: false, name: 'Inactive' },
+      isSurveyTypes: [
+        { id: 'Khảo sát đầu vào', name: 'Khảo sát đầu vào' },
+        { id: 'Khảo sát đầu ra', name: 'Khảo sát đầu ra' },
       ],
-      isGenderOpts: [
-        { id: 1, name: 'Nam' },
-        { id: 2, name: 'Nữ' },
+      isSurveyStatuss: [
+        { id: '0', name: 'Chưa xử lý' },
+        { id: '1', name: 'Đã xử lý' },
+        { id: '2', name: 'Đã đóng' },
       ],
       column: [
         {
+          key: '',
+          label: '',
+          sortable: false,
+        },
+        {
           key: 'username',
-          label: 'Nhân viên',
+          label: 'Tên HL',
           sortable: true,
         },
         {
@@ -487,6 +478,7 @@ export default {
           params: { ...this.searchParams },
         })
         .then(({ data }) => {
+          this.selected = [];
           this.data = data.items || [];
           this.paging.total = data.total;
         })

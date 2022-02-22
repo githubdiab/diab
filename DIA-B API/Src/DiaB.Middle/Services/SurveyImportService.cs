@@ -27,9 +27,9 @@ namespace DiaB.Middle.Services
                 return base.FilterQuery(query, input, context);
             }
 
-            if (filter.UserCode.HasValue)
+            if (!string.IsNullOrEmpty(filter.Username))
             {
-                query = query.Where(x => x.AccountImport.UserCode == filter.UserCode);
+                query = query.Where(x => x.AccountImport.UserCode.ToString() == filter.UserCode);
             }
 
             if (!string.IsNullOrEmpty(filter.Username))
@@ -55,6 +55,36 @@ namespace DiaB.Middle.Services
             if ("1".Equals(filter.SurveyStatus))
             {
                 query = query.Where(x => x.SurveyImportResult != null);
+            }
+
+            if (!string.IsNullOrEmpty(filter.OrderBy))
+            {
+                if (filter.OrderBy.StartsWith("username asc"))
+                {
+                    query = query.OrderBy(x => x.AccountImport.UserName);
+                }
+                else if (filter.OrderBy.StartsWith("username desc"))
+                {
+                    query = query.OrderByDescending(x => x.AccountImport.UserName);
+                }
+                else if (filter.OrderBy.StartsWith("usercode asc"))
+                {
+                    query = query.OrderBy(x => x.AccountImport.UserCode);
+                }
+                else if (filter.OrderBy.StartsWith("usercode desc"))
+                {
+                    query = query.OrderByDescending(x => x.AccountImport.UserCode);
+                }
+                else if (filter.OrderBy.StartsWith("importDay asc"))
+                {
+                    query = query.OrderBy(x => x.ImportDay);
+                }
+                else if (filter.OrderBy.StartsWith("importDay desc"))
+                {
+                    query = query.OrderByDescending(x => x.ImportDay);
+                }
+
+                filter.OrderBy = string.Empty;
             }
 
             return base.FilterQuery(query, input, context);
