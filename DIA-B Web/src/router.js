@@ -237,8 +237,24 @@ export default new Router({
         },
         // VALIDATE PAGE : END
 
-         // LOADING PAGE: BEGIN
-        
+        //EXPORT PAGE :BEGIN
+        {
+          path: 'user_export',
+          name: 'user_export_list',
+          component: () =>
+            import('@/view/pages/user_export/userExportList.vue'),
+          meta: {
+            requiresAuth: true,
+            breadcrumb: [
+              {
+                name: 'Xuất báo cáo',
+                link: 'user_export',
+                active: true,
+              },
+            ],
+          },
+        },
+        // EXPORT PAGE : END
       ],
     },
   ],

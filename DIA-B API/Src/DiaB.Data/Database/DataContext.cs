@@ -3,6 +3,7 @@ using DiaB.Data.Database.Entities;
 using DiaB.Data.Database.Entities.Account;
 using DiaB.Data.Database.Entities.Common;
 using DiaB.Data.Database.Entities.FireBase;
+using DiaB.Data.Database.Entities.Import;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -38,5 +39,14 @@ namespace DiaB.Data.Database
         public DbSet<TermAndConditionEntity> TermAndConditions { get; set; }
 
         public DbSet<DeviceEntity> Devices { get; set; }
+
+        public DbSet<AccountImportEntity> AccountImports { get; set; }
+
+        public DbSet<SurveyImportEntity> SurveyImports { get; set; }
+
+        public DbSet<SurveyImportDetailEntity> SurveyImportDetails{ get; set; }
+
+        public DbSet<SurveyImportResultEntity> SurveyImportResults { get; set; }
+
     }
 }
