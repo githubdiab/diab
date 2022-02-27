@@ -40,6 +40,8 @@ namespace DiaB.Data.Database
 
         public DbSet<DeviceEntity> Devices { get; set; }
 
+        public DbSet<ImageEntity> Images { get; set; }
+
         public DbSet<AccountImportEntity> AccountImports { get; set; }
 
         public DbSet<SurveyImportEntity> SurveyImports { get; set; }

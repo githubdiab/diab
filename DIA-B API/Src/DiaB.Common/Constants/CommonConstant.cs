@@ -33,5 +33,6 @@
             "image/png",
             "image/jpeg"
         };
+        public const string ReportWorkPath = @"OuputReport";
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DiaB.Common.Enums;
 using System;
 using System.ComponentModel;
+using System.IO;
 
 namespace DiaB.Middle.Dtos.SurveyImportDtos
 {
@@ -8,6 +9,9 @@ namespace DiaB.Middle.Dtos.SurveyImportDtos
     {
         public partial class AppItem
         {
+            [DisplayName("mã định danh")]
+            public Guid Id { get; set; }
+
             [DisplayName("mã bệnh nhân")]
             public string UserCode { get; set; }
 
@@ -24,6 +28,8 @@ namespace DiaB.Middle.Dtos.SurveyImportDtos
             public DateTime? ImportDay { get; set; }
 
             public string SurveyStatus { get; set; }
+
+            public Guid? SurveyResultId { get; set; }
         }
     }
 }

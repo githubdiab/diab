@@ -34,6 +34,8 @@ namespace DiaB.Data.Database.Entities.Import
 
         public int YearFoundout { get; set; }
 
+        public Guid? CoverId { get; set; }
+
         public virtual IList<SurveyImportEntity> SurveyImports { get; set; }
 
         protected override void ModelConfigure(EntityTypeBuilder<AccountImportEntity> builder)

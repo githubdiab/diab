@@ -7,6 +7,7 @@ using DiaB.Middle.Dtos.SurveyImportDtos;
 using DiaB.Middle.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ActionContext = DiaB.Common.Utilities.ActionContext;
@@ -15,6 +16,7 @@ namespace DiaB.Middle.Services
 {
     public class SurveyImportService : BaseService<SurveyImportEntity>, ISurveyImportService
     {
+        public ISurveyImportResultService SurveyImportResultService { get; set; }
         public SurveyImportService(IAppRepo<SurveyImportEntity> repo)
             : base(repo)
         {
@@ -52,9 +54,13 @@ namespace DiaB.Middle.Services
                 query = query.Where(x => x.SurveyName.Contains(filter.SurveyName, StringComparison.CurrentCultureIgnoreCase));
             }
 
+            query = query.Where(x => x.SurveyResultId == null || x.SurveyImportResult.IsClose == false);
             if ("1".Equals(filter.SurveyStatus))
             {
-                query = query.Where(x => x.SurveyImportResult != null);
+                query = query.Where(x => x.SurveyImportResult.IsClose == false);
+            } else if ("0".Equals(filter.SurveyStatus))
+            {
+                query = query.Where(x => x.SurveyResultId == null);
             }
 
             if (!string.IsNullOrEmpty(filter.OrderBy))
@@ -82,6 +88,14 @@ namespace DiaB.Middle.Services
                 else if (filter.OrderBy.StartsWith("importDay desc"))
                 {
                     query = query.OrderByDescending(x => x.ImportDay);
+                }
+                else if (filter.OrderBy.StartsWith("surveyStatus asc"))
+                {
+                    query = query.OrderBy(x => x.SurveyImportResult.IsClose);
+                }
+                else if (filter.OrderBy.StartsWith("surveyStatus desc"))
+                {
+                    query = query.OrderByDescending(x => x.SurveyImportResult.IsClose);
                 }
 
                 filter.OrderBy = string.Empty;
@@ -112,5 +126,43 @@ namespace DiaB.Middle.Services
 
             return result;
         }
+
+        public async Task<IList<Guid>> CreateSurveyImportResult(SurveyImportDtos.AppInput input, ActionContext context)
+        {
+            IList<Guid> resultList = new List<Guid>();
+            if (input.Ids == null)
+            {
+                throw new ServiceException(ServiceExceptions.ObjectInvalid);
+            }
+
+            foreach (Guid id in input.Ids)
+            {
+                var surveyImportEntity = await this.GetEntity(del => del.Where(r => !r.IsDeleted && r.Id == id), context);
+
+                if (surveyImportEntity == null)
+                {
+                    continue;
+                }
+
+                if (surveyImportEntity.SurveyResultId.HasValue)
+                {
+                    continue;
+                }
+
+                var surveyImportResultId = await this.SurveyImportResultService.CreateSurveyImportResult(surveyImportEntity, context);
+
+                _ = await this.UpdateEntity(
+                      surveyImportEntity,
+                      del =>
+                      {
+                          del.SurveyResultId = surveyImportResultId;
+                      }, context) as ICoreResultDto;
+
+                resultList.Add(surveyImportResultId);
+            }
+
+            return resultList;
+        }
+         
     }
 }
