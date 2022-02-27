@@ -254,6 +254,28 @@ export default new Router({
             ],
           },
         },
+        {
+          path: 'user_export/:form_type/:id?',
+          name: 'user_export_detail',
+          props: true,
+          component: () =>
+            import('@/view/pages/user_export/userExportDetail.vue'),
+          meta: {
+            requiresAuth: true,
+            breadcrumb: [
+              {
+                name: 'Xuất báo cáo',
+                link: 'user_export_list',
+              },
+              {
+                editName: 'Chỉnh sửa báo cáo',
+                viewName: 'Chi tiết báo cáo',
+                link: 'user_export_detail',
+                active: true,
+              },
+            ],
+          },
+        },
         // EXPORT PAGE : END
       ],
     },

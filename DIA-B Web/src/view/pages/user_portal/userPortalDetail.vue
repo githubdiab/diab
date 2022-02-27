@@ -13,7 +13,12 @@
             </span>
             Huỷ
           </b-button>
-          <b-button class="btn btn-light ml-3" type="button" @click="resetData">
+          <b-button
+            v-if="isEditForm"
+            class="btn btn-light ml-3"
+            type="button"
+            @click="resetData"
+          >
             <span class="svg-icon">
               <inline-svg src="/media/svg/icons/Neolex/Basic/refresh-cw.svg" />
             </span>
@@ -22,24 +27,24 @@
           <b-button
             class="btn btn-light ml-3"
             type="button"
-            v-if="!isCreateForm"
+            v-if="isEditForm"
             @click="resetPassword"
           >
             <span class="svg-icon">
-              <inline-svg src="/media/svg/icons/Neolex/Security/key.svg" />
+              <inline-svg src="/media/svg/icons/Neolex/Basic/close.svg" />
             </span>
-            Reset mật khẩu
+            Đóng báo cáo
           </b-button>
-          <template>
+          <template v-if="isEditForm">
             <b-button class="btn btn-success ml-3" @click.stop="handleValidate">
               <span class="svg-icon">
                 <inline-svg
                   :src="`/media/svg/icons/Neolex/Basic/${
-                    isCreateForm ? 'plus' : 'save'
+                    isEditForm ? 'plus' : 'save'
                   }.svg`"
                 />
               </span>
-              {{ isCreateForm ? 'Tạo mới' : ' Cập nhật' }}
+              {{ isEditForm ? 'Tạo mới' : ' Cập nhật' }}
             </b-button>
           </template>
         </template>
@@ -325,7 +330,7 @@
                       ></basic-input>
                     </b-col>
                   </b-row>
-                  <b-row v-if="isCreateForm">
+                  <b-row v-if="isEditForm">
                     <b-col cols="3">
                       <basic-input
                         label="Mật khẩu"
@@ -425,7 +430,7 @@
                         src="/media/svg/icons/Neolex/Basic/save.svg"
                       />
                     </span>
-                    {{ isCreateForm ? 'Tạo mới' : 'Cập nhật' }}
+                    {{ isEditForm ? 'Tạo mới' : 'Cập nhật' }}
                   </b-button>
                 </div>
               </div>
@@ -491,8 +496,8 @@ export default {
     districtId() {
       return this.form.district?.id;
     },
-    isCreateForm() {
-      return this.form_type === 'create' || this.form_type === 'copy';
+    isEditForm() {
+      return this.form_type === 'edit';
     },
   },
   methods: {
@@ -637,7 +642,7 @@ export default {
     },
     async submit() {
       let payload = new FormData();
-      const isCreateForm = this.isCreateForm;
+      const isEditForm = this.isEditForm;
       this.form.fullName && payload.append('fullName', this.form.fullName);
       this.form.phoneNumber &&
         payload.append('phoneNumber', this.form.phoneNumber);
@@ -663,7 +668,7 @@ export default {
       this.form.password && payload.append('password', this.form.password);
       let confirm = await this.$swal({
         text: `${
-          isCreateForm
+          isEditForm
             ? 'Bạn có chắc muốn tạo người dùng Portal mới này không? '
             : 'Bạn có chắc muốn cập nhật thông tin này hay không?'
         }`,
@@ -686,7 +691,7 @@ export default {
         },
       });
       if (confirm) {
-        if (isCreateForm) {
+        if (isEditForm) {
           this.handleCreate(payload);
         } else {
           this.handleUpdate(payload);

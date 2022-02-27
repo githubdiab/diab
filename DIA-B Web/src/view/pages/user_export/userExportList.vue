@@ -115,7 +115,7 @@
         <b-button
           class="btn btn-success ml-2"
           type="button"
-          @click="importItems"
+          @click="createItemSelect"
         >
           <span class="svg-icon">
             <inline-svg src="/media/svg/icons/Neolex/Basic/upload-cloud.svg" />
@@ -125,7 +125,7 @@
         <b-button
           class="btn btn-success ml-2"
           type="button"
-          @click="importItems"
+          @click="exportFileSelect"
         >
           <span class="svg-icon">
             <inline-svg src="/media/svg/icons/Neolex/Basic/upload-cloud.svg" />
@@ -140,6 +140,9 @@
           <b-col>
             <div class="card card-custom gutter-b">
               <div class="card-body mt-0">
+                <b-checkbox size="lg" class="m-5" v-model="selectAll">
+                  Chọn tất cả
+                </b-checkbox>
                 <template-table
                   :column="column"
                   :data="data"
@@ -175,11 +178,51 @@
                         :value="item"
                         @view="viewItem"
                         @edit="editItem"
-                        :show_edit="true"
+                        :show_view="false"
+                        :show_edit="item.surveyStatus == '1'"
                         :show_delete="false"
                         :show_copy="false"
-                        @copy="copyItem"
                       >
+                        <template v-if="item.surveyStatus == '0'">
+                          <b-dropdown-text tag="div" class="navi-item">
+                            <a
+                              href="javascript:;"
+                              class="navi-link text-primary"
+                              @click="createItem(item)"
+                            >
+                              <span class="menu-icon svg-icon svg-icon-sm">
+                                <inline-svg
+                                  class="svg-icon"
+                                  src="/media/svg/icons/Neolex/Basic/upload-cloud.svg"
+                                />
+                              </span>
+                              <span class="navi-text text-primary"
+                                >Phân loại khách hàng</span
+                              >
+                            </a>
+                          </b-dropdown-text>
+                          <b-dropdown-divider></b-dropdown-divider>
+                        </template>
+                        <template v-if="item.surveyStatus == '1'">
+                          <b-dropdown-text tag="div" class="navi-item">
+                            <a
+                              href="javascript:;"
+                              class="navi-link text-primary"
+                              @click="exportFileItem(item)"
+                            >
+                              <span class="menu-icon svg-icon svg-icon-sm">
+                                <inline-svg
+                                  class="svg-icon"
+                                  src="/media/svg/icons/Neolex/Basic/upload-cloud.svg"
+                                />
+                              </span>
+                              <span class="navi-text text-primary"
+                                >Xuất file</span
+                              >
+                            </a>
+                          </b-dropdown-text>
+                          <b-dropdown-divider></b-dropdown-divider>
+                        </template>
                       </action-dropdown>
                     </td>
                     <td>
@@ -200,7 +243,7 @@
                         Chưa xử lý
                       </span>
                       <span
-                        class="btn btn-inactive btn-pill"
+                        class="btn btn-success btn-pill"
                         style="width: 95px; cursor: default"
                         v-if="item.surveyStatus == '1'"
                       >
@@ -258,7 +301,6 @@ export default {
       isSurveyStatuss: [
         { id: '0', name: 'Chưa xử lý' },
         { id: '1', name: 'Đã xử lý' },
-        { id: '2', name: 'Đã đóng' },
       ],
       column: [
         {
@@ -325,6 +367,20 @@ export default {
         size: this.paging.pageSize,
       };
     },
+    selectAll: {
+      get() {
+        return (
+          this.data.length > 0 && this.selected.length === this.data.length
+        );
+      },
+      set(value) {
+        if (value) {
+          this.selected = [...this.data];
+        } else {
+          this.selected = [];
+        }
+      },
+    },
   },
   watch: {
     paging: {
@@ -368,28 +424,118 @@ export default {
     },
     viewItem(item) {
       this.$router.push({
-        name: 'user_portal_view',
+        name: 'user_export_detail',
         params: {
-          id: item.id,
+          form_type: 'view',
+          id: item.surveyResultId,
         },
       });
     },
     editItem(item) {
       this.$router.push({
-        name: 'user_portal_detail',
+        name: 'user_export_detail',
         params: {
           form_type: 'edit',
-          id: item.id,
+          id: item.surveyResultId,
         },
       });
     },
-    createItem() {
-      this.$router.push({
-        name: 'user_portal_detail',
-        params: {
-          form_type: 'create',
-        },
-      });
+    createItem(item) {
+      let ids = [item.id];
+      this.createSurveyResult(ids);
+    },
+    createItemSelect() {
+      let ids = this.selected
+        .filter((e) => e.id)
+        .map((e) => {
+          return e.id;
+        });
+      this.createSurveyResult(ids);
+    },
+
+    exportFileItem(item) {
+      let ids = [item.surveyResultId];
+      this.downloadReport(ids);
+    },
+    exportFileSelect() {
+      let ids = this.selected
+        .filter((e) => e.surveyResultId)
+        .map((e) => {
+          return e.surveyResultId;
+        });
+      if (ids.length == 0) {
+        this.$toastr.e({
+          title: 'Lỗi!',
+          msg: 'Vui lòng hãy chọn ít nhất một báo cáo đã xử lý rồi',
+        });
+      } else {
+        this.downloadReport(ids);
+      }
+    },
+
+    async createSurveyResult(ids) {
+      this.loading = true;
+      try {
+        let param = {
+          ids: ids,
+        };
+
+        await this.$api
+          .post(`Admin/SurveyImport/result`, param)
+          .then(({ data }) => {
+            this.$swal({
+              text: `Xử lý thành công ${data.length}/${ids.length} báo cáo.`,
+              icon: 'success',
+              confirm: {
+                text: 'OK',
+                value: true,
+                visible: true,
+                className: 'btn-success',
+                closeModal: false,
+              },
+            });
+            this.loadData();
+          });
+      } catch (error) {
+        this.$toastr.e({
+          title: 'Lỗi!',
+          msg: error,
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
+    async downloadReport(ids) {
+      this.loading = true;
+      try {
+        let param = {
+          ids: ids,
+        };
+        await this.$api
+          .post(`Admin/SurveyImport/result/download`, param, {
+            responseType: 'blob',
+          })
+          .then((res) => {
+            let fileDonwload = window.URL.createObjectURL(res);
+            var docUrl = document.createElement('a');
+            docUrl.href = fileDonwload;
+            if (ids.length == 1) {
+              docUrl.setAttribute('download', 'bao_cao_dau_ra.docx');
+            } else {
+              docUrl.setAttribute('download', 'bao_cao_dau_ra.zip');
+            }
+
+            document.body.appendChild(docUrl);
+            docUrl.click();
+          });
+      } catch (error) {
+        this.$toastr.e({
+          title: 'Lỗi!',
+          msg: error,
+        });
+      } finally {
+        this.loading = false;
+      }
     },
     validateState(ref) {
       if (
@@ -400,76 +546,6 @@ export default {
         return this.veeFields[ref].valid;
       }
       return null;
-    },
-    importItems() {},
-    deleteItem(item) {
-      let text = item.isActive ? 'Inactive' : 'Active';
-      let btn = item.isActive ? 'btn-inactive' : 'btn-active';
-      this.$swal({
-        title: '',
-        text: `Bạn có chắc muốn ${text} app user ${item.fullName} không?`,
-        icon: '/media/svg/icons/SweetAlert/alert-triangle-red.svg',
-        buttons: {
-          cancel: {
-            text: 'Quay lại',
-            value: false,
-            visible: true,
-            className: 'btn btn-secondary',
-            closeModal: true,
-          },
-          confirm: {
-            text: `${text}`,
-            value: true,
-            visible: true,
-            className: `btn ${btn}`,
-            closeModal: true,
-          },
-        },
-      }).then(
-        function (result) {
-          if (result) {
-            // inactive all
-            this.inactiveItem(item)
-              .then(() => {
-                this.loadData();
-                this.$swal(
-                  'Thành công!',
-                  'Chúc mừng, bạn đã cập nhật thông tin người dùng thành công!',
-                  'success',
-                );
-              })
-              .catch(() => {
-                this.$swal('Lỗi!', 'Đã có lỗi xảy ra.', 'error');
-              });
-          }
-        }.bind(this),
-      );
-    },
-    copyItem(item) {
-      this.$router.push({
-        name: 'user_portal_detail',
-        params: {
-          form_type: 'copy',
-          id: item.id,
-        },
-      });
-    },
-
-    async inactiveItem(item) {
-      this.loading = true;
-      try {
-        let payload = new FormData();
-        payload.append('id', item.id);
-        payload.append('active', !item.isActive);
-        await this.$api.put(`Admin/Account/portal`, payload);
-      } catch (error) {
-        this.$toastr.e({
-          title: 'Lỗi!',
-          msg: error,
-        });
-      } finally {
-        this.loading = false;
-      }
     },
     loadData() {
       this.$store.commit('context/setLoading', true);
