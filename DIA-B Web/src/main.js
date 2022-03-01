@@ -5,9 +5,6 @@ import store from '@/core/services/store';
 import ApiService from '@/core/services/api.service';
 import MgrService from '@/core/services/security.service';
 import MockService from '@/core/mock/mock.service';
-import VueSimpleAlert from "vue-simple-alert";
-
-Vue.use(VueSimpleAlert);
 
 // import { VERIFY_AUTH } from "@/core/services/store/auth.module";
 import { RESET_LAYOUT_CONFIG } from '@/core/services/store/config.module';
@@ -42,7 +39,6 @@ import '@/core/plugins/vue-mask';
 // Global Components
 import '@/components/global';
 
-
 // Custom Directive
 import '@/directive';
 
@@ -76,6 +72,6 @@ new Vue({
   store,
   i18n,
   vuetify,
-  
+
   render: (h) => h(App),
 }).$mount('#app');
