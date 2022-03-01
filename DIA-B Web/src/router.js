@@ -147,7 +147,7 @@ export default new Router({
             requiresAuth: true,
             breadcrumb: [
               {
-                name: 'Danh sách nhóm người dùng',
+                name: 'Chi tiết kết quả khảo sát',
                 link: 'user_import_list',
               },
               {
@@ -277,6 +277,7 @@ export default new Router({
           },
         },
         // EXPORT PAGE : END
+      
       ],
     },
   ],

@@ -22,6 +22,7 @@ namespace DiaB.Test.Controllers
 
 
         [HttpGet]
+
         public JsonResult Get()
         {
 
@@ -40,6 +41,36 @@ namespace DiaB.Test.Controllers
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
+
+        [HttpGet("survey_id")]
+        public JsonResult Get_detail(string user_id)
+        {
+
+
+            string query = @"select * from survey_import_details where survey_id in (select survey_imports.id from survey_imports where survey_imports.user_id = @user_id)";
+
+            DataTable table = new DataTable();
+            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
+            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
+
+
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    cmd.Parameters.AddWithValue("@user_id",user_id);
                     myReader = cmd.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -69,8 +100,8 @@ namespace DiaB.Test.Controllers
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
-                    cmd.Parameters.AddWithValue("@id", sid.id);
-                    cmd.Parameters.AddWithValue("@is_deleted", sid.is_deleted);
+                    cmd.Parameters.AddWithValue("@id", Guid.NewGuid());
+                    cmd.Parameters.AddWithValue("@is_deleted", 0);
                     cmd.Parameters.AddWithValue("@survey_id", sid.survey_id);
                     cmd.Parameters.AddWithValue("@category_code", sid.category_code);
                     cmd.Parameters.AddWithValue("@category", sid.category);

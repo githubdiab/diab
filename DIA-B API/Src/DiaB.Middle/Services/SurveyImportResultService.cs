@@ -1,4 +1,4 @@
-using CpTech.Core.Common.Dtos;
+﻿using CpTech.Core.Common.Dtos;
 using CpTech.Core.Middle.Dtos;
 using DiaB.Common.Constants;
 using DiaB.Common.Enums;
@@ -10,12 +10,14 @@ using DiaB.Middle.Dtos.ImageDtos;
 using DiaB.Middle.Dtos.SurveyImportDtos;
 using DiaB.Middle.Dtos.SurveyImportResultDtos;
 using DiaB.Middle.Services.Interfaces;
+using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ActionContext = DiaB.Common.Utilities.ActionContext;
 
@@ -224,6 +226,7 @@ namespace DiaB.Middle.Services
 
 
             var directoryInfo = Directory.CreateDirectory(Path.Combine(CommonConstant.ReportWorkPath, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff")));
+            var templatePath = Path.Combine(CommonConstant.ReportTemplatePath, "bao_cao_dau_ra.docx.docx");
             var physicalPath = string.Empty;
             foreach (Guid id in input.Ids)
             {
@@ -238,10 +241,12 @@ namespace DiaB.Middle.Services
 
                 physicalPath = Path.Combine(CommonConstant.ReportWorkPath, directoryInfo.Name, entity.SurveyImport.AccountImport.UserName.AppendTimeStamp() + ".docx");
 
-                await using (FileStream fileStream = new FileStream(physicalPath, FileMode.Create))
-                {
-                    await (new FileStream("../DiaB.Common/Template/bao_cao_dau_ra.docx", FileMode.Open, FileAccess.Read)).CopyToAsync(fileStream);
-                }
+                File.Copy(templatePath, physicalPath, true);
+
+                // write
+
+                this.WriteReport(entity, physicalPath, context);
+
             }
 
             if (input.Ids.Count == 1)
@@ -260,6 +265,129 @@ namespace DiaB.Middle.Services
            
 
             return response;
+        }
+
+        private bool WriteReport(SurveyImportResultEntity entity, string pathOutput, ActionContext context)
+        {
+            var danhxung = "Anh";
+            var gender = "Nam";
+            if (string.IsNullOrEmpty( entity.SurveyImport.AccountImport.UserGender))
+            {
+                if ("NỮ".Equals(entity.SurveyImport.AccountImport.UserGender.ToUpper()) || "NU".Equals(entity.SurveyImport.AccountImport.UserGender.ToUpper()))
+                {
+                    danhxung = "Chị";
+                    gender = "Nữ";
+                }
+            }
+
+
+            var wordDoc = WordprocessingDocument.Open(pathOutput, true);
+            using ((wordDoc))
+            {
+                // replase text
+                string docText = null;
+                var sr = new StreamReader(wordDoc.MainDocumentPart.GetStream());
+
+                docText = sr.ReadToEnd();
+
+                var regexText = new Regex("<<ccnd>>");
+                docText = regexText.Replace(docText, entity.SurveyImport.AccountImport.StorySuccess);
+
+                regexText = new Regex("<mtct>>");
+                docText = regexText.Replace(docText, entity.SurveyImport.AccountImport.UserName);
+
+                regexText = new Regex("<<nxtq>>");
+                docText = regexText.Replace(docText, entity.Nxtq);
+
+             
+                regexText = new Regex("<<kt-bl-val>>");
+                docText = regexText.Replace(docText, entity.KtBlVal + "");
+                regexText = new Regex("<<kt-tdcs-val>>");
+                docText = regexText.Replace(docText, entity.KtTdcsVal + "");
+                regexText = new Regex("<<kt-dd-val>>");
+                docText = regexText.Replace(docText, entity.KtDdVal + "");
+                regexText = new Regex("<<kt-vd-val>>");
+                docText = regexText.Replace(docText, entity.KtVdVal + "");
+                regexText = new Regex("<<kt-th-val>>");
+                docText = regexText.Replace(docText, entity.KtThVal + "");
+                regexText = new Regex("<<kt-tlhv-val>>");
+                docText = regexText.Replace(docText, entity.KtTlhvVal + "");
+                regexText = new Regex("<<kt-val>>");
+                docText = regexText.Replace(docText, entity.KtVal + "");
+                regexText = new Regex("<<kt-nxtq>>");
+                docText = regexText.Replace(docText, entity.KtNxtq);
+
+                // thứ bao nhiêu nữa?
+
+                regexText = new Regex("<<kntcs-ht>>");
+                docText = regexText.Replace(docText, entity.KntcsHtVal + "");
+                regexText = new Regex("<<kntcs-csbc>>");
+                docText = regexText.Replace(docText, entity.KntcsCsbcVal + "");
+                regexText = new Regex("<<kntcs-tddh>>");
+                docText = regexText.Replace(docText, entity.KntcsTddhVal + "");
+                regexText = new Regex("<<kntcs-cdvd>>");
+                docText = regexText.Replace(docText, entity.KntcsCdvdVal + "");
+                regexText = new Regex("<<kntcs-cdau>>");
+                docText = regexText.Replace(docText, entity.KntcsCdauVal + "");
+                regexText = new Regex("<<kntcs-val>>");
+                docText = regexText.Replace(docText, entity.KntcsVal + "");
+                regexText = new Regex("<<kntcs-nxtq>>");
+                docText = regexText.Replace(docText, entity.KntcsNxtq);
+
+                // thứ bao nhiêu nữa?
+
+                regexText = new Regex("<<mdrc-dt>>");
+                docText = regexText.Replace(docText, entity.MdrcDtVal + "");
+
+                regexText = new Regex("<<mdrc-nxtq>>");
+                docText = regexText.Replace(docText, entity.MdrcNxtq);
+
+                regexText = new Regex("<<kndctl-nxtq>>");
+                docText = regexText.Replace(docText, entity.KndctlNxtq);
+
+                regexText = new Regex("<<dltd-nxtq>>");
+                docText = regexText.Replace(docText, entity.DltdNxtq);
+
+                regexText = new Regex("<<dong luc thay doi nhan xet tong quat>>");
+                docText = regexText.Replace(docText, entity.DltdNxtq);
+
+                regexText = new Regex("<<de xuat va muc tieu>>");
+                docText = regexText.Replace(docText, entity.DxvmtNxtq);
+
+                regexText = new Regex("<<ke hoach hanh dong>>");
+                docText = regexText.Replace(docText, entity.KhvhdNxtq);
+
+                regexText = new Regex("<<ten>>");
+                docText = regexText.Replace(docText, entity.SurveyImport.AccountImport.UserName);
+
+                regexText = new Regex("<<tuoi>>");
+                docText = regexText.Replace(docText, (DateTime.Now.Year - entity.SurveyImport.AccountImport.UserYearofbirth) + "");
+
+                regexText = new Regex("<<thanh pho>>");
+                docText = regexText.Replace(docText, entity.SurveyImport.AccountImport.UserProvince);
+
+                regexText = new Regex("<<tip>>");
+                docText = regexText.Replace(docText, entity.SurveyImport.AccountImport.UserTypeofsick);
+
+                regexText = new Regex("<<so nam benh>>");
+                docText = regexText.Replace(docText, entity.SurveyImport.AccountImport.YearFoundout + "");
+
+                regexText = new Regex("<<danh xung>>");
+                docText = regexText.Replace(docText, danhxung);
+
+                regexText = new Regex("<<gioi tinh>>");
+                docText = regexText.Replace(docText, gender);
+
+                regexText = new Regex("<<nghe nghiep>>");
+                docText = regexText.Replace(docText, entity.SurveyImport.AccountImport.UserCareer);
+
+                regexText = new Regex("<<nghe nghiep>>");
+                docText = regexText.Replace(docText, entity.SurveyImport.AccountImport.YearFoundout + "");
+
+                StreamWriter sw = new StreamWriter(wordDoc.MainDocumentPart.GetStream(FileMode.Create));
+                sw.Write(docText);
+            }
+            return true;
         }
     }
 }

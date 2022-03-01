@@ -17,8 +17,8 @@
                 :searchAction="false"
                 @sortBy="sortRequest"
               >
-                <template v-slot:body="{ item }">
-                    <td>{{ item.stt }}</td>
+                <template v-slot:body="{ item , index }">
+                    <td>{{ index + 1 }}</td>
                   <td>{{ item.user_name }}</td>
                   <td>{{ item.user_code }}</td>
                   <td >{{item.survey_type }}</td>
@@ -92,6 +92,8 @@
     </b-container>
     <user-import-modal v-bind:staff_list="staff_list"/>
 
+    <user-import-modal2 v-bind:staff_list="staff_list"/>
+
   </div>
   
 </template>
@@ -132,10 +134,9 @@ p {
 
 <script>
 export default {
-components: { 'user-import-modal': () => import('./components/messages/messageNoError.vue') },
+components: { 'user-import-modal': () => import('./components/messages/messageNoError.vue'), 
 
-
-
+               'user-import-modal2': () => import('./components/messages/messageSuccess.vue')  },
   props: {
     staff_list: {
       type: Array,
@@ -147,7 +148,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
       paging: {
         page: 1,
         pageSize: 10,
-        total: 0,
+      //  total: 0,
       },
       filter: {
         searchKey: null,
@@ -373,9 +374,10 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
 
     async NoError() {
        var mess_error='';
+      
         for(let i=0;i<Number(this.staff_list.length);i++)
        {
-         if(this.staff_list[i].user_name ==''||this.staff_list[i].user_name.length<5||this.staff_list[i].user_name.length>30)
+         if(this.staff_list[i].user_name =='')
          {        
           mess_error='error'
          }
@@ -519,16 +521,21 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
         }
        else
        {
-       this.$nextTick(() => {
-      this.$bvModal.show('user-import-modal');
-      
+         
+        
+     this.$nextTick(() => {
+
+      //  this.$bvModal.show('user-import-modal2');
+            this.$bvModal.show('user-import-modal');
+           
+             setTimeout(() => {  this.$bvModal.show('user-import-modal2'); }, 8000);
+
+    //  this.$bvModal.show('user-import-modal');
       },
       
       );
        }
 
-
- 
     },
     
   },

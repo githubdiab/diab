@@ -10,12 +10,15 @@ namespace DiaB.Test.Models
         public int id { get; set; }
         public string code { get; set; }
         public int is_deleted { get; set; }
-        public int user_id { get; set; }
+        public string user_id { get; set; }
 
         public DateTime create_datetime { get; set; }
         public DateTime update_datetime { get; set; }
         public DateTime survey_day { get; set; }
         public DateTime import_day { get; set; }
+
+        public string creator_id { get; set; }
+        public string updater_id { get; set; }
 
         public string course_goal { get; set; }
         public string course_action  { get; set; }

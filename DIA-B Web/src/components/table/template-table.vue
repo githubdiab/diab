@@ -151,7 +151,7 @@
                       </span>
                     </td>
                     <slot name="body" :item="item" :index="idx"></slot>
-                    <td v-if="tableAction">
+                    <td id="break_line" v-if="tableAction">
                       <slot name="action" :item="item"></slot>
                     </td>
                   </tr>

@@ -1,232 +1,334 @@
 <template>
-  <div class="user-import-detail-page w-100">
-    <basic-subheader
-      :title="
-        form_type === 'create'
-          ? 'Thêm nhóm người dùng mới'
-          : 'Chỉnh sửa nhóm người dùng'
-      "
-    >
+  <div class="user-import-list-page w-100">
+    <basic-subheader>
       <template v-slot:actions>
-        <b-button class="btn ml-3" type="button" pill @click="returnPage">
+       
+         
+        <b-button
+          type="button"
+          id="show-btn"
+          @click="returnPage()">
           <span class="svg-icon">
             <inline-svg src="/media/svg/icons/Neolex/Arrows/arrow-left.svg" />
           </span>
-          Huỷ
+          Trở về trước
         </b-button>
-        <b-button class="btn ml-3" type="button">
-          <span class="svg-icon">
-            <inline-svg src="/media/svg/icons/Neolex/Basic/refresh-cw.svg" />
-          </span>
-          Reset dữ liệu
-        </b-button>
-        <template v-if="form_type === 'create'">
-          <b-button class="btn btn-success ml-3" type="button">
-            <span class="svg-icon">
-              <inline-svg src="/media/svg/icons/Neolex/Basic/plus.svg" />
-            </span>
-            Tạo mới
-          </b-button>
-        </template>
-        <template v-else>
-          <b-button class="btn btn-danger ml-3" type="button">
-            <span class="svg-icon">
-              <inline-svg src="/media/svg/icons/Neolex/Basic/trash-2.svg" />
-            </span>
-            Xóa nhóm
-          </b-button>
-          <b-button class="btn btn-success ml-3" type="button">
-            <span class="svg-icon">
-              <inline-svg src="/media/svg/icons/Neolex/Basic/check.svg" />
-            </span>
-            Cập nhật
-          </b-button>
-        </template>
       </template>
     </basic-subheader>
-    <b-container fluid class="user-import-detail-page__body mb-6 mt-6">
-      <div class="card card-custom">
-        <b-row class="border-bottom">
-          <b-col class="col-6 col-lg-4 col-xl-3">
-            <h6 class="d-flex align-items-center p-6 mb-0 text-success">
-              <span class="svg-icon mr-3">
-                <inline-svg src="/media/svg/icons/Neolex/Basic/info.svg" />
-              </span>
-              Thông tin nhóm
-            </h6>
-          </b-col>
-          <b-col class="col-7 col-lg-8 col-xl-9">
-            <h6 class="d-flex align-items-center p-6 mb-0 text-success">
-              <span class="svg-icon mr-3">
-                <inline-svg
-                  src="/media/svg/icons/Neolex/Basic/check-square.svg"
-                />
-              </span>
-              Chức năng thuộc nhóm
-            </h6>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col class="col-5 col-lg-4 col-xl-3">
-            <div class="p-6">
-              <label>Tên nhóm:</label>
-              <b-input
-                type="text"
-                class="form-control datatable-input"
-                placeholder="Nhập tên nhóm"
-                data-col-index="0"
-                v-model="form.name"
-              />
+     <b-container fluid class="user-import-list-page__body mb-6 mt-6">
+      <b-row>
+        <b-col>
+          <div class="card card-custom gutter-b">
+            <div class="card-body mt-0">
+                <p style="font-size:13px"><b>{{user_details[0].user_name}}  </b></p>      
+             
+                 
+             
+              <table v-bind:user_details="user_details">
+                <tr>
+                  <th>
+                    Năm sinh         
+                  </th>
+                   <th>
+                    Số điện thoại         
+                  </th>
+                  <th>
+                    Sở thích         
+                  </th>
+                  <th>
+                    Câu chuyện thành công         
+                  </th>
+                </tr>
+                <td> {{user_details[0].user_yearofbirth}} </td>
+                <td> {{user_details[0].user_phone}} </td>
+                <td> {{user_details[0].user_hoobit}} </td>
+                <td> {{user_details[0].story_success}} </td>
+              </table>
+               <br>
+               <br>
+                <table v-bind:user_details="user_details">
+                <tr id="row1">
+                  <th>
+                    Nghề nghiệp         
+                  </th>
+                   <th>
+                    Tỉnh thành         
+                  </th>
+                  <th>
+                    Địa chỉ         
+                  </th>
+                  <th>
+                   Kế hoạch hành động         
+                  </th>
+                </tr>
+                <td> {{user_details[0].user_career}} </td>
+                <td> {{user_details[0].user_province}} </td>
+                <td> {{user_details[0].user_address}} </td>
+                <td> {{user_details[0].course_action}} </td>
+              </table>
+               <br>
+              <p  style="font-size:16px"><b> Kết quả khảo sát </b></p>       
+              
+              <template-table
+                :id="table"
+                :column="column"
+                :data="staff_list"
+                :paging="paging"
+                :tableAction="false"
+                :selectAction="false"
+                :searchAction="false"
+                 @search="searchRequest"         
+              >
+                <template v-slot:body="{ item , index  }">
+                <td  style="text-align: center"> {{ index+1}} </td>
+                  <td  style="text-align: center"> {{ item.category }} </td>
+                 
+             
+                   <td  style="text-align: center">{{ item.question_number }}</td>
+                  <td  style="text-align: center">{{ item.question_answer }}</td>
+               
+                </template>
+              </template-table>
             </div>
-          </b-col>
-          <b-col class="col-7 col-lg-8 col-xl-9">
-            <div class="p-6">
-              <b-checkbox>
-                Chọn toàn bộ các quyền trong tất cả các chức năng
-              </b-checkbox>
-              <div class="mt-2">
-                <template-table
-                  :column="column"
-                  :data="data"
-                  :tableAction="false"
-                  :selectAction="false"
-                  :searchAction="false"
-                  :pagingAction="false"
-                >
-                  <template v-slot:body="{ item }">
-                    <td style="width: 50px; text-align: center">
-                      <b-checkbox size="lg"> </b-checkbox>
-                    </td>
-                    <td>
-                      {{ item.name }}
-                    </td>
-                    <td style="width: 100px; text-align: center">
-                      <b-checkbox size="lg"> </b-checkbox>
-                    </td>
-                    <td style="width: 100px; text-align: center">
-                      <b-checkbox size="lg"> </b-checkbox>
-                    </td>
-                    <td style="width: 100px; text-align: center">
-                      <b-checkbox size="lg"> </b-checkbox>
-                    </td>
-                    <td style="width: 100px; text-align: center">
-                      <b-checkbox size="lg"> </b-checkbox>
-                    </td>
-                  </template>
-                </template-table>
-              </div>
-            </div>
-          </b-col>
-        </b-row>
-      </div>
+          </div>
+        </b-col>
+      </b-row>
     </b-container>
+    
   </div>
 </template>
 
+<style lang="scss" scoped>
+.dropdown-form-filter {
+  .dropdown-menu {
+    .container {
+      width: 430px;
+    }
+  }
+}
+td {
+  white-space: nowrap;
+  word-wrap: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  width: 50px;
+}
+.information{
+text-decoration: gray;
+
+}
+table {
+  width: 100%;
+  table-layout: fixed;
+}
+
+div {
+  white-space: nowrap;
+  word-wrap: normal;
+  text-align: center;
+}
+p {
+ width: 36px;
+//text-align: left;
+
+  
+}
+
+#showbtn{
+ float: right;
+ 
+}
+table {
+    border-collapse: collapse;
+   
+    margin: 15px;
+}
+
+th{
+   color:gray;
+   font-style: normal;
+   font-family: 'Nunito';
+   font-size: 13px;
+    line-height: 25px;
+ text-align: left;
+}
+body{
+ //color:gray
+}
+td{
+  font-family: 'Nunito';
+   font-size: 13px;
+  font-weight: bold;
+ // color: black;
+  line-height: 25px;
+  text-align: left;
+
+}
+
+ 
+// data {
+//   white-space: nowrap;
+// }
+</style>
+
 <script>
+import axios from'axios'
 export default {
-  props: {
-    form_type: {
-      type: String,
-      default: 'detail',
-    },
-    id: {
-      type: String,
+ props:{
+    user_code: {
+      type: Number,
       default: null,
     },
+    id:{
+      type:String,
+      default:null,
+    }
   },
   data() {
     return {
-      form: {
-        name: null,
-        functionTypes: [],
+      paging: {
+        page: 1,
+        pageSize: 10,
+        total: 0,
+      },
+      filter: {
+        searchKey: null,
+      },
+      sort: {
+        by: null,
+        order: null,
       },
       column: [
-        {
-          key: 'actionCheckbox',
-          label: '',
+         {
+          key: 'stt',
+          label: 'Số thứ tự',
           sortable: false,
         },
         {
-          key: 'name',
-          label: 'Chức Năng',
+          key: 'category',
+          label: 'Nhóm câu hỏi',
           sortable: false,
         },
         {
-          key: 'hasViewFunction',
-          label: 'Xem',
+          key: 'question_number',
+          label: 'Câu hỏi',
           sortable: false,
-          style: 'width: 100px; text-align: center',
         },
         {
-          key: 'hasAddFunction',
-          label: 'Thêm mới',
+          key: 'question_answer',
+          label: 'Câu trả lời',
           sortable: false,
-          style: 'width: 100px; text-align: center',
         },
-        {
-          key: 'hasEditFunction',
-          label: 'Chỉnh Sửa',
-          sortable: false,
-          style: 'width: 100px; text-align: center',
-        },
-        {
-          key: 'hasDeleteFunction',
-          label: 'Xoá',
-          sortable: false,
-          style: 'width: 100px; text-align: center',
-        },
+
+        
+       
       ],
-      data: [
-        {
-          id: 'c8f334f8-6002-4560-adf7-3f70f39a1030',
-          name: 'Nhóm người dùng',
-        },
-        {
-          id: '601a9808-4706-499d-9f94-26afedf1dc72',
-          name: 'Tài khoản portal',
-        },
-        {
-          id: 'e9c2ac7f-2db3-429d-b0fe-98ee1f9c6b97',
-          name: 'Tài khoản bệnh nhân',
-        },
-        {
-          id: '74faa208-4398-406f-8da8-5112f09ef451',
-          name: 'Khoá học',
-        },
-        {
-          id: '8e4022eb-5fb1-415c-9ce2-7f2176ffe33a',
-          name: 'Huấn luyện viên & chuyên gia',
-        },
-      ],
+      
+      staff_list: [],
+      user_details: [],
     };
   },
-  computed: {},
-  watch: {},
-  methods: {
-    returnPage() {
-      this.$router.push({
-        name: 'user_group_list',
-      });
+  
+  computed: {
+    searchParams() {
+      return {
+        searchKey: this.filter.searchKey,
+        page: this.paging.page,
+        size: this.paging.pageSize,
+      };
     },
-    loadData() {
-      this.$store.commit('context/setLoading', true);
-      this.$api
-        .get('user_groups', {
-          params: this.searchParams,
+    tableLength: function () {
+     
+      let totalcount = this.staff_list.length ;
+    //  var totalcount = this.column[2].key
+      return totalcount;
+    },
+  },
+  created() {},
+  watch: {
+    'paging.page'() {
+      //this.loadData();
+    },
+    'paging.pageSize'() {
+      //this.loadData();
+    },
+    sort: {},
+  },
+  methods: {
+     loadData_surveydetails() {
+     
+      axios.get('https://localhost:44380/api/surveyimportdetails/survey_id', {
+          params: { user_id : this.id},
         })
-        // eslint-disable-next-line no-unused-vars
-        .then(({ meta, data }) => {
-          this.data = data || [];
+        .then(({ data }) => {
+          this.selected = [];
+         this.data = data.items || [];
+          this.paging.total = data.total;
+          this.staff_list = data
+        })
+        .catch((error) => {
+          this.$toastr.e({
+            title: 'Lỗi',
+            msg: error,
+          });
         })
         .finally(() => {
           this.$store.commit('context/setLoading', false);
         });
       return;
     },
-  },
-  mounted() {
-    this.loadData();
-  },
+     loadData_details() {
+     
+      axios.get('https://localhost:44380/api/surveyimportresults/details',{
+         params: { user_code:this.user_code },
+         
+        })
+        .then(({ data }) => {
+       //   this.selected = [];
+      //   this.data = data.items || [];
+      //    this.paging.total = data.total;
+          this.user_details = data
+        })
+        .catch((error) => {
+          this.$toastr.e({
+            title: 'Lỗi',
+            msg: error,
+          });
+        })
+        .finally(() => {
+          this.$store.commit('context/setLoading', false);
+        });
+      return;
+    },
+      returnPage() {
+      this.$router.push({
+        name: 'user_import_list',
+      });
+    },
+   
+  
+    
+    
+    // async handleImportUser() {
+    //   this.$nextTick(() => {
+    //     this.$bvModal.show('user-import-modal');
+    //   });
+    // },
+
+   
+
+ 
+    },
+  
+    
+  
+  
+mounted()
+{
+  this.loadData_surveydetails();
+  this.loadData_details();
+}
+ 
 };
 </script>

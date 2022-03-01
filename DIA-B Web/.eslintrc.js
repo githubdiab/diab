@@ -22,7 +22,7 @@ module.exports = {
     'no-confusing-arrow': 0,
     'no-unused-vars': 2,
     'no-use-before-define': 0,
-    'no-console': 2,
+    'no-console': 1,
     'no-debugger': 2,
     'no-empty': 1,
     'max-len': ['error', { code: 360 }],

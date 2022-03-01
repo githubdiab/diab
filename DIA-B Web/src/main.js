@@ -6,6 +6,7 @@ import ApiService from '@/core/services/api.service';
 import MgrService from '@/core/services/security.service';
 import MockService from '@/core/mock/mock.service';
 import VueSimpleAlert from "vue-simple-alert";
+
 Vue.use(VueSimpleAlert);
 
 // import { VERIFY_AUTH } from "@/core/services/store/auth.module";
@@ -41,6 +42,7 @@ import '@/core/plugins/vue-mask';
 // Global Components
 import '@/components/global';
 
+
 // Custom Directive
 import '@/directive';
 
@@ -67,10 +69,13 @@ router.beforeEach(async (to, from, next) => {
   // reset config to initial state
 });
 
+/// message success
+
 new Vue({
   router,
   store,
   i18n,
   vuetify,
+  
   render: (h) => h(App),
 }).$mount('#app');
