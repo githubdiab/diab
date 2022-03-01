@@ -54,7 +54,7 @@ namespace DiaB.Middle.Services
                         result.StaffList.Add(new FileUploadDtos.StaffInfo
                         {
                             user_name = (worksheet.Cells[row, 1].Value ?? string.Empty).ToString().Trim(),
-                            user_code = Int32.Parse(worksheet.Cells[row,2].Value.ToString()) ,
+                            user_code = (worksheet.Cells[row, 2].Value ?? string.Empty).ToString().Trim(),
                             survey_type = (worksheet.Cells[row, 3].Value ?? string.Empty).ToString().Trim(),
                             survey_code = (worksheet.Cells[row, 4].Value ?? string.Empty).ToString().Trim(),
                             survey_name = (worksheet.Cells[row, 5].Value ?? string.Empty).ToString().Trim(),
@@ -75,7 +75,7 @@ namespace DiaB.Middle.Services
                             course_action = (worksheet.Cells[row, 17].Value ?? string.Empty).ToString().Trim(),
                             course_final_rate = (worksheet.Cells[row, 18].Value ?? string.Empty).ToString().Trim(),
                             user_typeofsick = (worksheet.Cells[row, 19].Value ?? string.Empty).ToString().Trim(),
-                            year_foundout = Int32.Parse(worksheet.Cells[row, 20].Value.ToString()),
+                            year_foundout = (worksheet.Cells[row, 20].Value ?? string.Empty).ToString().Trim(),
 
                             participation_package = (worksheet.Cells[row, 21].Value ?? string.Empty).ToString().Trim(),
                             survey_type_code = (worksheet.Cells[row, 22].Value ?? string.Empty).ToString().Trim(),

@@ -14,13 +14,16 @@ namespace DiaB.WebApi.Controllers
 {
    
     [ApiExplorerSettings(GroupName = "app")]
+  //  [Route("api/[controller]")]
+    [Route("App/AccountImport")]
+
     public class AccountImportController : AppController
     {
 
         private readonly IConfiguration _configuration;
-      
 
-        [HttpGet]
+       
+        [HttpGet("account")]
         public JsonResult Get()
         {
 
@@ -48,7 +51,7 @@ namespace DiaB.WebApi.Controllers
             return new JsonResult(table);
         }
 
-        [HttpPost]
+        [HttpPost("account")]
         public JsonResult Post(AccountImport acc)
         {
 

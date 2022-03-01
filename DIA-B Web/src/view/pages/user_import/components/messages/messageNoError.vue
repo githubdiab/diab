@@ -1,8 +1,10 @@
 <template>
-         
+        
+ 
   <b-modal
     id="user-import-modal"
     ref="user-import-modal"
+    hide-header
     
     
   >
@@ -31,7 +33,7 @@
         <b-button
           class="btn btn-success ml-2"
           href="#"
-          @click="goback"
+          @click="goback()"
           tabindex="0"
           style="width:90px"
         >
@@ -43,7 +45,7 @@
         <b-button
           class="btn btn-success ml-2"
           href="#"
-          @click="handleClick"
+          @click="handleClick()"
           tabindex="0"
         >
         <span class="svg-icon">
@@ -58,12 +60,17 @@
       
     </template>
   </b-modal>
+ 
+
 </template>
 
 <script>
 
+import axios from 'axios';
+//import ModalSuccess from './messageSuccess.vue';
 export default {
   name: 'Modal',   
+ // components:{ModalSuccess},
  props: {
     staff_list: {
       type: Array,
@@ -80,23 +87,106 @@ export default {
   },
   data() {
     return {
-      isMounted: false,
-      loading: false,
-      isSelectFile: false,
-      form: {},
-      validationState: {},
-      error: {},
+      // user 
+      user_name: '',
+      user_code:'',
+      user_gender:'',
+      user_yearofbirth:'',
+      user_career:'',
+      user_phone:'',
+      user_hoobit:'',
+      user_address:'',
+      user_province:'',
+      story_success:'',
+      user_typeofsick:'',
+      year_foundout:'',
+
+// survey
+      course_goal:'',
+      course_action:'',
+      course_final_rate:'',
+      participation_package:'',
+      survey_type_code:'',
+      survey_type:'',
+      survey_code:'',
+      survey_name:'',
+      survey_day:'',
+      import_day:'',
+      user_id:'',
+   
+   //survey details 
+       survey_id:'',
+       category_code :'',
+       category:'',
+       sub_category_code:'',
+       sub_category:'',
+       question_code:'',
+       question_number:'',
+       question_answer:'',
+       question_result:'',
+     
+     data:[],
     };
+   
   },
-  methods: {
-  //  onClickButton (event) {
-  //        this.$emit('clicked', 'someValue')
-  //    },
+  methods: {    
+  async  addUser() {
+       
+      for(let i=0;i<=Number(this.staff_list.length);i++)
+      {
+    await axios.post('https://localhost:44380/api/accountimport', null, {
+        params: {
+            
+          user_name: this.staff_list[i].user_name,
+          user_code: this.staff_list[i].user_code,
+          user_gender: this.staff_list[i].user_gender,
+          user_yearofbirth: this.staff_list[i].user_yearofbirth,
+          user_career: this.staff_list[i].user_career,
+          user_phone: this.staff_list[i].user_phone,
+          user_hoobit: this.staff_list[i].user_hoobit,
+          user_address: this.staff_list[i].user_address,
+          user_province: this.staff_list[i].user_province,
+          story_success: this.staff_list[i].story_success,
+          user_typeofsick: this.staff_list[i].user_typeofsick,
+          year_foundout:this.staff_list[i].year_foundout,
+           
+        },
+         
+        });;
+    await  axios.get('https://localhost:44380/api/accountimport/id',)
+  }
+   },
+   
+ 
+
     goback() {
       this.$bvModal.hide('user-import-modal');
     },
+    // handleClick(){
+    //   this.AddSurvey();
+    //    this.$router.push({
+    //     name: 'user_import_list',
+    //      method:{
+    //       // staff_list : data
+    //       },
+    //     params: {
+          
+    //      staff_list : this.staff_list
+    //     },
+    //       })
+    // }
+
+     handleClick(){
+       this.addUser();
+       this.goback();
+     
+    },
+    
   },
-};
+  mounted(){
+   
+  }
+}
 </script>
 
 <style lang="scss">
@@ -117,3 +207,4 @@ export default {
 
 
 </style>
+}

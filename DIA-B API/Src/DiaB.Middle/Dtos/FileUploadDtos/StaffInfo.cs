@@ -12,7 +12,7 @@ namespace DiaB.Middle.Dtos.FileUploadDtos
             public partial class StaffInfo : BaseItemDto
             {
             // public string Count { get; set; }
-            public int  user_code { get; set; }
+            public string user_code { get; set; }
             public string user_name { get; set; }
             public string user_gender { get; set; }
 
@@ -37,7 +37,7 @@ namespace DiaB.Middle.Dtos.FileUploadDtos
             public string course_final_rate { get; set; }
 
             public string user_typeofsick { get; set; }
-            public int year_foundout { get; set; }
+            public string year_foundout { get; set; }
             public string participation_package { get; set; }
             public string survey_type_code { get; set; }
             public string import_day { get; set; }

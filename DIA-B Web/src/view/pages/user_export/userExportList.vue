@@ -183,7 +183,7 @@
                       </action-dropdown>
                     </td>
                     <td>
-                      {{ item.surveyType }}
+                      {{ item.userCode }}
                     </td>
                     <td>
                       {{ item.surveyCode }}
@@ -268,8 +268,8 @@ export default {
         },
         {
           key: 'username',
-          label: 'Tên HL',
-          sortable: true,
+          label: 'Bệnh nhân',
+          sortable: false,
         },
         {
           key: 'actionDropdown',
@@ -277,9 +277,9 @@ export default {
           sortable: false,
         },
         {
-          key: 'surveyType',
-          label: 'Loại báo cáo',
-          sortable: true,
+          key: 'UserCode',
+          label: 'Mã người bệnh',
+          sortable: false,
         },
         {
           key: 'surveyCode',
@@ -289,12 +289,12 @@ export default {
         {
           key: 'importDay',
           label: 'Ngày xử lý báo cáo',
-          sortable: true,
+          sortable: false,
         },
         {
           key: 'surveyStatus',
           label: 'Tình trạng báo cáo',
-          sortable: true,
+          sortable: false,
         },
       ],
       data: [],

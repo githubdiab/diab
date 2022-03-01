@@ -3,6 +3,7 @@
   <b-modal
     id="user-import-modal2"
     ref="user-import-modal2"
+    hide-header
     
     
   >
@@ -14,13 +15,14 @@
            
           <div style="text-align:center;font-family: Nunito;font-style: normal;font-weight: normal;font-size: 14px;;">
           
-            Tổng số khách hàng import thành công: {{96}}
+            Tổng số khách hàng import thành công: {{this.staff_list.length}}
+         
          
           </div>
 
           <div style="text-align:center;font-family: Nunito;font-style: normal;font-weight: normal;font-size: 14px;;">
           
-             Tổng số bản ghi import thành công: {{960}}
+             Tổng số bản ghi import thành công: {{this.account_list.length}} 
          
           </div>
     <template #modal-footer style="text-align:center">
@@ -34,7 +36,7 @@
         <b-button
           class="btn btn-success ml-2"
           href="#"
-          @click="handleClick"
+          @click="handleClick()"
           tabindex="0"
         >
         
@@ -51,14 +53,23 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Modal',
- 
+  props:{
+    staff_list: {
+      type: Array,
+      default: () => [],
+  },
+  
+  },
   computed: {},
   watch: {},
   // mounted() {this.$root.$on('Modal',()=>{
   //   this.handleClick()
   // })},
+  
   data() {
     return {
       isMounted: false,
@@ -67,65 +78,136 @@ export default {
       form: {},
       validationState: {},
       error: {},
+      account_list:[],
     };
   },
-  methods: {
-    handleClick() {
-      this.$refs.form.importForm();
+  created() {
+     
+      
     },
-    onUpload(payload) {
-      this.isSelectFile = payload;
-    },
-    importForm(payload) {
-      this.handleSubmit(payload);
-    },
-    async handleSubmit(payload) {
-      this.loading = true;
-      let result = [];
-      try {
-        //if (true) {
-        await this.$api
-          .post('Admin/Import/staff', payload, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          })
-          .then(({ data }) => {
-            result = data.staffList;
-          })
-          .finally(() => {
-            this.$store.commit('context/setLoading', false);
-          });
-        //}
-        this.$toastr.s({
-          title: 'Thành công!',
-          msg: `Import thành công`,
-        });
+    
+  mounted(){
+   
+   this.loadData_account();        
+    
 
-        // TODO
-        // this.$emit('loadData', result);
-        //console.log("aa");
-        this.$router.push({
-          name: 'loading',
-          params: {
-            staff_list: result,
+    
+    
+      
+  },
+
+  methods: {
+   
+    handleClick() {
+     
+      this.AddSurvey();
+       this.$router.push({
+        name: 'user_import_list',
+         method:{
+          // staff_list : data
           },
-        });
-        this.$bvModal.hide('user-import-modal2');
-      } catch (error) {
-        this.$toastr.e({
-          title: 'Lỗi!',
-          msg: error,
-        });
-      } finally {
-        this.loading = false;
-      }
-      // this.loading = false;
+        params: {
+          
+         staff_list : this.staff_list
+        },
+          })
+  
     },
+  async AddSurvey ()
+ {
+ //  this.addUser();
+    
+    const data = await axios.get('https://localhost:44380/api/accountimport/id',{
+       params:{
+   
+       }
+     })
+    .then(res => res.data);
+   // const n = data.length 
+        for(let j=0;j<=Number(this.staff_list.length);j++)
+     {
+   await  axios.post('https://localhost:44380/api/surveyimport', null, {
+      params: {
+        
+        
+      user_id : data[j].id,
+     // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
+      course_goal: this.staff_list[j].course_goal,
+      course_action:this.staff_list[j].course_action,
+      course_final_rate:this.staff_list[j].course_final_rate,
+      participation_package:this.staff_list[j].participation_package,
+      survey_type_code:this.staff_list[j].survey_type_code,
+      survey_type:this.staff_list[j].survey_type,
+      survey_code:this.staff_list[j].survey_code,
+      survey_name:this.staff_list[j].survey_name,
+      survey_day:this.staff_list[j].survey_day,
+      import_day:this.staff_list[j].import_day,
+           
+        },
+      });
+     
+   //   await axios.get('https://localhost:44380/api/surveyimport')
+   this.AddSurveyDetails();
+     }
+    
+ },
+  async AddSurveyDetails ()
+ {
+  // this.addUser();
+ //  this.AddSurvey();
+     for(let k=0;k<=Number(this.staff_list.length);k++)
+     {
+    const data = await axios.get('https://localhost:44380/api/surveyimport/id',{
+       params:{
+   //     user_code:this.staff_list[i].user_code,
+   
+       }
+     })
+    .then(res => res.data);
+
+    
+   await  axios.post('https://localhost:44380/api/surveyimportdetails', null, {
+      params: {
+       survey_id : data[k].id,
+     // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
+       category_code : this.staff_list[k].category_code,
+       category: this.staff_list[k].category,
+       sub_category_code: this.staff_list[k].sub_category_code,
+       sub_category:this.staff_list[k].sub_category,
+       question_code:this.staff_list[k].question_code,
+       question_number:this.staff_list[k].question_number,
+       question_answer:this.staff_list[k].question_answer,
+       question_result:this.staff_list[k].question_result,
+           
+        },
+      });
+     
+  
+     }
+ },
     goback() {
       this.$bvModal.hide('user-import-modal2');
     },
+    goOn() {
+      
+    },
+
+     loadData_account() {
+     
+      axios.get('https://localhost:44380/api/surveyimportdetails', {
+          params: { ...this.searchParams },
+        })
+        .then(({ data }) => {
+          this.selected = [];
+          this.data = data.items || [];
+          this.paging.total = data.total;
+          this.account_list = data
+        })
+        
+      return;
+    },
   },
+ 
 };
 </script>
 

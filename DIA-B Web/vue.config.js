@@ -2,6 +2,7 @@ const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
+
   publicPath: '/',
   configureWebpack: {
     resolve: {
@@ -11,6 +12,10 @@ module.exports = {
         // Or if using full build of Vue (runtime + compiler)
         // vue$: 'vue/dist/vue.esm.js'      // 'vue/dist/vue.common.js' for webpack 1
       },
+    },
+    devServer: {
+     headers: { "Access-Control-Allow-Origin": "*" },
+    //  proxy:' https://localhost:44380'
     },
     plugins: [
       new CopyWebpackPlugin({

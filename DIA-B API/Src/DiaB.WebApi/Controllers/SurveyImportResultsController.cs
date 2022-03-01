@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 namespace DiaB.Test.Controllers
 {
     [ApiExplorerSettings(GroupName = "app")]
-
+    [Route("App/AccountImport")]
     public class SurveyImportResultsController : AppController
     {
         private readonly IConfiguration _configuration;
        
 
-        [HttpGet]
+        [HttpGet("surveyresults")]
         public JsonResult Get()
         {
 
@@ -46,7 +46,7 @@ namespace DiaB.Test.Controllers
             return new JsonResult(table);
         }
 
-        [HttpPost]
+        [HttpPost("surveyresults")]
         public JsonResult Post(SurveyImportResults sir)
         {
 

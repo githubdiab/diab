@@ -90,27 +90,42 @@
             <div class="card-body mt-0">
               <template-table
                 :column="column"
-                :data="data"
+                :data="staff_list"
                 :paging="paging"
                 :tableAction="false"
                 :selectAction="false"
                 :searchAction="false"
-                @sortBy="sortRequest"
+                 @search="searchRequest"
+            
               >
-                <template v-slot:body="{ item }">
+                <template v-slot:body="{ item  }">
+             
                   <td>
                     {{ item.user_name }}
                   </td>
+                  <td style="width: 20px">
+                      <action-dropdown
+                        :value="item"
+                        @view="viewItem"
+                        @edit="editItem"
+                        :show_edit="false"
+                        :show_delete="false"
+                        :show_copy="false"
+                        @copy="copyItem"
+                      >
+                      </action-dropdown>
+                    </td>
                   <td>
-                    {{ item.user_code }}
+                    {{ item.user_typeofsick }}
                   </td>
+                  <td>{{ $moment(item.import_day).format('DD/MM/YYYY') }}</td>
+                  <td>{{ item.participation_package }}</td>
                   <td>{{ item.survey_type }}</td>
-                  <td>{{ item.survey_name }}</td>
-                  <td>{{ item.survey_code }}</td>
-                  <td>{{ item.category }}</td>
-                  <td>{{ item.user_gender }}</td>
+                  <td>{{ item.survey_name }}<br>Mã số: {{ item.survey_code }}
+                  </td>
+                  <!-- <td>{{ item.user_gender }}</td>
                   <td>{{ $moment(item.survey_day).format('DD/MM/YYYY') }}</td>
-                  <td>{{ item.user_province }}</td>
+                  <td>{{ item.user_province }}</td> -->
                 </template>
               </template-table>
             </div>
@@ -133,9 +148,10 @@
 </style>
 
 <script>
+import axios from 'axios';
 export default {
   components: { 'user-import-modal': () => import('./components/Modal') },
-  
+ 
 
   data() {
     return {
@@ -151,15 +167,32 @@ export default {
         by: null,
         order: null,
       },
+      list:{undefined}
+      ,
       column: [
         {
           key: 'user_name',
           label: 'Bệnh nhân',
           sortable: false,
         },
+         {
+          key: '',
+          label: '',
+          sortable: false,
+        },
         {
-          key: 'user_code',
-          label: 'Mã số',
+          key: 'user_typeofsick',
+          label: 'Loại bệnh',
+          sortable: false,
+        },
+        {
+          key: 'survey_import',
+          label: 'Ngày cập nhập',
+          sortable: true,
+        },
+        {
+          key: 'participation_package',
+          label: 'Gói tham gia',
           sortable: false,
         },
         {
@@ -172,39 +205,17 @@ export default {
           label: 'Tên khảo sát',
           sortable: false,
         },
-        {
-          key: 'survey_code',
-          label: 'Mã khảo sát',
-          sortable: false,
-        },
-        {
-          key: 'user_yearofbirth',
-          label: 'Năm sinh',
-          sortable: false,
-        },
-        {
-          key: 'user_gender',
-          label: 'Giới Tính',
-          sortable: false,
-        },
-        {
-          key: 'survey_day',
-          label: 'Ngày thực hiện khảo sát',
-          sortable: false,
-        },
-        {
-          key: 'user_province',
-          label: 'Tỉnh thành',
-          sortable: false,
-        },
+      
+     
       ],
-      data: [],
+      staff_list: [],
     };
   },
   computed: {
     searchParams() {
       return {
-        searchKey: this.filter.searchKey,
+       
+
         page: this.paging.page,
         size: this.paging.pageSize,
       };
@@ -231,6 +242,15 @@ export default {
         },
       });
     },
+    viewItem(item) {
+      this.$router.push({
+        name: 'user_import_detail',
+        params: {
+          user_code : item.user_code,
+          id : item.id
+        },
+      });
+    },
     editItem(item) {
       this.$router.push({
         name: 'user_group_detail',
@@ -253,10 +273,29 @@ export default {
     sortRequest() {
       return;
     },
-    loadData(payload) {
-      this.data = payload || [];
+    loadData_account() {
+     
+      axios.get('https://localhost:44380/api/surveyimportresults/user_import', {
+          params: { ...this.searchParams },
+        })
+        .then(({ data }) => {
+          this.selected = [];
+          this.data = data.items || [];
+          this.paging.total = data.total;
+          this.staff_list = data
+        })
+        .catch((error) => {
+          this.$toastr.e({
+            title: 'Lỗi',
+            msg: error,
+          });
+        })
+        .finally(() => {
+          this.$store.commit('context/setLoading', false);
+        });
       return;
     },
+    
     async handleImportUser() {
       this.$nextTick(() => {
         this.$bvModal.show('user-import-modal');
@@ -264,7 +303,9 @@ export default {
     },
   },
   mounted() {
-    // this.loadData();
+   // axios.get('').then((reps)=>this.list=reps.data.data)
+     this.loadData_account()
+    
   },
 };
 </script>

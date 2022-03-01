@@ -7,156 +7,120 @@
             <div class="card-body mt-0">
               <div id="container">
                 <div class="inline">
-                  <p v-if="column">
+                  <p  v-show="column">
                   <span class="svg-icon">
                   <inline-svg src="/media/svg/import/group.svg" />
                   </span>
-                    Tổng số bản ghi bị lỗi : {{ tableLength }}
+                    Tổng số bản ghi bị lỗi : {{ NullLength }}
                   </p>
                 </div>
                 <div class="inline">
-                  <p v-if="column">
+                  <p  v-show="column">
                     <span class="svg-icon">
                   <inline-svg src="/media/svg/import/group.svg" />
                   </span>
-                    Tổng số khách hàng bị ảnh hưởng : {{ tableLength }}
+                    Tổng số khách hàng bị ảnh hưởng : {{ NullLength }}
                   </p>
                 </div>
               </div>
               <template-table
+                :class="table"
                 :column="column"
-                :data="staff_list"
+                :data="NullItems"
                 :paging="paging"
                 :tableAction="false"
                 :selectAction="false"
                 :searchAction="false"
                 @sortBy="sortRequest"
-                :@click="get_column_error"
+               
               >
-                <template v-slot:body="{ item }">
+                <template v-slot:body="{ item ,index}">
           
-               <!-- show stt   -->
-                  <td v-show="item.length!=0" >{{"0"+ item.stt }}</td>
-                   <!-- <td v-show="item.length!=0" >{{""}}</td> -->
-
-
-              <!-- show name   -->
-                  <td v-show="item.user_gender.length!=0" >{{ item.user_name }}</td> 
-                    <!-- <td v-show="item.user_gender.length!=0" >{{ "" }}</td>  -->
+             <!-- show stt   -->
+            <td>{{index+1}}  </td>  
+             <!-- show name   -->              
+             <td>{{ item.user_name }}</td>       
               <!-- show code   -->
-                  <td v-show="item.user_gender.length!=0">{{ item.user_code }}</td>
-                  <!-- <td v-show="item.user_gender.length!=0">{{ "" }}</td> -->
-           
-                  <!-- show row error  -->
-                     <td v-show="item.user_gender.length==0">{{item.stt}}</td>
-                  <td v-show="item.user_name.length==0">{{item.stt}}</td>
+             <td>{{ item.user_code }}</td>  
+              <!-- show row error  -->     
+             <td>{{item.stt}} </td>  
+            
+                  
+                  
                  
-                  <td v-show="item.user_address.length==0">{{item.stt}}</td>
-                   <td v-show="item.user_code.length==0">{{item.stt}}</td>
-                  <td v-show="item.user_phone.length==0">{{item.stt}}</td>
-
-                   <td v-show="item.survey_type.length==0">{{item.stt}}</td>
-                  <td v-show="item.survey_name.length==0">{{item.stt}}</td>
-                   <td v-show="item.survey_code.length==0">{{item.stt}}</td>
-                   <td v-show="item.user_yearofbirth.length==0">{{item.stt}}</td>
-                   <td v-show="item.survey_day.length==0">{{item.stt}}</td>
-                   <td v-show="item.user_province.length==0">{{item.stt}}</td>
-                   <td v-show="item.user_career.length==0">{{item.stt}}</td>
-                   <td v-show="item.user_hoobit.length==0">{{item.stt}}</td>
-                   <td v-show="item.story_success.length==0">{{item.stt}}</td>
-                   <td v-show="item.course_goal.length==0">{{item.stt}}</td>
-                   <td v-show="item.course_action.length==0">{{item.stt}}</td>
-                   <td v-show="item.course_final_rate.length==0">{{item.stt}}</td>
-                   <td v-show="item.user_typeofsick.length==0">{{item.stt}}</td>
-                   <td v-show="item.year_foundout.length==0">{{item.stt}}</td>
-                   <td v-show="item.participation_package.length==0">{{item.stt}}</td>
-                   <td v-show="item.survey_type_code.length==0">{{item.stt}}</td>
-                   <td v-show="item.category_code.length==0">{{item.stt}}</td>
-                   <td v-show="item.category.length==0">{{item.stt}}</td>
-                   <td v-show="item.sub_category_code.length==0">{{item.stt}}</td>
-                   <td v-show="item.sub_category.length==0">{{item.stt}}</td>
-                   <td v-show="item.import_day.length==0">{{item.stt}}</td>
-                   <td v-show="item.question_code.length==0">{{item.stt}}</td>
-                   <td v-show="item.question_number.length==0">{{item.stt}}</td>
-                   <td v-show="item.question_answer.length==0">{{item.stt}}</td>
-                   <td v-show="item.question_result.length==0">{{item.stt}}</td>
-
 
                    <!-- show column error  -->
-                  <td v-show="item.user_gender.length==0">{{"Giới Tính"}}</td>
-                  <td v-show="item.user_name.length==0">{{"Họ Tên"}}</td>
-                  <!-- <td v-show="item.user_name.length<5||item.user_name.length>30">{{"Họ Tên"}}</td> -->
-
-                  <td v-show="item.user_address.length==0">{{"Địa chỉ"}}</td>
-                   <td v-show="item.user_code.length==0">{{"Mã số"}}</td>
-                  <td v-show="item.user_phone.length==0">{{"Số điện thoại"}}</td>
-                   <td v-show="item.survey_type.length==0">{{"Loại khảo sát"}}</td>
-                  <td v-show="item.survey_name.length==0">{{"Tên khảo sát"}}</td>
-                   <td v-show="item.survey_code.length==0">{{"Mã khảo sát"}}</td>
-                   <td v-show="item.user_yearofbirth.length==0">{{"Năm sinh"}}</td>
-                   <td v-show="item.survey_day.length==0">{{"Ngày thực hiện khảo sát"}}</td>
-                   <td v-show="item.user_province.length==0">{{"Tỉnh thành"}}</td>
-                   <td v-show="item.user_career.length==0">{{"Nghề nghiệp"}}</td>
-                   <td v-show="item.user_hoobit.length==0">{{"Sở thích"}}</td>
-                   <td v-show="item.story_success.length==0">{{"Câu chuyện thành công"}}</td>
-                   <td v-show="item.course_goal.length==0">{{"Mục tiêu khóa học"}}</td>
-                   <td v-show="item.course_action.length==0">{{"Kế hoạch hành động"}}</td>
-                   <td v-show="item.course_final_rate.length==0">{{"Đánh giá cuối khóa"}}</td>
-                   <td v-show="item.user_typeofsick.length==0">{{"Loại bệnh"}}</td>
-                   <td v-show="item.year_foundout.length==0">{{"Năm phát hiện"}}</td>
-                   <td v-show="item.participation_package.length==0">{{"Gói tham gia"}}</td>
-                   <td v-show="item.survey_type_code.length==0">{{"Mã loại khảo sát"}}</td>
-                   <td v-show="item.category_code.length==0">{{"Mã category"}}</td>
-                   <td v-show="item.category.length==0">{{"Category"}}</td>
-                   <td v-show="item.sub_category_code.length==0">{{"Mã Subcategory"}}</td>
-                   <td v-show="item.sub_category.length==0">{{"Subcategory"}}</td>
-                   <td v-show="item.import_day.length==0">{{"Ngày import"}}</td>
-                   <td v-show="item.question_code.length==0">{{"Mã câu hỏi"}}</td>
-                   <td v-show="item.question_number.length==0">{{"Câu hỏi"}}</td>
-                   <td v-show="item.question_answer.length==0">{{"Câu trả lời"}}</td>
-                   <td v-show="item.question_result.length==0">{{"Kết quả"}}</td>
-          
-
-
+              <td>
+                   <p    v-show="item.user_gender.length==0">{{"Giới Tính"}}      </p>  
+                   <p    v-show="item.user_name.length==0">{{"Họ Tên"}}      </p>  
+                   <p    v-show="item.user_address.length==0">{{"Địa chỉ"}}      </p>  
+                   <p    v-show="item.user_code.length==0">{{"Mã số"}}      </p>  
+                   <p    v-show="item.user_phone.length==0">{{"Số điện thoại"}}      </p>  
+                   <p    v-show="item.survey_type.length==0">{{"Loại khảo sát"}}      </p>  
+                   <p    v-show="item.survey_name.length==0">{{"Tên khảo sát"}}      </p>  
+                   <p    v-show="item.survey_code.length==0">{{"Mã khảo sát"}}      </p>  
+                   <p    v-show="item.user_yearofbirth.length==0">{{"Năm sinh"}}      </p>  
+                   <p    v-show="item.survey_day.length==0">{{"Ngày thực hiện khảo sát"}}      </p>  
+                   <p    v-show="item.user_province.length==0">{{"Tỉnh thành"}}      </p>  
+                   <p    v-show="item.user_career.length==0">{{"Nghề nghiệp"}}      </p>  
+                   <p    v-show="item.user_hoobit.length==0">{{"Sở thích"}}      </p>  
+                   <p    v-show="item.story_success.length==0">{{"Câu chuyện thành công"}}      </p>  
+                   <p    v-show="item.course_goal.length==0">{{"Mục tiêu khóa học"}}      </p>  
+                   <p    v-show="item.course_action.length==0">{{"Kế hoạch hành động"}}      </p>  
+                   <p    v-show="item.course_final_rate.length==0">{{"Đánh giá cuối khóa"}}      </p>  
+                   <p    v-show="item.user_typeofsick.length==0">{{"Loại bệnh"}}      </p>  
+                   <p    v-show="item.year_foundout.length==0">{{"Năm phát hiện"}}      </p>  
+                   <p    v-show="item.participation_package.length==0">{{"Gói tham gia"}}      </p>  
+                   <p    v-show="item.survey_type_code.length==0">{{"Mã loại khảo sát"}}      </p>  
+                   <p    v-show="item.category_code.length==0">{{"Mã category"}}      </p>  
+                   <p    v-show="item.category.length==0">{{"Category"}}      </p>  
+                   <p    v-show="item.sub_category_code.length==0">{{"Mã Subcategory"}}      </p>  
+                   <p    v-show="item.sub_category.length==0">{{"Subcategory"}}      </p>  
+                   <p    v-show="item.import_day.length==0">{{"Ngày import"}}      </p>  
+                   <p    v-show="item.question_code.length==0">{{"Mã câu hỏi"}}      </p>  
+                   <p    v-show="item.question_number.length==0">{{"Câu hỏi"}}      </p>  
+                   <p    v-show="item.question_answer.length==0">{{"Câu trả lời"}}      </p>  
+                   <p    v-show="item.question_result.length==0">{{"Kết quả"}}      </p>  
+              </td>
+             
 
 
                   <!-- show details  -->
-                  <td v-show="item.user_gender.length==0" style="color:red">{{ "Thiếu thông tin giới tính" }}</td>
-                  <td v-show="item.user_name.length==0" style="color:red">{{  "Thiếu họ tên" }}</td>
-                   <!-- <td v-show="item.user_name.length<5||item.user_name.length>30" style="color:red">{{  "Vượt quá ký tự cho phép" }}</td> -->
-
-                  <td v-show="item.user_address.length==0" style="color:red">{{ "Thiếu thông tin địa chỉ" }}</td>
-                   <td v-show="item.user_code.length==0" style="color:red">{{" Thiếu Mã số"}}</td>
-                   <td  v-show="item.survey_type.length==0" style="color:red">{{" Thiếu Loại khảo sát"}}</td>
-                   <td v-show="item.survey_name.length==0" style="color:red">{{" Thiếu Tên khảo sát"}}</td>
-                   <td  v-show="item.survey_code.length==0" style="color:red">{{" Thiếu Mã khảo sát"}}</td>
-                   <td v-show="item.user_yearofbirth.length==0" style="color:red">{{" Thiếu Năm sinh"}}</td>
-                   <td v-show="item.survey_day.length==0" style="color:red">{{"Thiếu Ngày thực hiện khảo sát"}}</td>
-                   <td v-show="item.user_province.length==0" style="color:red">{{"Thiếu Tỉnh thành"}}</td>
-                   <td v-show="item.user_career.length==0" style="color:red">{{" Thiếu Nghề nghiệp"}}</td>
-                   <td v-show="item.user_hoobit.length==0" style="color:red">{{"Thiếu Sở thích"}}</td>
-                   <td v-show="item.story_success.length==0" style="color:red">{{" Thiếu Câu chuyện thành công"}}</td>
-                   <td v-show="item.course_goal.length==0" style="color:red">{{" Thiếu Mục tiêu khóa học"}}</td>
-                   <td v-show="item.course_action.length==0" style="color:red">{{" Thiếu Kế hoạch hành động"}}</td>
-                   <td v-show="item.course_final_rate.length==0" style="color:red">{{" Thiếu Đánh giá cuối khóa"}}</td>
-                   <td v-show="item.user_typeofsick.length==0" style="color:red">{{"Thiếu Loại bệnh"}}</td>
-                   <td v-show="item.year_foundout.length==0" style="color:red">{{"Thiếu Năm phát hiện"}}</td>
-                   <td v-show="item.participation_package.length==0" style="color:red">{{"Thiếu Gói tham gia"}}</td>
-                   <td v-show="item.survey_type_code.length==0" style="color:red">{{"Thiếu Mã loại khảo sát"}}</td>
-                   <td v-show="item.category_code.length==0" style="color:red">{{"Thiếu Mã category"}}</td>
-                   <td v-show="item.category.length==0" style="color:red">{{"Thiếu Category"}}</td>
-                   <td v-show="item.sub_category_code.length==0" style="color:red">{{"Thiếu Mã Subcategory"}}</td>
-                   <td v-show="item.sub_category.length==0" style="color:red">{{"Thiếu Subcategory"}}</td>
-                   <td v-show="item.import_day.length==0" style="color:red">{{"Thiếu Ngày import"}}</td>
-                   <td v-show="item.question_code.length==0" style="color:red">{{"Thiếu Mã câu hỏi"}}</td>
-                   <td v-show="item.question_number.length==0" style="color:red">{{"Thiếu Câu hỏi"}}</td>
-                   <td v-show="item.question_answer.length==0" style="color:red">{{"Thiếu Câu trả lời"}}</td>
-                   <td v-show="item.question_result.length==0" style="color:red">{{"Thiếu Kết quả"}}</td>
-          
-
-               
-        
-               <!-- <td >{{ user_code2 }}</td> -->
+                 
+                 <td>
+                    <p    v-show="item.user_gender.length==0" style="color:red">{{ "Thiếu thông tin bắt buộc: Giới tính"}}</p> 
+                    <p    v-show="item.user_gender.length==0" style="color:red">{{ "Thiếu thông tin bắt buộc: Số điện thoại"}}</p> 
+                  <p    v-show="item.user_name.length==0" style="color:red">{{  "Thiếu thông tin bắt buộc: Họ tên"}}   </p>           
+                    <p    v-show="item.user_address.length==0" style="color:red">{{ "Thiếu thông tin bắt buộc: địa chỉ"}}   </p>                   
+                    <p    v-show="item.user_code.length==0" style="color:red">{{" Thiếu thông tin bắt buộc: Mã số"}}   </p>                    
+                    <p    v-show="item.survey_type.length==0" style="color:red">{{" Thiếu Loại khảo sát"}}     </p>                      
+                    <p    v-show="item.survey_name.length==0" style="color:red">{{" Thiếu Tên khảo sát"}}     </p>                      
+                    <p    v-show="item.survey_code.length==0" style="color:red">{{" Thiếu Mã khảo sát"}}     </p>   
+                    <p    v-show="item.user_yearofbirth.length==0" style="color:red">{{" Thiếu thông tin bắt buộc: Năm sinh"}}     </p>     
+                    <p    v-show="item.survey_day.length==0" style="color:red">{{"Thiếu Ngày thực hiện khảo sát"}}     </p>  
+                    <p    v-show="item.user_province.length==0" style="color:red">{{"Thiếu Tỉnh thành"}}     </p>  
+                    <p    v-show="item.user_career.length==0" style="color:red">{{" Thiếu Nghề nghiệp"}}     </p>  
+                    <p    v-show="item.user_hoobit.length==0" style="color:red">{{"Thiếu Sở thích"}}     </p>  
+                    <p    v-show="item.story_success.length==0" style="color:red">{{" Thiếu Câu chuyện thành công"}}     </p>  
+                    <p    v-show="item.course_goal.length==0" style="color:red">{{" Thiếu Mục tiêu khóa học"}}     </p>  
+                    <p    v-show="item.course_action.length==0" style="color:red">{{" Thiếu Kế hoạch hành động"}}     </p>  
+                    <p    v-show="item.course_final_rate.length==0" style="color:red">{{" Thiếu Đánh giá cuối khóa"}}     </p>  
+                    <p    v-show="item.user_typeofsick.length==0" style="color:red">{{"Thiếu Loại bệnh"}}     </p>  
+                    <p    v-show="item.year_foundout.length==0" style="color:red">{{"Thiếu thông tin bắt buộc: Năm phát hiện"}}     </p>  
+                    <p    v-show="item.participation_package.length==0" style="color:red">{{"Thiếu Gói tham gia"}}     </p>  
+                    <p    v-show="item.survey_type_code.length==0" style="color:red">{{"Thiếu Mã loại khảo sát"}}     </p>  
+                    <p    v-show="item.category_code.length==0" style="color:red">{{"Thiếu Mã category"}}     </p>  
+                    <p    v-show="item.category.length==0" style="color:red">{{"Thiếu Category"}}     </p>  
+                    <p    v-show="item.sub_category_code.length==0" style="color:red">{{"Thiếu Mã Subcategory"}}     </p>  
+                    <p    v-show="item.sub_category.length==0" style="color:red">{{"Thiếu Subcategory"}}     </p>  
+                    <p    v-show="item.import_day.length==0" style="color:red">{{"Thiếu Ngày import"}}     </p>  
+                    <p    v-show="item.question_code.length==0" style="color:red">{{"Thiếu Mã câu hỏi"}}     </p>   
+                    <p    v-show="item.question_number.length==0" style="color:red">{{"Thiếu Câu hỏi"}}     </p>   
+                    <p    v-show="item.question_answer.length==0" style="color:red">{{"Thiếu Câu trả lời"}}     </p>  
+                    <p    v-show="item.question_result.length==0" style="color:red">{{"Thiếu thông tin bắt buộc: Kết quả"}}     </p>  
+                  
+                 </td>
+              
                 </template>
               </template-table>
 
@@ -182,7 +146,8 @@
         </b-col>
       </b-row>
     </b-container>
-        <user-import-modal/>
+        <user-import-modal v-bind:staff_list="NotNullItems"/>
+        <user-import-modal2 v-bind:staff_list="NotNullItems"/>
 
   </div>
 
@@ -196,26 +161,14 @@
     }
   }
 }
-td {
-  white-space: nowrap;
-  word-wrap: normal;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: center;
-  width: 50px;
-}
 
-table {
-  width: 100%;
-  table-layout: fixed;
-}
 div {
   white-space: nowrap;
   word-wrap: normal;
   text-align: center;
 }
 p {
-  text-align: left;
+ // text-align: left;
 }
 .inline {
   display: inline-block;
@@ -230,6 +183,24 @@ p {
   // justify-content: space-between; /* switched from default (flex-start, see below) */
   // background-color: lightyellow;
 }
+#showdetails{
+  
+}
+span{
+ // display: inline-block;
+  
+}
+p{
+ //word-wrap:break-word;
+}
+.table {
+  width:500px;
+    table-layout:fixed;
+}
+
+.details{
+  float: right;
+}
 // data {
 //   white-space: nowrap;
 // }
@@ -238,7 +209,9 @@ p {
 <script>
 
 export default {
-  components: { 'user-import-modal': () => import('./messages/messageContinue.vue') },
+  components: { 'user-import-modal': () => import('./messages/messageContinue.vue'),
+  
+            'user-import-modal2': () => import('./messages/messageSuccess.vue')  },
 
   props: {
     staff_list: {
@@ -282,7 +255,7 @@ export default {
           sortable: false,
         },
         {
-              key: 'column_error',
+          key: 'column_error',
           label: 'Cột có lỗi',
           sortable: false,
         },
@@ -294,6 +267,7 @@ export default {
         },
       ],
       data: [],
+     
     };
   },
   computed: {
@@ -312,6 +286,37 @@ export default {
       return totalcount;
     },
     
+    NullItems: function() {
+      return this.staff_list.filter(function(item) {
+        return item.user_name == '' || item.user_code=='' ||item.user_gender=='' || item.user_address==''||item.survey_type==''||item.survey_name==''
+        ||item.survey_code==''||item.user_yearofbirth==''||item.survey_day=='Invalid date'||item.user_yearofbirth==''||item.user_province==''
+        ||item.user_career==''||item.user_hoobit==''||item.story_success==''||item.course_goal==''||item.course_action==''||item.course_final_rate==''
+        ||item.user_typeofsick==''||item.year_foundout==''||item.participation_package==''||item.survey_type_code==''||item.category_code==''
+        ||item.category==''||item.sub_category_code==''||item.sub_category==''||item.import_day=='Invalid date'||item.question_code==''
+        ||item.question_number==''||item.question_answer==''||item.question_result=='';
+      });
+    },
+     NotNullItems: function() {
+      return this.staff_list.filter(function(item) {
+          return  item.user_name !=''&& item.user_code!=''&&item.user_gender!=''&& item.user_address!=''&&item.survey_type!=''&&item.survey_name!=
+        ''&&item.survey_code!=''&&item.user_yearofbirth!=''&&item.survey_day!='Invalid date'&&item.user_yearofbirth!=''&&item.user_province!=
+        ''&&item.user_career!=''&&item.user_hoobit!=''&&item.story_success!=''&&item.course_goal!=''&&item.course_action!=''&&item.course_final_rate!=
+        ''&&item.user_typeofsick!=''&&item.year_foundout!=''&&item.participation_package!=''&&item.survey_type_code!=''&&item.category_code!=
+        ''&&item.category!=''&&item.sub_category_code!=''&&item.sub_category!=''&&item.import_day!='Invalid date'&&item.question_code!=
+        ''&&item.question_number!=''&&item.question_answer!=''&&item.question_result!='';
+      
+      });
+    },
+  NullLength: function () {
+      
+     
+      var totalcount2 = this.NullItems.length;
+      
+      return totalcount2;
+    },
+
+    
+   
   },
   created() {},
   watch: {
@@ -328,12 +333,17 @@ export default {
   {
       
       this.$bvModal.show('user-import-modal');
+       
+       setTimeout(() => {  this.$bvModal.show('user-import-modal2'); }, 8000);
         
   }
 
   },
   mounted() {
     // this.loadData();
+     
+     
+    
   },
 
   

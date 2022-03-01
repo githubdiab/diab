@@ -3,7 +3,7 @@
   <b-modal
     id="user-import-modal"
     ref="user-import-modal"
-    
+    hide-header
     
   >
             <div style="text-align:center; margin:5px; padding: 10px;">
@@ -31,7 +31,7 @@
         <b-button
           class="btn btn-success ml-2"
           href="#"
-          @click="goback"
+          @click="goback()"
           tabindex="0"
           style="width:90px"
         >
@@ -43,7 +43,7 @@
         <b-button
           class="btn btn-success ml-2"
           href="#"
-          @click="handleClick"
+          @click="handleClick()"
           tabindex="0"
         >
         <span class="svg-icon">
@@ -61,7 +61,14 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
+  props:{
+  staff_list:{
+    type: Array,
+    default: ()=>[],
+  }
+  },
   name: 'Modal',
  
   computed: {},
@@ -81,8 +88,37 @@ export default {
   },
   methods: {
     handleClick() {
-    
+    this.addUser();
+    this.goback();
     },
+    async  addUser() {
+       
+      for(let i=0;i<=Number(this.staff_list.length);i++)
+      {
+    await axios.post('https://localhost:44380/api/accountimport', null, {
+        params: {
+            
+          user_name: this.staff_list[i].user_name,
+          user_code: this.staff_list[i].user_code,
+          user_gender: this.staff_list[i].user_gender,
+          user_yearofbirth: this.staff_list[i].user_yearofbirth,
+          user_career: this.staff_list[i].user_career,
+          user_phone: this.staff_list[i].user_phone,
+          user_hoobit: this.staff_list[i].user_hoobit,
+          user_address: this.staff_list[i].user_address,
+          user_province: this.staff_list[i].user_province,
+          story_success: this.staff_list[i].story_success,
+          user_typeofsick: this.staff_list[i].user_typeofsick,
+          year_foundout:this.staff_list[i].year_foundout,
+           
+        },
+         
+        });;
+    await  axios.get('https://localhost:44380/api/accountimport/id',)
+  }
+   },
+   
+ 
     goback() {
       this.$bvModal.hide('user-import-modal');
     },

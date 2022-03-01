@@ -18,6 +18,7 @@ namespace DiaB.Middle.Mappers
                 .ForMember(dest => dest.SurveyType, opt => opt.MapFrom(src => src.SurveyType))
                 .ForMember(dest => dest.SurveyCode, opt => opt.MapFrom(src => src.SurveyCode))
                 .ForMember(dest => dest.ImportDay, opt => opt.MapFrom(src => src.ImportDay))
+            //    .ForMember(dest => dest.id, opt => opt.MapFrom(src => src.UserId))
                 .ForMember(dest => dest.SurveyStatus, opt => opt.MapFrom(src => src.SurveyImportResult != null ? "1" : "0"));
 
             this.CreateMap<SurveyImportDtos.AppFilter, SurveyImportDtos.Filter>(MemberList.Source)

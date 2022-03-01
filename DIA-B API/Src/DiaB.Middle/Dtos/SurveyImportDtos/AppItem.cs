@@ -24,6 +24,8 @@ namespace DiaB.Middle.Dtos.SurveyImportDtos
             public DateTime? ImportDay { get; set; }
 
             public string SurveyStatus { get; set; }
+
+    //        public string id { get; set; }
         }
     }
 }
