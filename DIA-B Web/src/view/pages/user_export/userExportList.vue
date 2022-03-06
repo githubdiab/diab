@@ -26,8 +26,8 @@
               <b-row>
                 <b-col>
                   <basic-input
-                    label="Mã bệnh nhân"
-                    placeholder="Nhập mã bệnh nhân"
+                    label="Mã HV"
+                    placeholder="Nhập mã hv"
                     name="userCode"
                     :value.sync="filter.UserCode"
                   ></basic-input>
@@ -35,7 +35,7 @@
                 <b-col>
                   <basic-input
                     label="Tên HL"
-                    placeholder="Nhập tên bệnh nhân"
+                    placeholder="Nhập tên hv"
                     name="name"
                     :value.sync="filter.Username"
                   ></basic-input>
@@ -226,7 +226,7 @@
                       </action-dropdown>
                     </td>
                     <td>
-                      {{ item.userCode }}
+                      {{ item.surveyType }}
                     </td>
                     <td>
                       {{ item.surveyCode }}
@@ -310,7 +310,7 @@ export default {
         },
         {
           key: 'username',
-          label: 'Bệnh nhân',
+          label: 'Tên HV',
           sortable: false,
         },
         {
@@ -319,8 +319,8 @@ export default {
           sortable: false,
         },
         {
-          key: 'UserCode',
-          label: 'Mã người bệnh',
+          key: 'surveyType',
+          label: 'Loại khảo sát',
           sortable: false,
         },
         {

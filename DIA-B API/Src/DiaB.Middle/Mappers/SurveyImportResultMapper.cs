@@ -45,7 +45,7 @@ namespace DiaB.Middle.Mappers
                 .ForMember(dest => dest.KntcsNxtq, opt => opt.MapFrom(src => src.KntcsNxtq))
 
                 .ForMember(dest => dest.MdrcDtVal, opt => opt.MapFrom(src => src.MdrcDtVal))
-                .ForMember(dest => dest.MdrcDhVal, opt => opt.MapFrom(src => src.MdrcDhVal))
+                .ForMember(dest => dest.MdrcTddhVal, opt => opt.MapFrom(src => src.MdrcTddhVal))
                 .ForMember(dest => dest.MdrcCdvdVal, opt => opt.MapFrom(src => src.MdrcCdvdVal))
                 .ForMember(dest => dest.MdrcCdauVal, opt => opt.MapFrom(src => src.MdrcCdauVal))
                 .ForMember(dest => dest.MdrcVal, opt => opt.MapFrom(src => src.MdrcVal))

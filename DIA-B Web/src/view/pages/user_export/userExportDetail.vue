@@ -511,10 +511,10 @@
                     <b-col>
                       <span
                         class="font-weight-bold text-muted font-size-lg mr-2"
-                        >Đường huyết</span
+                        >Theo dõi dường huyết</span
                       >
                       <span class="font-weight-bolder text-right">
-                        {{ form.mdrcDhVal }}</span
+                        {{ form.mdrcTddhVal }}</span
                       >
                     </b-col>
                   </b-row>

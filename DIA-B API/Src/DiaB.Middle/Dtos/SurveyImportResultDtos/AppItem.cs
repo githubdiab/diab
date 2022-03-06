@@ -42,7 +42,7 @@ namespace DiaB.Middle.Dtos.SurveyImportResultDtos
             public int KntcsVal { get; set; }
             public string KntcsNxtq { get; set; }
             public int MdrcDtVal { get; set; }
-            public int MdrcDhVal { get; set; }
+            public int MdrcTddhVal { get; set; }
             public int MdrcCdvdVal { get; set; }
             public int MdrcCdauVal { get; set; }
             public int MdrcVal { get; set; }
