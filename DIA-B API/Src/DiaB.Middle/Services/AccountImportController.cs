@@ -1,4 +1,4 @@
-﻿using DiaB.Test.Models;
+﻿using DiaB.Middle.Dtos.AccountImportDtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
@@ -8,62 +8,24 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiaB.Test.Controllers
+namespace DiaB.Middle.Services
 {
     [Route("api/[controller]")]
 
-    public class SurveyImportDetailsController : Controller
+    public class AccountImportController : Controller
     {
+
         private readonly IConfiguration _configuration;
-        public IActionResult Index()
-        {
-            return View();
-        }
 
-
-
-
-
-        [HttpGet("user_code")]
-
-        public JsonResult GetuserCode(int id)
-        {
-
-
-            string query = @"select user_code  from account_imports where @id= id";
-
-            DataTable table = new DataTable();
-            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
-
-
-            MySqlDataReader myReader;
-            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
-)
-            {
-                myconn.Open();
-                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
-                {
-                    cmd.Parameters.AddWithValue("@id",id);
-
-                    myReader = cmd.ExecuteReader();
-                    table.Load(myReader);
-                    myReader.Close();
-                    myconn.Close();
-                }
-            }
-            return new JsonResult(table);
-        }
-
-      
-
-        [HttpGet]
+        [HttpGet("id")]
 
         public JsonResult Get()
         {
 
 
-            string query = @"select * from survey_import_details ";
+            string query = @"SELECT account_imports.id 
+                                 FROM account_imports
+                                 where id not in (select user_id from survey_imports order by user_id ASC) ";
 
             DataTable table = new DataTable();
             //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
@@ -87,12 +49,12 @@ namespace DiaB.Test.Controllers
         }
 
 
-        [HttpGet("survey_id")]
-        public JsonResult Get_detail(string user_id)
+        [HttpGet("account")]
+        public JsonResult GetAll()
         {
 
 
-            string query = @"select * from survey_import_details where survey_id in (select survey_imports.id from survey_imports where survey_imports.user_id = @user_id)";
+            string query = @"select * from account_imports order by id ASC  ";
 
             DataTable table = new DataTable();
             //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
@@ -106,7 +68,6 @@ namespace DiaB.Test.Controllers
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
-                    cmd.Parameters.AddWithValue("@user_id",user_id);
                     myReader = cmd.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -114,19 +75,62 @@ namespace DiaB.Test.Controllers
                 }
             }
             return new JsonResult(table);
+        }
+
+
+
+
+        [HttpGet("{user_code}")]
+        public JsonResult GetUserCode()
+        {
+
+            string query = @"select user_code from account_imports ";
+
+
+            DataTable table = new DataTable();
+            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
+
+
+
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+
+
+                }
+
+
+            }
+
+            return new JsonResult(table);
+
+
         }
 
         [HttpPost]
-        public JsonResult Post(SurveyImportDetails sid)
+        public JsonResult Post(AccountImport acc)
         {
 
 
-            string query = @"insert into survey_import_details(id,is_deleted,survey_id,category_code,category,sub_category_code,sub_category,question_code,question_number,question_answer,question_result)
-               values(@id,@is_deleted,@survey_id,@category_code,@category,@sub_category_code,@sub_category,@question_code,@question_number,@question_answer,@question_result)";
+
+            string query = @"insert into account_imports(id,is_deleted,user_code,user_name,user_gender,user_yearofbirth,user_career,user_phone,user_hoobit,user_address,user_province,story_success,user_typeofsick,year_foundout,creator_id,updater_id)
+               values(@id,@is_deleted,@user_code,@user_name,@user_gender,@user_yearofbirth,@user_career,@user_phone,@user_hoobit,@user_address,@user_province,@story_success,@user_typeofsick,@year_foundout,@creator_id,@updater_id)
+                 ON DUPLICATE KEY UPDATE user_code=@user_code";
 
             DataTable table = new DataTable();
             //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
             /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
+
+
 
 
             MySqlDataReader myReader;
@@ -134,30 +138,41 @@ namespace DiaB.Test.Controllers
 )
             {
                 myconn.Open();
+
+
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
                     cmd.Parameters.AddWithValue("@id", Guid.NewGuid());
                     cmd.Parameters.AddWithValue("@is_deleted", 0);
-                    cmd.Parameters.AddWithValue("@survey_id", sid.survey_id);
-                    cmd.Parameters.AddWithValue("@category_code", sid.category_code);
-                    cmd.Parameters.AddWithValue("@category", sid.category);
-                    cmd.Parameters.AddWithValue("@sub_category_code", sid.sub_category_code);
-                    cmd.Parameters.AddWithValue("@sub_category", sid.sub_category);
-                    cmd.Parameters.AddWithValue("@question_code", sid.question_code);
-                    cmd.Parameters.AddWithValue("@question_number", sid.question_number);
-                    cmd.Parameters.AddWithValue("@question_answer", sid.question_answer);
-                    cmd.Parameters.AddWithValue("@question_result", sid.question_result);
-                 
-
+                    cmd.Parameters.AddWithValue("@user_code", acc.user_code);
+                    cmd.Parameters.AddWithValue("@user_name", acc.user_name);
+                    cmd.Parameters.AddWithValue("@user_gender", acc.user_gender);
+                    cmd.Parameters.AddWithValue("@user_yearofbirth", acc.user_yearofbirth);
+                    cmd.Parameters.AddWithValue("@user_address", acc.user_address);
+                    cmd.Parameters.AddWithValue("@user_province", acc.user_province);
+                    cmd.Parameters.AddWithValue("@story_success", acc.story_success);
+                    cmd.Parameters.AddWithValue("@user_typeofsick", acc.user_typeofsick);
+                    cmd.Parameters.AddWithValue("@year_foundout", acc.year_foundout);
+                    cmd.Parameters.AddWithValue("@user_career", acc.user_career);
+                    cmd.Parameters.AddWithValue("@user_phone", acc.user_phone);
+                    cmd.Parameters.AddWithValue("@user_hoobit", acc.user_hoobit);
+                    cmd.Parameters.AddWithValue("@creator_id", "cb356d0b-b62b-4418-a295-b2b71393fba6");
+                    cmd.Parameters.AddWithValue("@updater_id", "cb356d0b-b62b-4418-a295-b2b71393fba6");
 
                     myReader = cmd.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
                     myconn.Close();
+
                 }
             }
+
+
             return new JsonResult("Adding Success");
+            // Get();
         }
+
+
 
         /*  [HttpPut]
           public JsonResult Put(AccountImport acc)

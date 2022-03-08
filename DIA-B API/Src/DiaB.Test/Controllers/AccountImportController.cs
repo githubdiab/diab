@@ -33,7 +33,7 @@ namespace DiaB.Test.Controllers
 
                 string query = @"SELECT account_imports.id 
                                  FROM account_imports
-                                 where id not in (select user_id from survey_imports)";
+                                 where id not in (select user_id from survey_imports order by user_id ASC) ";
 
                 DataTable table = new DataTable();
                 //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
@@ -62,7 +62,7 @@ namespace DiaB.Test.Controllers
         {
 
 
-            string query = @"select * from account_imports ";
+            string query = @"select * from account_imports order by id ASC  ";
 
             DataTable table = new DataTable();
             //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
@@ -88,42 +88,42 @@ namespace DiaB.Test.Controllers
 
 
 
-        /* [HttpGet("{user_code}")]
-         public JsonResult GetbyID(int user_code)
-         {
+        [HttpGet("{user_code}")]
+        public JsonResult GetUserCode()
+        {
 
-             string query = @"select id from account_imports where user_code=@user_code";
-
-
-             DataTable table = new DataTable();
-             //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-             *//*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*//*
+            string query = @"select user_code from account_imports ";
 
 
-             MySqlDataReader myReader;
-             using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
- )
-             {
-                 myconn.Open();
-                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
-                 {
-                     cmd.Parameters.AddWithValue("@user_code", user_code);
-                     myReader = cmd.ExecuteReader();
-                     table.Load(myReader);
-                     myReader.Close();
-                     myconn.Close();
+            DataTable table = new DataTable();
+            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
 
 
-                 }
+
+          MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                  
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
 
 
-             }
-
-               return new JsonResult(table);
+                }
 
 
-         }
- */
+            }
+
+            return new JsonResult(table);
+
+
+        }
+
         [HttpPost]
             public JsonResult Post(AccountImport acc)
             {
@@ -131,7 +131,8 @@ namespace DiaB.Test.Controllers
 
 
                 string query = @"insert into account_imports(id,is_deleted,user_code,user_name,user_gender,user_yearofbirth,user_career,user_phone,user_hoobit,user_address,user_province,story_success,user_typeofsick,year_foundout,creator_id,updater_id)
-               values(@id,@is_deleted,@user_code,@user_name,@user_gender,@user_yearofbirth,@user_career,@user_phone,@user_hoobit,@user_address,@user_province,@story_success,@user_typeofsick,@year_foundout,@creator_id,@updater_id)";
+               values(@id,@is_deleted,@user_code,@user_name,@user_gender,@user_yearofbirth,@user_career,@user_phone,@user_hoobit,@user_address,@user_province,@story_success,@user_typeofsick,@year_foundout,@creator_id,@updater_id)
+                 ON DUPLICATE KEY UPDATE user_code=@user_code";
 
                 DataTable table = new DataTable();
             //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");

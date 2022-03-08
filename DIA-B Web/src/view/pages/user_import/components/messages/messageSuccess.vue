@@ -4,7 +4,8 @@
     id="user-import-modal2"
     ref="user-import-modal2"
     hide-header
-    
+  no-close-on-backdrop
+  no-stacking
     
   >
             <div style="text-align:center; ">
@@ -15,14 +16,14 @@
            
           <div style="text-align:center;font-family: Nunito;font-style: normal;font-weight: normal;font-size: 14px;;">
           
-            Tổng số khách hàng import thành công: {{this.staff_list.length}}
+            Tổng số khách hàng import thành công: {{count_NewUser}}
          
          
           </div>
 
           <div style="text-align:center;font-family: Nunito;font-style: normal;font-weight: normal;font-size: 14px;;">
           
-             Tổng số bản ghi import thành công: {{this.account_list.length}} 
+             Tổng số bản ghi import thành công: {{this.staff_list.length}} 
          
           </div>
     <template #modal-footer style="text-align:center">
@@ -64,7 +65,34 @@ export default {
   },
   
   },
-  computed: {},
+  computed: {
+   
+   count_NewUser: function()
+   {  
+     const uniqueValues = new Set(this.staff_list.map(v => v.user_code));
+     let result =0;
+if (uniqueValues.size < this.staff_list.length) {
+ result =uniqueValues.size
+  }
+else
+  {
+result =uniqueValues.size;
+  }
+     return result
+   },
+  //    elimited: function() {
+  //     return this.staff_list.filter(function(item) {
+  //       return
+  //     });
+    
+
+  // },
+
+
+
+  },
+
+
   watch: {},
   // mounted() {this.$root.$on('Modal',()=>{
   //   this.handleClick()
@@ -88,7 +116,7 @@ export default {
     
   mounted(){
    
-   this.loadData_account();        
+  // this.loadData_account();        
     
 
     
@@ -100,7 +128,7 @@ export default {
    
     handleClick() {
      
-      this.AddSurvey();
+      this.AddSurveyDetails();
        this.$router.push({
         name: 'user_import_list',
          method:{
@@ -113,62 +141,51 @@ export default {
           })
   
     },
-  async AddSurvey ()
- {
- //  this.addUser();
-    
-    const data = await axios.get('https://localhost:44380/api/accountimport/id',{
-       params:{
-   
-       }
-     })
-    .then(res => res.data);
-   // const n = data.length 
-        for(let j=0;j<=Number(this.staff_list.length);j++)
-     {
-   await  axios.post('https://localhost:44380/api/surveyimport', null, {
-      params: {
-        
-        
-      user_id : data[j].id,
-     // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
-      course_goal: this.staff_list[j].course_goal,
-      course_action:this.staff_list[j].course_action,
-      course_final_rate:this.staff_list[j].course_final_rate,
-      participation_package:this.staff_list[j].participation_package,
-      survey_type_code:this.staff_list[j].survey_type_code,
-      survey_type:this.staff_list[j].survey_type,
-      survey_code:this.staff_list[j].survey_code,
-      survey_name:this.staff_list[j].survey_name,
-      survey_day:this.staff_list[j].survey_day,
-      import_day:this.staff_list[j].import_day,
-           
-        },
-      });
-     
-   //   await axios.get('https://localhost:44380/api/surveyimport')
-   this.AddSurveyDetails();
-     }
-    
- },
+  
   async AddSurveyDetails ()
  {
   // this.addUser();
  //  this.AddSurvey();
-     for(let k=0;k<=Number(this.staff_list.length);k++)
-     {
-    const data = await axios.get('https://localhost:44380/api/surveyimport/id',{
-       params:{
-   //     user_code:this.staff_list[i].user_code,
-   
-       }
-     })
-    .then(res => res.data);
+ 
+
+ const data = await axios.get('https://localhost:44380/api/surveyimport/id',{          // lay tat ca survey_id tu survey_imports
+        params:{}}).then(res => res.data);
 
     
-   await  axios.post('https://localhost:44380/api/surveyimportdetails', null, {
+const data_code = await axios.get('https://localhost:44380/api/accountimport/account',{        
+       params:{}}).then(res => res.data);
+
+
+//const number_question = await axios.get('https://localhost:44380/api/surveyimportdetails',{        
+     //  params:{}}).then(res => res.data);
+
+ //    var isInsert=false;
+     
+     // for(let m=0;m<=this.staff_list.length;m++)
+   // {
+      
+ 
+ //    n++;
+   //   }
+       //  let count=0;
+
+     for(let n=0;n<=data_code.length;n++)
+     {
+     for(let k=0;k<Number(this.staff_list.length);k++)
+     {
+       
+   
+           
+      { 
+       if((data_code[n].user_code===Number(this.staff_list[k].user_code))===true)
+       {
+       // return true ;  
+        // if(number_question[n].question_number!==this.staff_list[k].question_number)
+
+    {
+       await  axios.post('https://localhost:44380/api/surveyimportdetails', null, {
       params: {
-       survey_id : data[k].id,
+       survey_id : data[n].id,
      // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
        category_code : this.staff_list[k].category_code,
        category: this.staff_list[k].category,
@@ -180,9 +197,25 @@ export default {
        question_result:this.staff_list[k].question_result,
            
         },
-      });
+      });  
+     //   console.log(true,count++,[n , k]);
+    //   console.log(number_question[n].number_question)
+       }
+       if(data_code[n].user_code!==Number(this.staff_list[k].user_code))
+       {
+       console.log(false + [n,k]);                     
+       } 
+
+      
+    
+     }
+      }
+   
+   
      
   
+     }
+   
      }
  },
     goback() {

@@ -1,4 +1,4 @@
-﻿using DiaB.Test.Models;
+﻿using DiaB.Middle.Dtos.AccountImportDtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
@@ -7,19 +7,14 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-
-namespace DiaB.Test.Controllers
+namespace DiaB.Middle.Services
 {
     [Route("api/[controller]")]
 
     public class SurveyImportDetailsController : Controller
     {
         private readonly IConfiguration _configuration;
-        public IActionResult Index()
-        {
-            return View();
-        }
-
+      
 
 
 
@@ -44,7 +39,7 @@ namespace DiaB.Test.Controllers
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
-                    cmd.Parameters.AddWithValue("@id",id);
+                    cmd.Parameters.AddWithValue("@id", id);
 
                     myReader = cmd.ExecuteReader();
                     table.Load(myReader);
@@ -55,7 +50,7 @@ namespace DiaB.Test.Controllers
             return new JsonResult(table);
         }
 
-      
+
 
         [HttpGet]
 
@@ -106,7 +101,7 @@ namespace DiaB.Test.Controllers
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
-                    cmd.Parameters.AddWithValue("@user_id",user_id);
+                    cmd.Parameters.AddWithValue("@user_id", user_id);
                     myReader = cmd.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -147,7 +142,7 @@ namespace DiaB.Test.Controllers
                     cmd.Parameters.AddWithValue("@question_number", sid.question_number);
                     cmd.Parameters.AddWithValue("@question_answer", sid.question_answer);
                     cmd.Parameters.AddWithValue("@question_result", sid.question_result);
-                 
+
 
 
                     myReader = cmd.ExecuteReader();

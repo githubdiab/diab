@@ -69,7 +69,7 @@
                 type="button"
                 style="float: right"
             
-                @click="NoError()"
+                @click="NoError() , modalShow = !modalShow"
               
               >           
                 Validate
@@ -320,6 +320,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
         },
       ],
       data: [],
+        modalShow: false
     };
   },
   
@@ -333,7 +334,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
     },
     tableLength: function () {
      
-      let totalcount = this.staff_list.length ;
+      let totalcount = this.staff_list.length;
     //  var totalcount = this.column[2].key
       return totalcount;
     },
@@ -521,19 +522,16 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
         }
        else
        {
-         
-        
-     this.$nextTick(() => {
-
-      //  this.$bvModal.show('user-import-modal2');
-            this.$bvModal.show('user-import-modal');
+           this.$bvModal.show('user-import-modal');
            
-             setTimeout(() => {  this.$bvModal.show('user-import-modal2'); }, 8000);
-
-    //  this.$bvModal.show('user-import-modal');
-      },
+  
+          if(this.$bvModal.hide('user-import-modal'));
+          {
+            this.$bvModal.show('user-import-modal2');
+          }
+          
       
-      );
+      
        }
 
     },
