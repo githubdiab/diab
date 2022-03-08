@@ -20,7 +20,7 @@ namespace DiaB.Data.Database.Entities.Import
 
         public string SubCategory { get; set; }
 
-        public string Question_code { get; set; }
+        public string QuestionCode { get; set; }
 
         public string QuestionNumber { get; set; }
 

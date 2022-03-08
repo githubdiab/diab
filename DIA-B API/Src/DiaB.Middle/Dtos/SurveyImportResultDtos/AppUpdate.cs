@@ -30,6 +30,7 @@ namespace DiaB.Middle.Dtos.SurveyImportResultDtos
             public string Nxtq { get; set; }
             public string DxvmtNxtq { get; set; }
             public string KhvhdNxtq { get; set; }
+            public string CourseGoal { get; set; }
             public string Status { get; set; }
         }
     }

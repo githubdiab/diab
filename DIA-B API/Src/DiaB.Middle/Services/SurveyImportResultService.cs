@@ -35,6 +35,8 @@ namespace DiaB.Middle.Services
     {
         public IAccountImportService AccountImportService { get; set; }
         public IImageService ImageService { get; set; }
+        public ISurveyQuestionMappingService SurveyQuestionMappingService { get; set; }
+        public ISurveyRangeValueService ISurveyRangeValueService { get; set; }
 
         public SurveyImportResultService(IAppRepo<SurveyImportResultEntity> repo)
             : base(repo)
@@ -102,7 +104,9 @@ namespace DiaB.Middle.Services
                     del.DltdNxtq = input.DltdNxtq;
                     del.Nxtq = input.KtNxtq;
                     del.DxvmtNxtq = input.DxvmtNxtq;
-                    del.KhvhdNxtq = input.KtNxtq;
+                    del.KhvhdNxtq = input.KhvhdNxtq;
+
+                    del.SurveyImport.CourseGoal = input.CourseGoal;
 
                     del.SurveyImport.AccountImport.UserName = input.UserName;
                     del.SurveyImport.AccountImport.UserGender = input.UserGender;
@@ -112,6 +116,7 @@ namespace DiaB.Middle.Services
                     del.SurveyImport.AccountImport.UserProvince = input.UserProvince;
                     del.SurveyImport.AccountImport.UserTypeofsick = input.UserTypeofsick;
                     del.SurveyImport.AccountImport.YearFoundout = input.YearFoundout;
+                    del.SurveyImport.AccountImport.StorySuccess = input.StorySuccess;
                     del.SurveyImport.AccountImport.CoverId = coverId ?? entity.SurveyImport.AccountImport.CoverId;
                 },
                 context) as ICoreResultDto;
@@ -172,49 +177,624 @@ namespace DiaB.Middle.Services
                 await this.Delete(surveyImportEntity.SurveyResultId.Value, context);
             }
 
+            SurveyRangeValueEntity rangeValue = null;
+            var Nxtq = "";
+            var KtNxtq = "";
+
+            // BMI
+            var BmiVal = 0.0;
+            var BmiPhanloai = "";
+            var questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TTA0001CH", context);
+            if (questions.Count > 0)
+            {
+                var TTA0001CH04 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "TTA0001CH04" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var TTA0001CH04Val = 0.0;
+                if (TTA0001CH04 != null)
+                {
+                    double.TryParse(TTA0001CH04.QuestionAnswer, out TTA0001CH04Val);
+                }
+
+                var TTA0001CH05 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "TTA0001CH05" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var TTA0001CH05Val = 0.0;
+                if (TTA0001CH05 != null)
+                {
+                    double.TryParse(TTA0001CH05.QuestionAnswer, out TTA0001CH05Val);
+                }
+                if (TTA0001CH04Val != 0)
+                {
+                    BmiVal = Math.Round((TTA0001CH05Val / ((TTA0001CH04Val / 100) * (TTA0001CH04Val / 100))), 1);
+                }
+            }
+
+            rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("BMI", "BMI", BmiVal, context);
+            if (rangeValue != null)
+            {
+                BmiPhanloai = rangeValue.Description;
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    Nxtq += Nxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // HbA1C
+            var Hba1cVal = 0.0;
+            var Hba1cPhanloai = "";
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TTA0001CH08", context);
+            if (questions.Count > 0)
+            {
+                var TTA0001CH08 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "TTA0001CH08" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var TTA0001CH08Val = 0.0;
+                if (TTA0001CH08 != null)
+                {
+                    double.TryParse(TTA0001CH08.QuestionAnswer, out TTA0001CH08Val);
+                }
+
+                Hba1cVal = TTA0001CH08Val;
+            }
+
+            rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("HbA1C", "HbA1C", Hba1cVal, context);
+            if (rangeValue != null)
+            {
+                Hba1cPhanloai = rangeValue.Description;
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    Nxtq += Nxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Kiến thức
+            var KtVal = 0.0;
+
+            // Bệnh lý: KTD001CH01 ~ KTD001CH10
+            var KtBlVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTD001", context);
+            if (questions.Count > 0)
+            {
+                var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted 
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode && m.QuestionAnswer == r.QuestionAnswer)).Count();
+
+                KtBlVal = Math.Round(((countQuestionTrue * 10.0) / questions.Count), 1);
+                KtVal += KtBlVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Kiến thức", "Bệnh lý", KtBlVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KtNxtq += KtNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+          
+            // Theo dõi chỉ số: KTT001CH01 ~ KTT001CH05
+            var KtTdcsVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTT001", context);
+            if (questions.Count > 0)
+            {
+                var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode && m.QuestionAnswer == r.QuestionAnswer)).Count();
+
+                KtTdcsVal = Math.Round(((countQuestionTrue * 10.0) / questions.Count), 1);
+                KtVal += KtTdcsVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Kiến thức", "Theo dõi chỉ số", KtTdcsVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KtNxtq += KtNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+
+            }
+
+            // Dinh duong
+            var KtDdVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTN001", context);
+            if (questions.Count > 0)
+            {
+                var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode && m.QuestionAnswer == r.QuestionAnswer)).Count();
+
+                KtDdVal = Math.Round(((countQuestionTrue * 10.0) / questions.Count), 1);
+                KtVal += KtDdVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Kiến thức", "Dinh dưỡng", KtDdVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KtNxtq += KtNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+
+            }
+
+            // Vận động
+            var KtVdVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTE001", context);
+            if (questions.Count > 0)
+            {
+                var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode && m.QuestionAnswer == r.QuestionAnswer)).Count();
+
+                KtVdVal = Math.Round(((countQuestionTrue * 10.0) / questions.Count), 1);
+                KtVal += KtVdVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Kiến thức", "Vận động", KtVdVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KtNxtq += KtNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+
+            }
+            // TODO
+            var KtThVal = 0;
+            var KtTlhvVal = 0;
+            var KtPhanloai = "";
+            KtVal = Math.Round(KtVal / 4.0, 1);
+            rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Kiến thức", "Kiến thức", KtVal, context);
+            if (rangeValue != null)
+            {
+                KtPhanloai = rangeValue.Description;
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    Nxtq += Nxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+                
+            }
+
+            // Khả năng tự chăm sóc
+            var KntcsVal = 0.0;
+            var KntcsNxtq = "";
+
+            // Khả năng tự chăm sóc - Chế độ ăn uống
+            var KntcsCdauVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CSN001CH", context);
+            if (questions.Count > 0)
+            {
+                var CSN001CH01 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CSN001CH01" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CSN001CH01Val = 0.0;
+                if (CSN001CH01 != null)
+                {
+                   double.TryParse( CSN001CH01.QuestionAnswer,out CSN001CH01Val);
+                }
+
+                var CSN001CH02 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CSN001CH02" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CSN001CH02Val = 0.0;
+                if (CSN001CH02 != null)
+                {
+                    double.TryParse(CSN001CH02.QuestionAnswer, out CSN001CH02Val);
+                }
+
+                var CSN001CH03 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CSN001CH03" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CSN001CH03Val = 0.0;
+                if (CSN001CH03 != null)
+                {
+                    double.TryParse(CSN001CH03.QuestionAnswer, out CSN001CH03Val);
+                }
+
+                var CSN001CH04 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CSN001CH04" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CSN001CH04Val = 0.0;
+                if (CSN001CH04 != null)
+                {
+                    double.TryParse(CSN001CH04.QuestionAnswer, out CSN001CH04Val);
+                }
+
+
+                KntcsCdauVal = Math.Round((((CSN001CH01Val + CSN001CH02Val) / 2.0) + ((CSN001CH03Val + 7 - CSN001CH04Val) / 2.0)) / 2.0 * 10.0 / 7.0,  1);
+                KntcsVal += KntcsCdauVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng tự chăm sóc", "Chế độ ăn uống", KntcsCdauVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KntcsNxtq += KntcsNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Khả năng tự chăm sóc - Chế độ vận động
+            var KntcsCdvdVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CSE001CH", context);
+            if (questions.Count > 0)
+            {
+                var CSE001CH01 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CSE001CH01" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CSE001CH0Val = 0.0;
+                if (CSE001CH01 != null)
+                {
+                    double.TryParse(CSE001CH01.QuestionAnswer, out CSE001CH0Val);
+                }
+
+                var CSE001CH02 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CSE001CH02" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CSE001CH02Val = 0.0;
+                if (CSE001CH02 != null)
+                {
+                    double.TryParse(CSE001CH02.QuestionAnswer, out CSE001CH02Val);
+                }
+
+                KntcsCdvdVal = Math.Round(((CSE001CH0Val + CSE001CH02Val) / 2.0) * 10.0 / 7.0, 1);
+                KntcsVal += KntcsCdvdVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng tự chăm sóc", "Chế độ vận động", KntcsCdvdVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KntcsNxtq += KntcsNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Khả năng tự chăm sóc - Theo dõi đường huyết
+            var KntcsTddhVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CST001CH", context);
+            if (questions.Count > 0)
+            {
+                var CST001CH01 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CST001CH01" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CST001CH01Val = 0.0;
+                if (CST001CH01 != null)
+                {
+                    double.TryParse(CST001CH01.QuestionAnswer, out CST001CH01Val);
+                }
+
+                var CST001CH02 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CST001CH02" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CST001CH02Val = 0.0;
+                if (CST001CH02 != null)
+                {
+                    double.TryParse(CST001CH02.QuestionAnswer, out CST001CH02Val);
+                }
+
+                KntcsTddhVal = Math.Round(((CST001CH01Val + CST001CH01Val) / 2.0) * 10.0 / 7.0, 1);
+                KntcsVal += KntcsTddhVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng tự chăm sóc", "Theo dõi đường huyết", KntcsTddhVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KntcsNxtq += KntcsNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Khả năng tự chăm sóc - Đo đường huyết
+            var KntcsCsbcVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CSC001CH", context);
+            if (questions.Count > 0)
+            {
+                var CSC001CH11 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CSC001CH11" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CSC001CH11Val = 0.0;
+                if (CSC001CH11 != null)
+                {
+                    double.TryParse(CSC001CH11.QuestionAnswer, out CSC001CH11Val);
+                }
+
+                var CSC001CH12 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionId == "CSC001CH12" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                var CSC001CH12Val = 0.0;
+                if (CSC001CH12 != null)
+                {
+                    double.TryParse(CSC001CH12.QuestionAnswer, out CSC001CH12Val);
+                }
+
+                KntcsCsbcVal = Math.Round(((CSC001CH11Val + CSC001CH12Val) / 2.0) * 10.0 / 7.0, 1);
+                KntcsVal += KntcsCsbcVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng tự chăm sóc", "Chăm sóc bàn chân", KntcsCsbcVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KntcsNxtq += KntcsNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Khả năng tự chăm sóc - Hút thuốc
+            var KntcsHtVal = 0.0;
+
+            var KntcsPhanloai = "";
+            KntcsVal = Math.Round(KntcsVal / 4.0, 1);
+            rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng tự chăm sóc", "Khả năng tự chăm sóc", KntcsVal, context);
+            if (rangeValue != null)
+            {
+                KntcsPhanloai = rangeValue.Description;
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    Nxtq += Nxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+
+            }
+
+            // Mức độ rào cản
+            var MdrcVal = 0.0;
+            var MdrcPhanloai = "";
+            var MdrcNxtq = "";
+
+            // Mức độ rào cản - Chế độ ăn uống
+            var MdrcCdauVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RCN001CH", context);
+            if (questions.Count > 0)
+            {
+                var outTemp = 0.0;
+                var RCN001CHAvg = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0 
+                        && questions.Any(m =>m.QuestionCode == r.QuestionCode)).Select( a => Double.Parse(a.QuestionAnswer)).DefaultIfEmpty().Average();
+
+                MdrcCdauVal = Math.Round(RCN001CHAvg * 10.0 / 5.0, 1);
+                MdrcVal += MdrcCdauVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Mức độ rào cản", "Chế độ ăn uống", MdrcCdauVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    MdrcNxtq += MdrcNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Mức độ rào cản - Chế độ vận động
+            var MdrcCdvdVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RCE001CH", context);
+            if (questions.Count > 0)
+            {
+                var outTemp = 0.0;
+                var RCE001CHAvg = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode)).Select(a => Double.Parse(a.QuestionAnswer)).DefaultIfEmpty().Average();
+
+                MdrcCdvdVal = Math.Round(RCE001CHAvg * 10.0 / 5.0, 1);
+                MdrcVal += MdrcCdvdVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Mức độ rào cản", "Chế độ vận động", MdrcCdvdVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    MdrcNxtq += MdrcNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Mức độ rào cản - Dùng thuốc
+            var MdrcDtVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RCA001CH", context);
+            if (questions.Count > 0)
+            {
+                var outTemp = 0.0;
+                var RCA001CHAvg = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode)).Select(a => Double.Parse(a.QuestionAnswer)).DefaultIfEmpty().Average();
+
+                MdrcDtVal = Math.Round(RCA001CHAvg * 10.0 / 5.0, 1);
+                MdrcVal += MdrcDtVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Mức độ rào cản", "Dùng thuốc", MdrcDtVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    MdrcNxtq += MdrcNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Mức độ rào cản - Đường huyết
+            var MdrcTddhVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RCT001CH", context);
+            if (questions.Count > 0)
+            {
+                var outTemp = 0.0;
+                var RCT001CHAvg = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode)).Select(a => Double.Parse(a.QuestionAnswer)).DefaultIfEmpty().Average();
+
+                MdrcTddhVal = Math.Round(RCT001CHAvg * 10.0 / 5.0, 1);
+                MdrcVal += MdrcTddhVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Mức độ rào cản", "Đường huyết", MdrcTddhVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    MdrcNxtq += MdrcNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            MdrcVal = Math.Round(MdrcVal / 4.0, 1);
+            rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Mức độ rào cản", "Mức độ rào cản", MdrcVal, context);
+            if (rangeValue != null)
+            {
+                MdrcPhanloai = rangeValue.Description;
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    Nxtq += Nxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Khả năng điều chỉnh tâm lý
+            var KndctlVal = 0.0;
+            var KndctlPhanloai = "";
+            var KndctlNxtq = "";
+
+            // Khả năng điều chỉnh tâm lý - Gánh nặng cảm xúc
+            var KndctlGncxVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA001CH", context);
+            if (questions.Count > 0)
+            {
+                var outTemp = 0.0;
+                var TLA001CHSum = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode)).Select(a => Double.Parse(a.QuestionAnswer)).Sum();
+
+                KndctlGncxVal = Math.Round(TLA001CHSum / questions.Count * 10.0 / 6.0, 1);
+                KndctlVal += KndctlGncxVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng điều chỉnh tâm lý", "Gánh nặng cảm xúc", KndctlGncxVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KndctlNxtq += KndctlNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Khả năng điều chỉnh tâm lý - Căng thẳng liên quan đến bác sĩ
+            var KndctlCtlqdbsVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA002CH", context);
+            if (questions.Count > 0)
+            {
+                var outTemp = 0.0;
+                var TLA002CHSum = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode)).Select(a => Double.Parse(a.QuestionAnswer)).Sum();
+
+                KndctlCtlqdbsVal = Math.Round(TLA002CHSum / questions.Count * 10.0 / 6.0, 1);
+                KndctlVal += KndctlCtlqdbsVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng điều chỉnh tâm lý", "Căng thẳng liên quan đến bác sĩ", KndctlCtlqdbsVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KndctlNxtq += KndctlNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Khả năng điều chỉnh tâm lý - Gánh nặng về tuân thủ điều trị
+            var KndctlGnvttdtVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA003CH", context);
+            if (questions.Count > 0)
+            {
+                var outTemp = 0.0;
+                var TLA003CHSum = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode)).Select(a => Double.Parse(a.QuestionAnswer)).Sum();
+
+                KndctlGnvttdtVal = Math.Round(TLA003CHSum / questions.Count * 10.0 / 6.0, 1);
+                KndctlVal += KndctlGnvttdtVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng điều chỉnh tâm lý", "Gánh nặng về tuân thủ điều trị", KndctlGnvttdtVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KndctlNxtq += KndctlNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Khả năng điều chỉnh tâm lý - Gánh nặng về tuân thủ điều trị
+            var KndctlCttcmqhVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA004CH", context);
+            if (questions.Count > 0)
+            {
+                var outTemp = 0.0;
+                var TLA004CHSum = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode)).Select(a => Double.Parse(a.QuestionAnswer)).Sum();
+
+                KndctlCttcmqhVal = Math.Round(TLA004CHSum / questions.Count * 10.0 / 6.0, 1);
+                KndctlVal += KndctlCttcmqhVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng điều chỉnh tâm lý", "Căng thẳng trong các mối quan hệ", KndctlCttcmqhVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    KndctlNxtq += KndctlNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            KndctlVal = Math.Round(KndctlVal / 4.0, 1);
+            rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Khả năng điều chỉnh tâm lý", "Khả năng điều chỉnh tâm lý", KndctlVal, context);
+            if (rangeValue != null)
+            {
+                KndctlPhanloai = rangeValue.Description;
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    Nxtq += Nxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+
+            // Động lực thay đổi
+            var DltdVal = 0.0;
+            var DltdPhanloai = "";
+            var DltdNxtq = "";
+
+            // Động lực thay đổi - Động lực thay đổi bên trong
+            var DltdDltdbtVal = 0.0;
+            var DltdDltdbnVal = 0.0;
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("DLA001CH", context);
+            string[] dongLucthayDoiBenTrongQuestion = new string[] { "DLA001CH02", "DLA001CH03", "DLA001CH07", "DLA001CH10", "DLA001CH13", "DLA001CH16", "DLA001CH18", "DLA001CH19"};
+            string[] dongLucthayDoiBenNgoaiQuestion = new string[] { "DLA001CH01", "DLA001CH04", "DLA001CH05", "DLA001CH06", "DLA001CH08", "DLA001CH09", "DLA001CH11", "DLA001CH12", "DLA001CH14", "DLA001CH15", "DLA001CH17"};
+            if (questions.Count > 0)
+            {
+                var questions1 = questions.Where(r => dongLucthayDoiBenTrongQuestion.Contains(r.QuestionId)).ToList();
+                var questions2 = questions.Where(r => dongLucthayDoiBenNgoaiQuestion.Contains(r.QuestionId)).ToList();
+
+                var outTemp = 0.0;
+                var sum1 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0
+                        && questions1.Any(m => m.QuestionCode == r.QuestionCode)).Select(a => Double.Parse(a.QuestionAnswer)).Sum();
+
+                var sum2 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0
+                       && questions2.Any(m => m.QuestionCode == r.QuestionCode)).Select(a => Double.Parse(a.QuestionAnswer)).Sum();
+
+                DltdDltdbtVal = Math.Round(sum1 / questions1.Count * 10.0 / 7.0, 1);
+                DltdDltdbnVal = Math.Round(sum2 / questions2.Count * 10.0 / 7.0, 1);
+                DltdVal = DltdDltdbtVal + DltdDltdbnVal;
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Động lực thay đổi", "Động lực thay đổi bên trong", DltdDltdbtVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    DltdNxtq += DltdNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+
+                rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Động lực thay đổi", "Động lực thay đổi bên ngoài", DltdDltdbnVal, context);
+
+                if (!string.IsNullOrEmpty(rangeValue?.MessageToCustomer))
+                {
+                    DltdNxtq += DltdNxtq != "" ? "\r\n" + rangeValue?.MessageToCustomer : rangeValue?.MessageToCustomer;
+                }
+            }
+            DltdVal = Math.Round(DltdVal / 2.0, 1);
+
             var result = await this.CreateEntity(
                 new SurveyImportResultEntity
                 {
-                    Hba1cVal = 5,
-                    BmiVal =  5,
+                    Hba1cVal = Hba1cVal,
+                    Hba1cPhanloai = Hba1cPhanloai,
+                    BmiVal = BmiVal,
+                    BmiPhanloai = BmiPhanloai,
 
-                    KtBlVal =  5,
-                    KtTdcsVal = 5,
-                    KtDdVal =  5,
-                    KtVdVal =  5,
-                    KtThVal =  5,
-                    KtTlhvVal = 5,
-                    KtVal =  5,
-                    KtNxtq =  "",
+                    KtBlVal = KtBlVal,
+                    KtTdcsVal = KtTdcsVal,
+                    KtDdVal = KtDdVal,
+                    KtVdVal = KtVdVal,
+                    KtThVal = KtThVal,
+                    KtTlhvVal = KtTlhvVal,
+                    KtVal = KtVal,
+                    KtPhanloai = KtPhanloai,
+                    KtNxtq = KtNxtq,
 
-                    KntcsHtVal =  5,
-                    KntcsCsbcVal =  5,
-                    KntcsTddhVal =  5,
-                    KntcsCdvdVal =  5,
-                    KntcsCdauVal =  5,
-                    KntcsVal =  5,
-                    KntcsNxtq =  "",
+                    KntcsHtVal = KntcsHtVal,
+                    KntcsCsbcVal = KntcsCsbcVal,
+                    KntcsTddhVal = KntcsTddhVal,
+                    KntcsCdvdVal = KntcsCdvdVal,
+                    KntcsCdauVal = KntcsCdauVal,
+                    KntcsVal = KntcsVal,
+                    KntcsPhanloai = KntcsPhanloai,
+                    KntcsNxtq = KntcsNxtq,
 
-                    MdrcDtVal =  5,
-                    MdrcTddhVal =  5,
-                    MdrcCdvdVal =  5,
-                    MdrcCdauVal =  5,
-                    MdrcVal =  5,
-                    MdrcNxtq =  "",
+                    MdrcDtVal = MdrcDtVal,
+                    MdrcTddhVal = MdrcTddhVal,
+                    MdrcCdvdVal = MdrcCdvdVal,
+                    MdrcCdauVal = MdrcCdauVal,
+                    MdrcVal = MdrcVal,
+                    MdrcPhanloai = MdrcPhanloai,
+                    MdrcNxtq = MdrcNxtq,
 
-                    KndctlCtlqdbsVal =  5,
-                    KndctlCttcmqhVal =  5,
-                    KndctlGnvttdtVal =  5,
-                    KndctlGncxVal =  5,
-                    KndctlVal =  5,
-                    KndctlNxtq =  "",
+                    KndctlCtlqdbsVal = KndctlCtlqdbsVal,
+                    KndctlCttcmqhVal = KndctlCttcmqhVal,
+                    KndctlGnvttdtVal = KndctlGnvttdtVal,
+                    KndctlGncxVal = KndctlGncxVal,
+                    KndctlVal = KndctlVal,
+                    KndctlPhanloai = KndctlPhanloai,
+                    KndctlNxtq = KndctlNxtq,
 
-                    DltdDltdbtVal =  5,
-                    DltdDltdbnVal =  5,
-                    DltdVal =  5,
-                    DltdNxtq =  "",
+                    DltdDltdbtVal = DltdDltdbtVal,
+                    DltdDltdbnVal = DltdDltdbnVal,
+                    DltdVal = DltdVal,
+                    DltdPhanloai = DltdPhanloai,
+                    DltdNxtq = DltdNxtq,
 
-                    Nxtq =  "",
+                    Nxtq = Nxtq,
                     DxvmtNxtq =  "",
                     KhvhdNxtq =  "",
                     IsClose = false
@@ -561,14 +1141,12 @@ namespace DiaB.Middle.Services
                     ChartPart charPart = (ChartPart)wordDoc.MainDocumentPart.GetPartById(selectChart.Id);
 
                     var values = charPart.ChartSpace.Descendants<NumericValue>().ToList();
-                    if (values.Count >= 26)
+                    if (values.Count >= 18)
                     {
-                        values[7].Text = entity.KtBlVal == 0 ? "-" : entity.KtBlVal + "";
-                        values[8].Text = entity.KtTdcsVal == 0 ? "-" : entity.KtTdcsVal + "";
-                        values[9].Text = entity.KtDdVal == 0 ? "-" : entity.KtDdVal + "";
-                        values[10].Text = entity.KtVdVal == 0 ? "-" : entity.KtVdVal + "";
-                        values[11].Text = entity.KtThVal == 0 ? "-" : entity.KtThVal + "";
-                        values[12].Text = entity.KtTlhvVal == 0 ? "-" : entity.KtTlhvVal  + "";
+                        values[5].Text = entity.KtBlVal == 0 ? "-" : entity.KtBlVal + "";
+                        values[6].Text = entity.KtTdcsVal == 0 ? "-" : entity.KtTdcsVal + "";
+                        values[7].Text = entity.KtDdVal == 0 ? "-" : entity.KtDdVal + "";
+                        values[8].Text = entity.KtVdVal == 0 ? "-" : entity.KtVdVal + "";
                     }
                 }
 
@@ -621,10 +1199,9 @@ namespace DiaB.Middle.Services
                     if (values.Count >= 18)
                     {
                         values[5].Text = entity.MdrcCdauVal == 0 ? "-" : entity.MdrcCdauVal + "";
-                        values[6].Text = entity.MdrcTddhVal == 0 ? "-" : entity.MdrcTddhVal + "";
+                        values[6].Text = entity.MdrcCdvdVal == 0 ? "-" : entity.MdrcCdvdVal + "";
                         values[7].Text = entity.MdrcDtVal == 0 ? "-" : entity.MdrcDtVal + "";
                         values[8].Text = entity.MdrcTddhVal == 0 ? "-" : entity.MdrcTddhVal + "";
-                      
                     }
                 }
 

@@ -50,5 +50,9 @@ namespace DiaB.Data.Database
 
         public DbSet<SurveyImportResultEntity> SurveyImportResults { get; set; }
 
+        public DbSet<SurveyRangeValueEntity> SurveyRangeValues { get; set; }
+
+        public DbSet<SurveyQuestionMappingEntity> SurveyQuestionMappings { get; set; }
+
     }
 }

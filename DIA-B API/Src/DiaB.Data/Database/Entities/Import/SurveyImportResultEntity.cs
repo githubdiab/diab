@@ -8,49 +8,49 @@ namespace DiaB.Data.Database.Entities.Import
 {
     public class SurveyImportResultEntity : ModelEntity<SurveyImportResultEntity>
     {
-        public int Hba1cVal { get; set; }
+        public double Hba1cVal { get; set; }
         public String Hba1cPhanloai { get; set; }
-        public int BmiVal { get; set; }
+        public double BmiVal { get; set; }
         public String BmiPhanloai { get; set; }
 
-        public int KtBlVal { get; set; }
-        public int KtTdcsVal { get; set; }
-        public int KtDdVal { get; set; }
-        public int KtVdVal { get; set; }
-        public int KtThVal { get; set; }
-        public int KtTlhvVal { get; set; }
-        public int KtVal { get; set; }
+        public double KtBlVal { get; set; }
+        public double KtTdcsVal { get; set; }
+        public double KtDdVal { get; set; }
+        public double KtVdVal { get; set; }
+        public double KtThVal { get; set; }
+        public double KtTlhvVal { get; set; }
+        public double KtVal { get; set; }
         public String KtPhanloai { get; set; }
         public string KtNxtq { get; set; }
 
-        public int KntcsHtVal { get; set; }
-        public int KntcsCsbcVal { get; set; }
-        public int KntcsTddhVal { get; set; }
-        public int KntcsCdvdVal { get; set; }
-        public int KntcsCdauVal { get; set; }
-        public int KntcsVal { get; set; }
+        public double KntcsHtVal { get; set; }
+        public double KntcsCsbcVal { get; set; }
+        public double KntcsTddhVal { get; set; }
+        public double KntcsCdvdVal { get; set; }
+        public double KntcsCdauVal { get; set; }
+        public double KntcsVal { get; set; }
         public String KntcsPhanloai { get; set; }
         public string KntcsNxtq { get; set; }
 
-        public int MdrcDtVal { get; set; }
-        public int MdrcTddhVal { get; set; }
-        public int MdrcCdvdVal { get; set; }
-        public int MdrcCdauVal { get; set; }
-        public int MdrcVal { get; set; }
+        public double MdrcDtVal { get; set; }
+        public double MdrcTddhVal { get; set; }
+        public double MdrcCdvdVal { get; set; }
+        public double MdrcCdauVal { get; set; }
+        public double MdrcVal { get; set; }
         public String MdrcPhanloai { get; set; }
         public string MdrcNxtq { get; set; }
 
-        public int KndctlCtlqdbsVal { get; set; }
-        public int KndctlCttcmqhVal { get; set; }
-        public int KndctlGnvttdtVal { get; set; }
-        public int KndctlGncxVal { get; set; }
-        public int KndctlVal { get; set; }
+        public double KndctlCtlqdbsVal { get; set; }
+        public double KndctlCttcmqhVal { get; set; }
+        public double KndctlGnvttdtVal { get; set; }
+        public double KndctlGncxVal { get; set; }
+        public double KndctlVal { get; set; }
         public String KndctlPhanloai { get; set; }
         public string KndctlNxtq { get; set; }
 
-        public int DltdDltdbtVal { get; set; }
-        public int DltdDltdbnVal { get; set; }
-        public int DltdVal { get; set; }
+        public double DltdDltdbtVal { get; set; }
+        public double DltdDltdbnVal { get; set; }
+        public double DltdVal { get; set; }
         public String DltdPhanloai { get; set; }
         public string DltdNxtq { get; set; }
 

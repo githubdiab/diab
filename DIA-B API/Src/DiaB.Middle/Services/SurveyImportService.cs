@@ -149,16 +149,22 @@ namespace DiaB.Middle.Services
                     continue;
                 }
 
-                var surveyImportResultId = await this.SurveyImportResultService.CreateSurveyImportResult(surveyImportEntity, context);
+                try
+                {
+                    var surveyImportResultId = await this.SurveyImportResultService.CreateSurveyImportResult(surveyImportEntity, context);
 
-                _ = await this.UpdateEntity(
-                      surveyImportEntity,
-                      del =>
-                      {
-                          del.SurveyResultId = surveyImportResultId;
-                      }, context) as ICoreResultDto;
+                    _ = await this.UpdateEntity(
+                          surveyImportEntity,
+                          del =>
+                          {
+                              del.SurveyResultId = surveyImportResultId;
+                          }, context) as ICoreResultDto;
 
-                resultList.Add(surveyImportResultId);
+                    resultList.Add(surveyImportResultId);
+                } catch (Exception ex)
+                {
+
+                }
             }
 
             return resultList;

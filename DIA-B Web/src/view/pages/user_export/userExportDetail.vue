@@ -14,6 +14,18 @@
             Trở về trước
           </b-button>
           <b-button
+            class="btn btn-success ml-2"
+            type="button"
+            @click="exportFileSelect"
+          >
+            <span class="svg-icon">
+              <inline-svg
+                src="/media/svg/icons/Neolex/Basic/upload-cloud.svg"
+              />
+            </span>
+            Xuất file
+          </b-button>
+          <b-button
             v-if="isEditForm"
             class="btn btn-light ml-3"
             type="button"
@@ -451,6 +463,7 @@
                         {{ form.kntcsCsbcVal }}</span
                       >
                     </b-col>
+                    <b-col> </b-col>
                   </b-row>
                   <b-row>
                     <b-col>
@@ -469,6 +482,15 @@
                       >
                       <span class="font-weight-bolder text-right">
                         {{ form.kntcsCdvdVal }}</span
+                      >
+                    </b-col>
+                    <b-col>
+                      <span
+                        class="font-weight-bold text-muted font-size-lg mr-2"
+                        >Chế độ ăn uống</span
+                      >
+                      <span class="font-weight-bolder text-right">
+                        {{ form.kntcsCdauVal }}</span
                       >
                     </b-col>
                   </b-row>
@@ -655,6 +677,38 @@
                   </b-row>
 
                   <hr style="margin: 2rem -2.25rem" />
+                  <h5 class="card-title text-success">Câu chuyện người dùng</h5>
+                  <b-row>
+                    <b-col>
+                      <basic-text-area
+                        label="Câu chuyện người dùng"
+                        placeholder="Ghi câu chuyện người dùng"
+                        name="storySuccess"
+                        :value.sync="form.storySuccess"
+                        :state="validateState('storySuccess')"
+                        :invalidFeedback="errors.first('storySuccess')"
+                      ></basic-text-area>
+                    </b-col>
+                  </b-row>
+
+                  <hr style="margin: 2rem -2.25rem" />
+                  <h5 class="card-title text-success">
+                    Mục tiêu tham gia chương trình
+                  </h5>
+                  <b-row>
+                    <b-col>
+                      <basic-text-area
+                        label="Mục tiêu tham gia chương trình"
+                        placeholder="Ghi mục tiêu tham gia chương trình"
+                        name="courseGoal"
+                        :value.sync="form.courseGoal"
+                        :state="validateState('courseGoal')"
+                        :invalidFeedback="errors.first('courseGoal')"
+                      ></basic-text-area>
+                    </b-col>
+                  </b-row>
+
+                  <hr style="margin: 2rem -2.25rem" />
                   <h5 class="card-title text-success">
                     Nhận xét và khuyến nghị
                   </h5>
@@ -687,6 +741,18 @@
                   v-if="isEditForm"
                   class="card-footer d-flex align-items-lg-center justify-content-center"
                 >
+                  <b-button
+                    class="btn btn-success ml-2"
+                    type="button"
+                    @click="exportFileSelect"
+                  >
+                    <span class="svg-icon">
+                      <inline-svg
+                        src="/media/svg/icons/Neolex/Basic/upload-cloud.svg"
+                      />
+                    </span>
+                    Xuất file
+                  </b-button>
                   <b-button
                     v-if="isEditForm"
                     class="btn btn-light ml-3"
@@ -924,6 +990,12 @@ export default {
         payload.append('kndctlNxtq', this.form.kndctlNxtq);
       this.form.dltdNxtq && payload.append('dltdNxtq', this.form.dltdNxtq);
       this.form.nxtq && payload.append('nxtq', this.form.nxtq);
+
+      this.form.storySuccess &&
+        payload.append('storySuccess', this.form.storySuccess);
+      this.form.courseGoal &&
+        payload.append('courseGoal', this.form.courseGoal);
+
       this.form.dxvmtNxtq && payload.append('dxvmtNxtq', this.form.dxvmtNxtq);
       this.form.khvhdNxtq && payload.append('khvhdNxtq', this.form.khvhdNxtq);
 
@@ -985,6 +1057,42 @@ export default {
         );
 
         this.preview = data.avatar?.url;
+      } catch (error) {
+        this.$toastr.e({
+          title: 'Lỗi!',
+          msg: error,
+        });
+      } finally {
+        this.loading = false;
+      }
+    },
+    exportFileSelect() {
+      let ids = [this.form.id];
+      this.downloadReport(ids);
+    },
+    async downloadReport(ids) {
+      this.loading = true;
+      try {
+        let param = {
+          ids: ids,
+        };
+        await this.$api
+          .post(`Admin/SurveyImport/result/download`, param, {
+            responseType: 'blob',
+          })
+          .then((res) => {
+            let fileDonwload = window.URL.createObjectURL(res);
+            var docUrl = document.createElement('a');
+            docUrl.href = fileDonwload;
+            if (ids.length == 1) {
+              docUrl.setAttribute('download', 'bao_cao_dau_ra.docx');
+            } else {
+              docUrl.setAttribute('download', 'bao_cao_dau_ra.zip');
+            }
+
+            document.body.appendChild(docUrl);
+            docUrl.click();
+          });
       } catch (error) {
         this.$toastr.e({
           title: 'Lỗi!',

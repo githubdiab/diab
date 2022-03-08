@@ -68,6 +68,8 @@ namespace DiaB.Middle.Mappers
                 .ForMember(dest => dest.DxvmtNxtq, opt => opt.MapFrom(src => src.DxvmtNxtq))
                 .ForMember(dest => dest.KhvhdNxtq, opt => opt.MapFrom(src => src.KhvhdNxtq))
 
+                .ForMember(dest => dest.CourseGoal, opt => opt.MapFrom(src => src.SurveyImport.CourseGoal))
+
                 .ForMember(dest => dest.IsClose, opt => opt.MapFrom(src => src.IsClose))
 
                 .ForMember(dest => dest.FileReport, opt => opt.Ignore())
