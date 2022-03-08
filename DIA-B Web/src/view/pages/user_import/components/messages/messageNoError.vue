@@ -5,8 +5,8 @@
     id="user-import-modal"
     ref="user-import-modal"
     hide-header
-    
-    
+    no-close-on-backdrop
+    no-stacking
   >
             <div style="text-align:center;">
             <span class="svg-tick" >
@@ -33,7 +33,7 @@
         <b-button
           class="btn btn-success ml-2"
           href="#"
-          @click="goback()"
+         @click="$router.go(-1)"
           tabindex="0"
           style="width:90px"
         >
@@ -66,6 +66,7 @@
 
 <script>
 
+//import $ from 'jquery' ;
 import axios from 'axios';
 //import ModalSuccess from './messageSuccess.vue';
 export default {
@@ -78,12 +79,9 @@ export default {
     },
   },
   computed:{
-   tableLength: function () {
-     
-     
-    //  var totalcount = this.column[2].key
-      return this.num;
-    },
+    
+
+    
   },
   data() {
     return {
@@ -126,15 +124,17 @@ export default {
        question_result:'',
      
      data:[],
+     checkaccount:[],
     };
    
   },
+  
   methods: {    
   async  addUser() {
-       
+
       for(let i=0;i<=Number(this.staff_list.length);i++)
       {
-    await axios.post('https://localhost:44380/api/accountimport', null, {
+        await axios.post('https://localhost:44380/api/accountimport', null, {
         params: {
             
           user_name: this.staff_list[i].user_name,
@@ -152,15 +152,65 @@ export default {
            
         },
          
-        });;
-    await  axios.get('https://localhost:44380/api/accountimport/id',)
+        })
+        
+               await  axios.get('https://localhost:44380/api/accountimport/id',).then(this.AddSurvey());
+
+        ;;
+   //     console.log()
   }
+
+
+
+
    },
+
+   async AddSurvey ()
+ {
+    //  await this.addUser();
+    
+    const data = await axios.get('https://localhost:44380/api/accountimport/id',{          
+       params:{
+   
+       }
+     })
+    .then(res => res.data);
+   // const n = data.length 
+        for(let j=0;j<=Number(this.staff_list.length);j++)
+     {
+   await  axios.post('https://localhost:44380/api/surveyimport', null, {
+      params: {
+        
+        
+      user_id : data[j].id,
+     // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
+      course_goal: this.staff_list[j].course_goal,
+      course_action:this.staff_list[j].course_action,
+      course_final_rate:this.staff_list[j].course_final_rate,
+      participation_package:this.staff_list[j].participation_package,
+      survey_type_code:this.staff_list[j].survey_type_code,
+      survey_type:this.staff_list[j].survey_type,
+      survey_code:this.staff_list[j].survey_code,
+      survey_name:this.staff_list[j].survey_name,
+      survey_day:this.staff_list[j].survey_day,
+      import_day:this.staff_list[j].import_day,
+           
+        },
+      });
+     
+   //   await axios.get('https://localhost:44380/api/surveyimport')
+    // this.AddSurveyDetails();
+     }
+    
+ },
    
  
 
     goback() {
       this.$bvModal.hide('user-import-modal');
+
+     // this.$router.go(0);
+     // $router.go(2)
     },
     // handleClick(){
     //   this.AddSurvey();
@@ -181,21 +231,28 @@ export default {
        this.goback();
      
     },
-    
+    onClickButton () {
+      this.$emit('clicked',2)
+    }
+     
   },
   mounted(){
-   
+  // this.newUserItems();
+//  axios.get('https://localhost:44380/api/accountimport/user_code');
   }
 }
 </script>
 
 <style lang="scss">
-#glucose-modal {
-  .modal-dialog {
-    // width: 370px;
-    // height: 582px;
-   
-  }
+.modal-dialog {
+  height: 60%;
+  width: 600px;
+  display: flex;
+  align-items: center;
+}
+
+.modal-content {
+  margin: 0 auto;
 }
 .modal-footer{
   justify-content: center;

@@ -20,43 +20,81 @@
             </span>
             Bộ lọc
           </h6>
-          <b-dropdown-divider> </b-dropdown-divider>
+         <b-dropdown-divider> </b-dropdown-divider>
           <b-dropdown-form>
             <b-container class="p-0">
               <b-row>
                 <b-col>
                   <basic-input
-                    label="Tên nhóm"
-                    :required="true"
-                    placeholder="Nhập tên nhóm"
+                    label="Tên bệnh nhân"
+                    placeholder="Nhập tên bệnh nhân"
+                    name="userCode"
+                    :value.sync="filter.UserCode"
+                  ></basic-input>
+                </b-col>
+                
+                
+                <b-col>
+                  <basic-input
+                    label="Số điện thoại"
+                    placeholder="Nhập số điện thoại"
+                    name="userPhone"
+                    inputType="number"
+                    :value.sync="filter.UserPhone"
+                  ></basic-input>
+                </b-col>
+                <b-col>
+                  <basic-input
+                    label="Độ tuổi "
+                    placeholder="Nhập tên bệnh nhân"
                     name="name"
-                    :value.sync="filter.searchKey"
+                    :value.sync="filter.Username"
                   ></basic-input>
                 </b-col>
               </b-row>
               <b-row>
-                <b-col>
+                 <b-col>
                   <basic-select
-                    label="Chức năng"
-                    placeholder="Chọn nhóm chức năng"
-                    name="exerciseCategory"
-                    apiPath="/exerciseCategory"
-                    :value.sync="filter.searchKey"
+                    label="Gói tham gia"
+                    placeholder="--- Chọn ---"
+                    name="surveyType"
+                    :options="isSurveyTypes"
+                    :value.sync="filter.SurveyType"
+                    :solid="false"
+                    :allowEmpty="true"
                   />
                 </b-col>
-              </b-row>
-              <b-row>
                 <b-col>
-                  <basic-check-box
-                    :options="[{ text: 'Lọc các nhóm Inactive', value: false }]"
-                  ></basic-check-box>
+                  <basic-select
+                    label="Loại khảo sát"
+                    placeholder="--- Chọn ---"
+                    name="surveyType"
+                    :options="isSurveyTypes"
+                    :value.sync="filter.SurveyType"
+                    :solid="false"
+                    :allowEmpty="true"
+                  />
                 </b-col>
+                <b-col>
+                  <basic-input
+                    label="Tên khảo sát"
+                    placeholder="Nhập tên khảo sát"
+                    name="name"
+                    :value.sync="filter.SurveyName"
+                  ></basic-input>
+                </b-col>
+                
               </b-row>
             </b-container>
           </b-dropdown-form>
           <b-dropdown-divider> </b-dropdown-divider>
           <div class="d-flex align-items-center justify-content-lg-end m-0 p-4">
-            <b-button class="btn ml-2" href="#" tabindex="0">
+            <b-button
+              class="btn ml-2"
+              href="#"
+              tabindex="0"
+              @click="resetRequest"
+            >
               <span class="svg-icon">
                 <inline-svg
                   src="/media/svg/icons/Neolex/Basic/refresh-cw.svg"
@@ -64,7 +102,12 @@
               </span>
               Reset bộ lọc
             </b-button>
-            <b-button class="btn ml-2" href="#" tabindex="0">
+            <b-button
+              class="btn ml-2"
+              href="#"
+              tabindex="0"
+              @click="searchRequest"
+            >
               <span class="svg-icon">
                 <inline-svg src="/media/svg/icons/Neolex/Basic/filter.svg" />
               </span>
@@ -141,7 +184,7 @@
 .dropdown-form-filter {
   .dropdown-menu {
     .container {
-      width: 430px;
+      width: 850px;
     }
   }
 }
@@ -222,13 +265,12 @@ export default {
     },
   },
   watch: {
-    'paging.page'() {
-      //this.loadData();
+      paging: {
+      handler() {
+        this.loadData_account();  
+      },
+      deep: true,
     },
-    'paging.pageSize'() {
-      //this.loadData();
-    },
-    sort: {},
   },
   methods: {
     pagingAction() {

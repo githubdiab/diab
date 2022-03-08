@@ -25,16 +25,16 @@ namespace DiaB.Test.Controllers
         }
 
        
-
         [HttpGet("id")]
 
         public JsonResult GetId()
         {
 
 
-            string query = @"SELECT survey_imports.id 
-                                 FROM survey_imports
-                                 where id not in (select survey_id from survey_import_details)";
+           /* string query = @"SELECT survey_imports.id 
+                                   FROM survey_imports
+                                   where id not in (select survey_id from survey_import_details) order by user_id ASC ";*/
+             string query = @"SELECT id from survey_imports order by user_id ASC ";
 
             DataTable table = new DataTable();
             //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");

@@ -36,7 +36,7 @@
                     Sở thích         
                   </th>
                   <th>
-                    Câu chuyện thành công         
+                    Câu chuyện          
                   </th>
                 </tr>
                 <td> {{user_details[0].user_yearofbirth}} </td>
@@ -63,7 +63,7 @@
                 </tr>
                 <td> {{user_details[0].user_career}} </td>
                 <td> {{user_details[0].user_province}} </td>
-                <td> {{user_details[0].user_address}} </td>
+                <td style="white-space: initial;"> {{user_details[0].user_address}} </td>
                 <td> {{user_details[0].course_action}} </td>
               </table>
                <br>
@@ -80,12 +80,12 @@
                  @search="searchRequest"         
               >
                 <template v-slot:body="{ item , index  }">
-                <td  style="text-align: center"> {{ index+1}} </td>
-                  <td  style="text-align: center"> {{ item.category }} </td>
+                <td  style="text-align: left"> {{ index+1}} </td>
+                  <td  style="text-align: left"> {{ item.category }} </td>
                  
              
-                   <td  style="text-align: center">{{ item.question_number }}</td>
-                  <td  style="text-align: center">{{ item.question_answer }}</td>
+                   <td  style="text-align: left">{{ item.question_number }}</td>
+                  <td  style="text-align: left">{{ item.question_answer }}</td>
                
                 </template>
               </template-table>
@@ -107,11 +107,19 @@
   }
 }
 td {
-  white-space: nowrap;
-  word-wrap: normal;
+   font-family: 'Nunito';
+   font-size: 13px;
+  font-weight: bold;
+ // color: black;
+  line-height: 25px;
+  text-align: left;
+
+   
+//  
+ //word-wrap: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: center;
+  //text-align: center;
   width: 50px;
 }
 .information{
@@ -126,7 +134,7 @@ table {
 div {
   white-space: nowrap;
   word-wrap: normal;
-  text-align: center;
+  text-align: left;
 }
 p {
  width: 36px;
@@ -157,12 +165,7 @@ body{
  //color:gray
 }
 td{
-  font-family: 'Nunito';
-   font-size: 13px;
-  font-weight: bold;
- // color: black;
-  line-height: 25px;
-  text-align: left;
+ 
 
 }
 
@@ -247,13 +250,10 @@ export default {
   },
   created() {},
   watch: {
-    'paging.page'() {
-      //this.loadData();
-    },
-    'paging.pageSize'() {
-      //this.loadData();
-    },
-    sort: {},
+  paging: {
+     // loadData_surveydetails() // data search
+  }
+  
   },
   methods: {
      loadData_surveydetails() {

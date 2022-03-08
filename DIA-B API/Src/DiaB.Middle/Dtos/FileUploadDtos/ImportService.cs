@@ -53,19 +53,23 @@ namespace DiaB.Middle.Services
                     {
                         result.StaffList.Add(new FileUploadDtos.StaffInfo
                         {
-                            user_name = (worksheet.Cells[row, 1].Value ?? string.Empty).ToString().Trim(),
-                            user_code = (worksheet.Cells[row, 2].Value ?? string.Empty).ToString().Trim(),
-                            survey_type = (worksheet.Cells[row, 3].Value ?? string.Empty).ToString().Trim(),
-                            survey_code = (worksheet.Cells[row, 4].Value ?? string.Empty).ToString().Trim(),
-                            survey_name = (worksheet.Cells[row, 5].Value ?? string.Empty).ToString().Trim(),
 
-                            user_yearofbirth = Int32.Parse(worksheet.Cells[row, 6].Value.ToString()),
-                            user_gender = (worksheet.Cells[row, 7].Value ?? string.Empty).ToString().Trim(),
-                            user_phone = (worksheet.Cells[row, 8].Value ?? string.Empty).ToString().Trim(),
-                            survey_day = (worksheet.Cells[row, 9].Value ?? string.Empty).ToString().Trim(),
-                            user_province = (worksheet.Cells[row, 10].Value ?? string.Empty).ToString().Trim(),
+                            stt = Int32.Parse(worksheet.Cells[row, 1].Value.ToString()),
+                            user_name = (worksheet.Cells[row, 2].Value ?? string.Empty).ToString().Trim(),
+                            user_code = (worksheet.Cells[row, 3].Value ?? string.Empty).ToString().Trim(),
 
-                            stt = Int32.Parse(worksheet.Cells[row, 11].Value.ToString()),
+                            survey_type = (worksheet.Cells[row, 4].Value ?? string.Empty).ToString().Trim(),
+                            survey_code = (worksheet.Cells[row, 5].Value ?? string.Empty).ToString().Trim(),
+                            survey_name = (worksheet.Cells[row, 6].Value ?? string.Empty).ToString().Trim(),
+                          
+                            user_yearofbirth = Int32.Parse(worksheet.Cells[row, 7].Value.ToString()),
+                            user_gender = (worksheet.Cells[row, 8].Value ?? string.Empty).ToString().Trim(),
+                            user_phone = (worksheet.Cells[row, 9].Value ?? string.Empty).ToString().Trim(),
+                            survey_day = (worksheet.Cells[row, 10].Value ?? string.Empty).ToString().Trim(),
+                            user_province = (worksheet.Cells[row, 11].Value ?? string.Empty).ToString().Trim(),
+
+                            
+                           
                             user_career = (worksheet.Cells[row, 12].Value ?? string.Empty).ToString().Trim(),
                             user_hoobit = (worksheet.Cells[row, 13].Value ?? string.Empty).ToString().Trim(),
                             user_address = (worksheet.Cells[row, 14].Value ?? string.Empty).ToString().Trim(),

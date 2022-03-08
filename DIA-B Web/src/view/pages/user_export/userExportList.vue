@@ -385,7 +385,7 @@ export default {
   watch: {
     paging: {
       handler() {
-        this.loadData();
+        this.loadData();  
       },
       deep: true,
     },

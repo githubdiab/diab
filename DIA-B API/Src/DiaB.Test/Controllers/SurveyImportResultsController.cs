@@ -28,7 +28,7 @@ namespace DiaB.Test.Controllers
 
             string query = @"select account_imports.user_name,account_imports.user_typeofsick,survey_imports.import_day,survey_imports.participation_package,survey_imports.survey_type,survey_imports.survey_name,survey_imports.survey_code ,account_imports.user_code,account_imports.id
                         from survey_imports,account_imports
-                        where account_imports.id in (select user_id from survey_imports)";
+                        where account_imports.id in (select user_id from survey_imports order by user_id asc )" ;
             
 
             DataTable table = new DataTable();
@@ -61,7 +61,7 @@ namespace DiaB.Test.Controllers
         {
 
 
-            string query = @"select * from account_imports , survey_imports where account_imports.id = survey_imports.user_id and user_code=@user_code";
+            string query = @"select * from account_imports , survey_imports where account_imports.id = survey_imports.user_id and user_code=@user_code ";
 
 
             DataTable table = new DataTable();
