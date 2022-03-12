@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 
 export default {
   name: 'Modal',
@@ -126,10 +126,22 @@ result =uniqueValues.size;
 
   methods: {
    
-    handleClick() {
-     
-      this.AddSurveyDetails();
-       this.$router.push({
+ async  handleClick() {
+     this.$store.commit('context/setLoading', true);
+   await this.AddSurveyDetails().then(this.goback()).catch((error) => {
+          this.$toastr.e({
+            title: 'Lỗi',
+            msg: error,
+          });
+        }).catch((error) => {
+          this.$toastr.e({
+            title: 'Lỗi',
+            msg: error,
+          });
+        })
+        .finally(() => {
+          this.$store.commit('context/setLoading', false);
+           this.$router.push({
         name: 'user_import_list',
          method:{
           // staff_list : data
@@ -139,51 +151,34 @@ result =uniqueValues.size;
          staff_list : this.staff_list
         },
           })
+        });
+        
+       
   
     },
   
   async AddSurveyDetails ()
  {
-  // this.addUser();
- //  this.AddSurvey();
- 
 
- const data = await axios.get('https://localhost:44380/api/surveyimport/id',{          // lay tat ca survey_id tu survey_imports
-        params:{}}).then(res => res.data);
+
+ const data = await this.$api.get('SurveyImport/id')         // lay tat ca survey_id tu survey_imports
+     
 
     
-const data_code = await axios.get('https://localhost:44380/api/accountimport/account',{        
-       params:{}}).then(res => res.data);
+const data_code = await this.$api.get('AccountImport/account')        // get user_code 
+  
 
-
-//const number_question = await axios.get('https://localhost:44380/api/surveyimportdetails',{        
-     //  params:{}}).then(res => res.data);
-
- //    var isInsert=false;
-     
-     // for(let m=0;m<=this.staff_list.length;m++)
-   // {
-      
- 
- //    n++;
-   //   }
-       //  let count=0;
-
-     for(let n=0;n<=data_code.length;n++)
+     for(let n=0;n<data_code.length;n++)             // vong lap user_code
      {
-     for(let k=0;k<Number(this.staff_list.length);k++)
+     for(let k=0;k<Number(this.staff_list.length);k++)     // vong lap file excel 
      {
-       
-   
-           
+             
       { 
-       if((data_code[n].user_code===Number(this.staff_list[k].user_code))===true)
+       if((data_code[n].user_code===Number(this.staff_list[k].user_code))===true)        // so sanh user_code
        {
-       // return true ;  
-        // if(number_question[n].question_number!==this.staff_list[k].question_number)
 
-    {
-       await  axios.post('https://localhost:44380/api/surveyimportdetails', null, {
+      {
+       await  this.$api.post('SurveyImportDetails',{headers: {'Content-Type': 'application/json'}}, {
       params: {
        survey_id : data[n].id,
      // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
@@ -201,18 +196,12 @@ const data_code = await axios.get('https://localhost:44380/api/accountimport/acc
      //   console.log(true,count++,[n , k]);
     //   console.log(number_question[n].number_question)
        }
-       if(data_code[n].user_code!==Number(this.staff_list[k].user_code))
-       {
-       console.log(false + [n,k]);                     
-       } 
-
-      
-    
+      //  if(data_code[n].user_code!==Number(this.staff_list[k].user_code))
+      //  {
+      //  console.log(false + [n,k]);                     
+      //  }     
      }
       }
-   
-   
-     
   
      }
    
@@ -227,8 +216,8 @@ const data_code = await axios.get('https://localhost:44380/api/accountimport/acc
 
      loadData_account() {
      
-      axios.get('https://localhost:44380/api/surveyimportdetails', {
-          params: { ...this.searchParams },
+      this.$api.get('SurveyImportDetails', {
+          //params: { ...this.searchParams },
         })
         .then(({ data }) => {
           this.selected = [];
@@ -239,6 +228,7 @@ const data_code = await axios.get('https://localhost:44380/api/accountimport/acc
         
       return;
     },
+    
   },
  
 };

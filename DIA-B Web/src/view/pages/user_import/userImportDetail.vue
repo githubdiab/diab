@@ -80,7 +80,7 @@
                  @search="searchRequest"         
               >
                 <template v-slot:body="{ item , index  }">
-                <td  style="text-align: left"> {{ index+1}} </td>
+                <td style=" padding-left: 30px;"> {{ index+1}} </td>
                   <td  style="text-align: left"> {{ item.category }} </td>
                  
              
@@ -176,7 +176,7 @@ td{
 </style>
 
 <script>
-import axios from'axios'
+
 export default {
  props:{
     user_code: {
@@ -258,48 +258,31 @@ export default {
   methods: {
      loadData_surveydetails() {
      
-      axios.get('https://localhost:44380/api/surveyimportdetails/survey_id', {
+      this.$api.get('SurveyImportDetails/survey_id', {
           params: { user_id : this.id},
         })
-        .then(({ data }) => {
-          this.selected = [];
-         this.data = data.items || [];
-          this.paging.total = data.total;
+        .then( data => {
+        //  this.selected = [];
+      //   this.data = data.items || [];
+        //  this.paging.total = data.total;
           this.staff_list = data
         })
-        .catch((error) => {
-          this.$toastr.e({
-            title: 'Lỗi',
-            msg: error,
-          });
-        })
-        .finally(() => {
-          this.$store.commit('context/setLoading', false);
-        });
-      return;
+       
     },
      loadData_details() {
      
-      axios.get('https://localhost:44380/api/surveyimportresults/details',{
-         params: { user_code:this.user_code },
+      this.$api.get('SurveyImportResults/details',{
+         params: { user_code : this.user_code },
          
         })
-        .then(({ data }) => {
+        .then( data  => {
        //   this.selected = [];
       //   this.data = data.items || [];
       //    this.paging.total = data.total;
           this.user_details = data
         })
-        .catch((error) => {
-          this.$toastr.e({
-            title: 'Lỗi',
-            msg: error,
-          });
-        })
-        .finally(() => {
-          this.$store.commit('context/setLoading', false);
-        });
-      return;
+     
+     
     },
       returnPage() {
       this.$router.push({

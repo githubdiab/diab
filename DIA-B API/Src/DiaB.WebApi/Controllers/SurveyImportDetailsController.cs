@@ -10,18 +10,52 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiaB.Test.Controllers
+
+namespace DiaB.WebApi.Controllers
 {
     [ApiExplorerSettings(GroupName = "app")]
-    [Route("App/AccountImport")]
+    
 
     public class SurveyImportDetailsController : AppController
     {
-        private readonly IConfiguration _configuration;
-      
 
 
-        [HttpGet("surveydetails")]
+
+        [HttpGet("user_code")]
+
+        public JsonResult GetuserCode(int id)
+        {
+
+
+            string query = @"select user_code  from account_imports where @id= id";
+
+            DataTable table = new DataTable();
+            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
+            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
+
+
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
+
+
+        [HttpGet]
+
         public JsonResult Get()
         {
 
@@ -49,7 +83,37 @@ namespace DiaB.Test.Controllers
             return new JsonResult(table);
         }
 
-        [HttpPost("surveydetails")]
+
+        [HttpGet("survey_id")]
+        public JsonResult Get_detail(string user_id)
+        {
+
+
+            string query = @"select * from survey_import_details where survey_id in (select survey_imports.id from survey_imports where survey_imports.user_id = @user_id ) order by LENGTH(question_code),question_code";
+
+            DataTable table = new DataTable();
+            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
+            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
+
+
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    cmd.Parameters.AddWithValue("@user_id", user_id);
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
+        [HttpPost]
         public JsonResult Post(SurveyImportDetails sid)
         {
 
@@ -69,8 +133,8 @@ namespace DiaB.Test.Controllers
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
-                    cmd.Parameters.AddWithValue("@id", sid.id);
-                    cmd.Parameters.AddWithValue("@is_deleted", sid.is_deleted);
+                    cmd.Parameters.AddWithValue("@id", Guid.NewGuid());
+                    cmd.Parameters.AddWithValue("@is_deleted", 0);
                     cmd.Parameters.AddWithValue("@survey_id", sid.survey_id);
                     cmd.Parameters.AddWithValue("@category_code", sid.category_code);
                     cmd.Parameters.AddWithValue("@category", sid.category);
@@ -80,7 +144,7 @@ namespace DiaB.Test.Controllers
                     cmd.Parameters.AddWithValue("@question_number", sid.question_number);
                     cmd.Parameters.AddWithValue("@question_answer", sid.question_answer);
                     cmd.Parameters.AddWithValue("@question_result", sid.question_result);
-                 
+
 
 
                     myReader = cmd.ExecuteReader();

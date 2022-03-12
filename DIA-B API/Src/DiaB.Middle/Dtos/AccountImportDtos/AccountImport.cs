@@ -1,13 +1,13 @@
-﻿using System;
+﻿using CpTech.Core.Middle.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DiaB.Middle.Dtos.AccountImportDtos
 {
-    public class AccountImport
+    public class AccountImport 
     {
-        //   public int user_id { get; set; }
         public int id { get; set; }
         public int is_deleted { get; set; }
         public string code { get; set; }

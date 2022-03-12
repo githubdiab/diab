@@ -4,7 +4,7 @@
     id="user-import-modal"
     ref="user-import-modal"
     hide-header
-    no-close-on-backdrop
+    
     no-stacking
   >
             <div style="text-align:center; margin:5px; padding: 10px;">
@@ -33,7 +33,7 @@
         <b-button
           class="btn btn-success ml-2"
           href="#"
-          @click="$router.go(-1)"
+          @click="goback()"
           tabindex="0"
           style="width:90px"
         >
@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+//import axios from 'axios'
 export default {
   props:{
   staff_list:{
@@ -93,17 +93,23 @@ export default {
     };
   },
   methods: {
-    handleClick() {
-    this.addUser();
-    this.goback();
+   async handleClick(){
+      this.$store.commit('context/setLoading', true);
+    await this.addUser().then(this.goback())
+        .finally(() => {
+          this.$store.commit('context/setLoading', false);
+             this.openModalSuccess();
+        });
+   
+    
+     
     },
     async  addUser() {
 
       for(let i=0;i<=Number(this.staff_list.length);i++)
       {
-        await axios.post('https://localhost:44380/api/accountimport', null, {
-        params: {
-            
+        await this.$api.post('AccountImport', {headers: {'Content-Type': 'application/json'}}, {
+        params: {        
           user_name: this.staff_list[i].user_name,
           user_code: this.staff_list[i].user_code,
           user_gender: this.staff_list[i].user_gender,
@@ -115,13 +121,12 @@ export default {
           user_province: this.staff_list[i].user_province,
           story_success: this.staff_list[i].story_success,
           user_typeofsick: this.staff_list[i].user_typeofsick,
-          year_foundout:this.staff_list[i].year_foundout,
-           
+          year_foundout:this.staff_list[i].year_foundout,          
         },
          
         })
         
-               await  axios.get('https://localhost:44380/api/accountimport/id',).then(this.AddSurvey());
+       await  this.$api.get('AccountImport/id',).then(this.AddSurvey());
 
         ;;
   }
@@ -135,19 +140,15 @@ export default {
  {
     //  await this.addUser();
     
-    const data = await axios.get('https://localhost:44380/api/accountimport/id',{          
-       params:{
-   
-       }
-     })
-    .then(res => res.data);
+    const data = await this.$api.get('AccountImport/id')
+ 
    // const n = data.length 
         for(let j=0;j<=Number(this.staff_list.length);j++)
      {
-   await  axios.post('https://localhost:44380/api/surveyimport', null, {
-      params: {
-        
-        
+        const survey_day = new Date(this.staff_list[j].survey_day).toISOString().slice(0, 10);
+        const import_day = new Date(this.staff_list[j].import_day).toISOString().slice(0, 10);
+       await  this.$api.post('SurveyImport',{headers: {'Content-Type': 'application/json'}}, {
+      params: {   
       user_id : data[j].id,
      // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
       course_goal: this.staff_list[j].course_goal,
@@ -158,8 +159,8 @@ export default {
       survey_type:this.staff_list[j].survey_type,
       survey_code:this.staff_list[j].survey_code,
       survey_name:this.staff_list[j].survey_name,
-      survey_day:this.staff_list[j].survey_day,
-      import_day:this.staff_list[j].import_day,
+      import_day:  import_day,
+      survey_day: survey_day
            
         },
       });
@@ -172,6 +173,10 @@ export default {
  
     goback() {
       this.$bvModal.hide('user-import-modal');
+    },
+    openModalSuccess: function()
+    {
+        this.$root.$refs.B.clickshow();
     },
   },
 };

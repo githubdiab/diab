@@ -9,6 +9,7 @@
                <div>
               </div> 
               <template-table
+                id="my-table"
                 :column="column"
                 :data="staff_list"
                 :paging="paging"
@@ -18,15 +19,15 @@
                 @sortBy="sortRequest"
               >
                 <template v-slot:body="{ item , index }">
-                    <td>{{ index + 1 }}</td>
-                  <td>{{ item.user_name }}</td>
+                    <td style="  text-align: center">{{ index + 1 }}</td>
+                  <td style="width: 100px;">{{ item.user_name }}</td>
                   <td>{{ item.user_code }}</td>
                   <td >{{item.survey_type }}</td>
                   <td>{{ item.survey_name }}</td>
-                  <td>{{ item.survey_code }}</td>
-                  <td>{{ item.user_yearofbirth }}</td>
+                  <td style=" padding-left: 30px;">{{ item.survey_code }}</td>
+                  <td style=" padding-left: 20px;">{{ item.user_yearofbirth }}</td>
                   <td>{{ item.user_gender }}</td>
-                  <td>
+                <td style="  text-align: center">
                     {{ $moment(item.survey_day).format('DD/MM/YYYY') }}
                   </td>
                   <td>{{ item.user_province }}</td>
@@ -39,13 +40,13 @@
                   <td>{{ item.course_goal }}</td>
                   <td>{{ item.course_action }}</td>
                   <td>{{ item.course_final_rate }}</td>
-                  <td>{{ item.user_typeofsick }}</td>
-                  <td>{{ item.year_foundout }}</td>
+                  <td style=" padding-left: 30px;">{{ item.user_typeofsick }}</td>
+                  <td style=" padding-left: 30px;">{{ item.year_foundout }}</td>
                   <td>{{ item.participation_package }}</td>
                   <td>{{ item.survey_type_code }}</td>
                   <td>{{ item.category_code }}</td>
                   <td>{{ item.category }}</td>
-                  <td>{{ item.sub_category_code }}</td>
+                  <td style=" padding-left: 30px;">{{ item.sub_category_code }}</td>
                   <td>{{ item.sub_category }}</td>
                   <td>
                     {{ $moment(item.import_day).format('DD/MM/YYYY') }}
@@ -53,9 +54,22 @@
                   <td>{{ item.question_code }}</td>
                   <td>{{ item.question_number }}</td>
                   <td>{{ item.question_answer }}</td>
-                  <td>{{ item.question_result }}</td>
+                  <td style=" padding-left: 30px;">{{ item.question_result }}</td>
                 </template>
               </template-table>
+
+               <!-- <b-pagination
+             
+              :total-rows="this.staff_list.length"
+             v-model="paging.currentPage"
+            :per-page="paging.perpage"
+               @input="handlePageChange"
+           
+            aria-controls="my-table"
+
+                ></b-pagination> -->
+                <br>
+                <br>
               <b-button
                 class="btn btn-success ml-2"
                 type="button"
@@ -85,15 +99,22 @@
               >           
                 Message
               </b-button> -->
+             
+
             </div>
           </div>
         </b-col>
       </b-row>
+
+     
+
+    
     </b-container>
     <user-import-modal v-bind:staff_list="staff_list"/>
 
     <user-import-modal2 v-bind:staff_list="staff_list"/>
 
+    
   </div>
   
 </template>
@@ -110,8 +131,12 @@ td {
   word-wrap: normal;
   overflow: hidden;
   text-overflow: ellipsis;
-  text-align: center;
-  width: 50px;
+  text-align: left;
+  width: 60px;
+  font-size: 13px;
+  line-height: 20px;
+   font-style: normal;
+   font-family: 'Nunito';
 }
 
 table {
@@ -121,7 +146,7 @@ table {
 div {
   white-space: nowrap;
   word-wrap: normal;
-  text-align: center;
+  text-align: left;
 }
 p {
   text-align: left;
@@ -142,12 +167,16 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
       type: Array,
       default: () => [],
     },
+   
   },
   data() {
     return {
       paging: {
         page: 1,
         pageSize: 10,
+        total: this.staff_list.length,
+        
+        
       //  total: 0,
       },
       filter: {
@@ -320,8 +349,8 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
         },
       ],
       data: [],
-        modalShow: false
-    };
+    }
+    
   },
   
   computed: {
@@ -332,6 +361,8 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
         size: this.paging.pageSize,
       };
     },
+   
+
     tableLength: function () {
      
       let totalcount = this.staff_list.length;
@@ -339,7 +370,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
       return totalcount;
     },
   },
-  created() {},
+  created() {this.$root.$refs.A = this},
   watch: {
     'paging.page'() {
       //this.loadData();
@@ -348,6 +379,8 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
       //this.loadData();
     },
     sort: {},
+
+   
   },
   methods: {
    
@@ -372,7 +405,9 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
     //     this.$bvModal.show('user-import-modal');
     //   });
     // },
-
+     handlePageChange(value) {
+      this.paging.page = value;
+    },
     async NoError() {
        var mess_error='';
       
@@ -398,7 +433,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].user_age =='')
+          if(this.staff_list[i].user_yearofbirth =='')
          {        
           mess_error='error'
          }
@@ -523,22 +558,17 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
        else
        {
            this.$bvModal.show('user-import-modal');
-           
-  
-          if(this.$bvModal.hide('user-import-modal'));
-          {
-            this.$bvModal.show('user-import-modal2');
-          }
           
-      
-      
        }
 
     },
-    
+     clickshow: function ()
+  {
+    this.$bvModal.show('user-import-modal2');
+  }  
   },
-  
-
+ 
+     
  
 };
 </script>

@@ -24,15 +24,16 @@
                 </div>
               </div>
               <template-table
+                id="my-table"
                 :class="table"
                 :column="column"
                 :data="NullItems"
-                :paging="paging"
+                
                 :tableAction="false"
                 :selectAction="false"
                 :searchAction="false"
-                @sortBy="sortRequest"
-               
+              
+              
               >
                 <template v-slot:body="{ item ,index}">
           
@@ -41,9 +42,9 @@
              <!-- show name   -->              
                <td>{{ item.user_name }}</td>       
               <!-- show code   -->
-                 <td style=" text-align: left">{{ item.user_code }}</td>  
+                 <td style=" text-align: left; padding-left: 45px;">{{ item.user_code }}</td>  
               <!-- show row error  -->     
-              <td style=" text-align: left">{{item.stt}} </td>  
+              <td style=" text-align: left ; padding-left: 45px;">{{+item.stt}} </td>  
             
                   
                   
@@ -122,26 +123,40 @@
               
                 </template>
               </template-table>
+             <br>
+          <div style="float: right">
+             <b-pagination
+              
+              v-model="currentPage"
+             :total-rows="tableLength"
+             :per-page="perPage"
+              aria-controls="my-table"         
+
+              ></b-pagination>
+               <br>
+               <br>
+                   <b-button
+                class="btn btn-success ml-2"
+                id="Button"
+                type="button"
+               
+                @click="message_success()"
+              >
+                Tiếp tục
+              </b-button>
 
               <b-button
                 class="btn btn-success ml-2"
                 id="Button"
                 type="button"
-                style="float: right"
+                 
                 @click="$router.go(-2)"
               >
                 Hủy
               </b-button>
 
-              <b-button
-                class="btn btn-success ml-2"
-                id="Button"
-                type="button"
-                style="float: right"
-                @click="message_success()"
-              >
-                Tiếp tục
-              </b-button>
+          
+          </div>
             </div>
           </div>
         </b-col>
@@ -269,9 +284,13 @@ export default {
         },
       ],
       data: [],
-     //  modalDisabled:true,
+    
+    
+      
+       
+      }
      
-    };
+    
   },
   computed: {
     searchParams() {
@@ -281,6 +300,9 @@ export default {
         size: this.paging.pageSize,
       };
     },
+     rows() {
+        return this.staff_list.length
+      },
     tableLength: function () {
       
      
@@ -347,7 +369,7 @@ result =uniqueValues.size;
     
    
   },
-  created() {},
+    created() {this.$root.$refs.B = this},
   watch: {
     'paging.page'() {
       //this.loadData();
@@ -361,15 +383,7 @@ result =uniqueValues.size;
     message_success()
   {
     this.$bvModal.show('user-import-modal');
-  //  setTimeout(() => {  this.$bvModal.show('user-import-modal2'); }, 4000)
-    
-    if(!this.$bvModal.show('user-import-modal'))
-    {
-          this.$bvModal.show('user-import-modal2');
-    }
-    // this.$bvModal.show('user-import-modal2');
-   
-        // document.getElementById("Button").disabled = true
+ 
      
        
        ;
@@ -379,6 +393,10 @@ result =uniqueValues.size;
   {
    this.$bvModal.hide('user-import-modal2');
   },
+   clickshow: function ()
+  {
+    this.$bvModal.show('user-import-modal2');
+  }  
 
   }
   }

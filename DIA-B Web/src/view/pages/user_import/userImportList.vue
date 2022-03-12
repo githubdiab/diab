@@ -30,6 +30,7 @@
                     placeholder="Nhập tên bệnh nhân"
                     name="userCode"
                     :value.sync="filter.UserCode"
+                    
                   ></basic-input>
                 </b-col>
                 
@@ -39,18 +40,34 @@
                     label="Số điện thoại"
                     placeholder="Nhập số điện thoại"
                     name="userPhone"
-                    inputType="number"
+                   
                     :value.sync="filter.UserPhone"
                   ></basic-input>
                 </b-col>
+                
+                   
+                
                 <b-col>
-                  <basic-input
-                    label="Độ tuổi "
-                    placeholder="Nhập tên bệnh nhân"
+               <label>Độ tuổi</label>                 
+                  <basic-input                 
+                    placeholder="Từ"
                     name="name"
+                    inputType="number"
                     :value.sync="filter.Username"
                   ></basic-input>
+                   </b-col>              
+                   <b-col>
+                 <b-col></b-col>
+                   <basic-input
+                 
+                    placeholder="Đến"
+                    name="name"
+                    inputType="number"
+                    :value.sync="filter.Username"
+                  ></basic-input>
+                
                 </b-col>
+             
               </b-row>
               <b-row>
                  <b-col>
@@ -58,13 +75,13 @@
                     label="Gói tham gia"
                     placeholder="--- Chọn ---"
                     name="surveyType"
-                    :options="isSurveyTypes"
-                    :value.sync="filter.SurveyType"
+                    :options="isGenderOpts"
+                
                     :solid="false"
                     :allowEmpty="true"
                   />
                 </b-col>
-                <b-col>
+                 <b-col>
                   <basic-select
                     label="Loại khảo sát"
                     placeholder="--- Chọn ---"
@@ -76,14 +93,38 @@
                   />
                 </b-col>
                 <b-col>
-                  <basic-input
+                  <basic-select
                     label="Tên khảo sát"
+                    placeholder="--- Nhập tên khảo sát ---"
+                    name="surveyType"
+                    :options="isSurveyTypes"
+                    :value.sync="filter.SurveyType"
+                    :solid="false"
+                    :allowEmpty="true"
+                  />
+                </b-col>
+              
+                
+              </b-row>
+              <b-row>
+                  <b-col>
+                  <basic-input
+                    label="Ngày thực hiện khảo sát"
                     placeholder="Nhập tên khảo sát"
                     name="name"
                     :value.sync="filter.SurveyName"
                   ></basic-input>
                 </b-col>
-                
+
+                 <b-col>
+                  <basic-input
+                    label="Ngày Import"
+                    placeholder="Nhập tên khảo sát"
+                    name="name"
+                    :value.sync="filter.SurveyName"
+                  ></basic-input>
+                </b-col>
+                 
               </b-row>
             </b-container>
           </b-dropdown-form>
@@ -120,7 +161,7 @@
           class="btn btn-success ml-2"
           type="button"
           id="show-btn"
-          @click="handleImportUser()"
+         @click="handleImportUser"
         >
           Import
         </b-button>
@@ -132,14 +173,18 @@
           <div class="card card-custom gutter-b">
             <div class="card-body mt-0">
               <template-table
+             
                 :column="column"
-                :data="staff_list"
-                :paging="paging"
-                :tableAction="false"
-                :selectAction="false"
-                :searchAction="false"
-                 @search="searchRequest"
-            
+                  :data="staff_list"
+                  :paging="paging"
+                  :tableAction="false"
+                  :selectAction="false"
+                  :searchAction="false"
+                  @search="searchRequest"
+                  @reset="resetRequest"
+                  @sortBy="sortRequest"
+                  @input="handlePageChange"
+                
               >
                 <template v-slot:body="{ item  }">
              
@@ -161,7 +206,7 @@
                   <td>
                     {{ item.user_typeofsick }}
                   </td>
-                  <td>{{ $moment(item.import_day).format('DD/MM/YYYY') }}</td>
+                  <td>{{ $moment(item.import_day* 1000).format('DD/MM/YYYY') }}</td>
                   <td>{{ item.participation_package }}</td>
                   <td>{{ item.survey_type }}</td>
                   <td>{{ item.survey_name }}<br>Mã số: {{ item.survey_code }}
@@ -171,12 +216,15 @@
                   <td>{{ item.user_province }}</td> -->
                 </template>
               </template-table>
+               
             </div>
           </div>
         </b-col>
       </b-row>
+      
     </b-container>
     <user-import-modal :popupType="'popupType'" @loadData="loadData" />
+  
   </div>
 </template>
 
@@ -188,20 +236,24 @@
     }
   }
 }
+td{
+  font-family: 'Nunito';
+}
 </style>
 
 <script>
-import axios from 'axios';
+//import axios from 'axios';
 export default {
   components: { 'user-import-modal': () => import('./components/Modal') },
  
 
   data() {
     return {
+      selected: [],
       paging: {
         page: 1,
         pageSize: 10,
-        total: 0,
+        total: 10,
       },
       filter: {
         searchKey: null,
@@ -252,13 +304,18 @@ export default {
      
       ],
       staff_list: [],
+      isGenderOpts: [
+        { id: 1, name: 'Nam' },
+        { id: 2, name: 'Nữ' },
+      ],
+     
     };
   },
   computed: {
     searchParams() {
       return {
        
-
+     
         page: this.paging.page,
         size: this.paging.pageSize,
       };
@@ -267,15 +324,17 @@ export default {
   watch: {
       paging: {
       handler() {
-        this.loadData_account();  
+        this.loadData();  
+       this.handlePageChange();
       },
       deep: true,
     },
   },
   methods: {
     pagingAction() {
-      //this.loadData();
+      this.loadData();
     },
+  
     createItem() {
       this.$router.push({
         name: 'windown_import',
@@ -310,23 +369,22 @@ export default {
       this.$nextTick(() => {
         this.$validator.reset();
       });
-      //this.loadData();
+      this.loadData();
     },
     sortRequest() {
       return;
     },
-    loadData_account() {
-     
-      axios.get('https://localhost:44380/api/surveyimportresults/user_import', {
+    loadData() {
+       this.$store.commit('context/setLoading', true);
+    this.$api.get('SurveyImportResults/user_import', {
           params: { ...this.searchParams },
         })
-        .then(({ data }) => {
-          this.selected = [];
-          this.data = data.items || [];
-          this.paging.total = data.total;
-          this.staff_list = data
-        })
-        .catch((error) => {
+        .then( data  => {     
+          this.staff_list = data;
+       //    this.paging.total = data.total;
+        //  console.log("staff "+this.staff_list , data)
+        
+        }).catch((error) => {
           this.$toastr.e({
             title: 'Lỗi',
             msg: error,
@@ -335,7 +393,10 @@ export default {
         .finally(() => {
           this.$store.commit('context/setLoading', false);
         });
-      return;
+        
+    },
+      handlePageChange(value) {
+      this.paging.page = value;
     },
     
     async handleImportUser() {
@@ -346,7 +407,7 @@ export default {
   },
   mounted() {
    // axios.get('').then((reps)=>this.list=reps.data.data)
-     this.loadData_account()
+     this.loadData()
     
   },
 };

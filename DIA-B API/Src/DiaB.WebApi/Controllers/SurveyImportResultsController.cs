@@ -1,4 +1,5 @@
-﻿using DiaB.Middle.Dtos.AccountImportDtos;
+﻿
+using DiaB.Middle.Dtos.AccountImportDtos;
 using DiaB.WebApi.Controllers.Abstracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -9,16 +10,90 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DiaB.Test.Controllers
+
+namespace DiaB.WebApi.Controllers
 {
     [ApiExplorerSettings(GroupName = "app")]
-    [Route("App/AccountImport")]
+  
     public class SurveyImportResultsController : AppController
     {
-        private readonly IConfiguration _configuration;
-       
 
-        [HttpGet("surveyresults")]
+        //     [SwaggerResponse(200, null, typeof(DataResult<IPagingData<AccountImportDtos.AppItem>>))]
+       // [Route("App/SurveyImportResults")]
+        [HttpGet("user_import")]
+        public JsonResult Get_userimport()
+        {
+
+
+            string query = @"select account_imports.user_name,account_imports.user_typeofsick,survey_imports.import_day,survey_imports.participation_package,survey_imports.survey_type,survey_imports.survey_name,survey_imports.survey_code ,account_imports.user_code,account_imports.id
+                             from survey_imports,account_imports
+                             where account_imports.id = survey_imports.user_id
+                              order by account_imports.create_datetime desc";
+
+
+            DataTable table = new DataTable();
+            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
+            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
+
+
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306;Convert Zero Datetime=True")
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+
+            }
+
+            return new JsonResult(table);
+
+
+         //   return new JsonResult(table);
+        }
+
+
+        [HttpGet("details")]
+        public JsonResult Get_all(int user_code)
+        {
+
+
+            string query = @"select * from account_imports , survey_imports where account_imports.id = survey_imports.user_id and user_code=@user_code ";
+
+
+            DataTable table = new DataTable();
+            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
+            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
+
+
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306;Convert Zero Datetime=True")
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    cmd.Parameters.AddWithValue("@user_code", user_code);
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+
+            }
+
+
+
+            return new JsonResult(table);
+        }
+
+
+        [HttpGet]
         public JsonResult Get()
         {
 
@@ -46,7 +121,7 @@ namespace DiaB.Test.Controllers
             return new JsonResult(table);
         }
 
-        [HttpPost("surveyresults")]
+        [HttpPost]
         public JsonResult Post(SurveyImportResults sir)
         {
 
@@ -68,7 +143,7 @@ namespace DiaB.Test.Controllers
                 {
                     cmd.Parameters.AddWithValue("@id", sir.id);
                     cmd.Parameters.AddWithValue("@is_deleted", sir.is_deleted);
-                    
+
 
 
 
@@ -80,6 +155,7 @@ namespace DiaB.Test.Controllers
             }
             return new JsonResult("Adding Success");
         }
+
 
         /*  [HttpPut]
           public JsonResult Put(AccountImport acc)

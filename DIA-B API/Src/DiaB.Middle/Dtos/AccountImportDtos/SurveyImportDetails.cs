@@ -1,13 +1,14 @@
-﻿using System;
+﻿using CpTech.Core.Middle.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace DiaB.Middle.Dtos.AccountImportDtos
 {
-    public class SurveyImportDetails
+    public class SurveyImportDetails 
     {
-        public string id { get; set; }
+        public Guid? id { get; set; }
         public string code { get; set; }
         public int is_deleted { get; set; }
         public DateTime create_date { get; set; }

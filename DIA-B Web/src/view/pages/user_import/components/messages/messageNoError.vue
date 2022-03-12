@@ -5,7 +5,7 @@
     id="user-import-modal"
     ref="user-import-modal"
     hide-header
-    no-close-on-backdrop
+   
     no-stacking
   >
             <div style="text-align:center;">
@@ -33,7 +33,7 @@
         <b-button
           class="btn btn-success ml-2"
           href="#"
-         @click="$router.go(-1)"
+          @click="goback()"
           tabindex="0"
           style="width:90px"
         >
@@ -47,6 +47,7 @@
           href="#"
           @click="handleClick()"
           tabindex="0"
+      
         >
         <span class="svg-icon">
             <inline-svg src="/media/svg/import/tick.svg" />
@@ -67,8 +68,10 @@
 <script>
 
 //import $ from 'jquery' ;
-import axios from 'axios';
+
 //import ModalSuccess from './messageSuccess.vue';
+//import axios from 'axios'
+//import moment from 'vue-moment'
 export default {
   name: 'Modal',   
  // components:{ModalSuccess},
@@ -108,8 +111,8 @@ export default {
       survey_type:'',
       survey_code:'',
       survey_name:'',
-      survey_day:'',
-      import_day:'',
+      survey_day:"",
+      import_day:"",
       user_id:'',
    
    //survey details 
@@ -134,7 +137,7 @@ export default {
 
       for(let i=0;i<=Number(this.staff_list.length);i++)
       {
-        await axios.post('https://localhost:44380/api/accountimport', null, {
+        await this.$api.post('accountimport', {headers: {'Content-Type': 'application/json'}}, {
         params: {
             
           user_name: this.staff_list[i].user_name,
@@ -154,7 +157,7 @@ export default {
          
         })
         
-               await  axios.get('https://localhost:44380/api/accountimport/id',).then(this.AddSurvey());
+           await  this.$api.get('accountimport/id').then(this.AddSurvey());
 
         ;;
    //     console.log()
@@ -167,23 +170,21 @@ export default {
 
    async AddSurvey ()
  {
-    //  await this.addUser();
-    
-    const data = await axios.get('https://localhost:44380/api/accountimport/id',{          
-       params:{
    
-       }
-     })
-    .then(res => res.data);
-   // const n = data.length 
-        for(let j=0;j<=Number(this.staff_list.length);j++)
+    const data = await this.$api.get('accountimport/id')
+      
+   
+  
+    for(let j=0;j<=Number(this.staff_list.length);j++)
      {
-   await  axios.post('https://localhost:44380/api/surveyimport', null, {
-      params: {
-        
-        
+   const survey_day = new Date(this.staff_list[j].survey_day).toISOString().slice(0, 10);
+   const import_day = new Date(this.staff_list[j].import_day).toISOString().slice(0, 10);
+ 
+  await  this.$api.post('surveyimport',{headers: {'Content-Type': 'application/json'}}, {
+  
+       params: {    
+
       user_id : data[j].id,
-     // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
       course_goal: this.staff_list[j].course_goal,
       course_action:this.staff_list[j].course_action,
       course_final_rate:this.staff_list[j].course_final_rate,
@@ -192,53 +193,51 @@ export default {
       survey_type:this.staff_list[j].survey_type,
       survey_code:this.staff_list[j].survey_code,
       survey_name:this.staff_list[j].survey_name,
-      survey_day:this.staff_list[j].survey_day,
-      import_day:this.staff_list[j].import_day,
-           
+      import_day:  import_day,
+      survey_day: survey_day
         },
-      });
-     
-   //   await axios.get('https://localhost:44380/api/surveyimport')
-    // this.AddSurveyDetails();
-     }
+   
+      
+      }).catch((error) => {
+          this.$toastr.e({
+            title: 'Lỗi',
+            msg: error,
+          });
+        })
     
+
+
+
+     
+     }
+ 
  },
    
  
 
     goback() {
       this.$bvModal.hide('user-import-modal');
-
-     // this.$router.go(0);
-     // $router.go(2)
     },
-    // handleClick(){
-    //   this.AddSurvey();
-    //    this.$router.push({
-    //     name: 'user_import_list',
-    //      method:{
-    //       // staff_list : data
-    //       },
-    //     params: {
-          
-    //      staff_list : this.staff_list
-    //     },
-    //       })
-    // }
+    openModalSuccess: function()
+    {
+        this.$root.$refs.A.clickshow();
+    },
 
-     handleClick(){
-       this.addUser();
-       this.goback();
+    async handleClick(){
+      this.$store.commit('context/setLoading', true);
+    await this.addUser().then(this.goback())
+        .finally(() => {
+          this.$store.commit('context/setLoading', false);
+             this.openModalSuccess();
+        });
+   
+    
      
     },
-    onClickButton () {
-      this.$emit('clicked',2)
-    }
-     
+    
   },
   mounted(){
-  // this.newUserItems();
-//  axios.get('https://localhost:44380/api/accountimport/user_code');
+
   }
 }
 </script>

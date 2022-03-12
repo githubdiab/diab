@@ -10011,9 +10011,9 @@
     "resize-observer-polyfill" "^1.5.1"
 
 "vue-loader-v16@npm:vue-loader@^16.0.0-beta.7":
-  "integrity" "sha512-V53TJbHmzjBhCG5OYI2JWy/aYDspz4oVHKxS43Iy212GjGIG1T3EsB3+GWXFm/1z5VwjdjLmdZUFYM70y77vtQ=="
-  "resolved" "https://registry.npmjs.org/vue-loader/-/vue-loader-16.8.1.tgz"
-  "version" "16.8.1"
+  "integrity" "sha512-7vKN45IxsKxe5GcVCbc2qFU5aWzyiLrYJyUuMz4BQLKctCj/fmCa0w6fGiiQ2cLFetNcek1ppGJQDCup0c1hpA=="
+  "resolved" "https://registry.npmjs.org/vue-loader/-/vue-loader-16.8.3.tgz"
+  "version" "16.8.3"
   dependencies:
     "chalk" "^4.1.0"
     "hash-sum" "^2.0.0"
