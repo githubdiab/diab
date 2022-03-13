@@ -20,6 +20,7 @@ namespace DiaB.WebApi.Controllers
 
         //     [SwaggerResponse(200, null, typeof(DataResult<IPagingData<AccountImportDtos.AppItem>>))]
        // [Route("App/SurveyImportResults")]
+
         [HttpGet("user_import")]
         public JsonResult Get_userimport()
         {

@@ -834,6 +834,11 @@ export default {
       file: null,
       preview: null,
       loading: false,
+      //  paging: {
+      //   page: 1,
+      //   pageSize: 10,
+      //   total: 10,
+      // },
     };
   },
   created() {

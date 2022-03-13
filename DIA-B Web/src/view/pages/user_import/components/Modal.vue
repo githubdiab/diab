@@ -26,7 +26,7 @@
         </b-button> -->
         <b-button
           href="#"
-          :disabled="!isSelectFile"
+        
           @click="goback"
           tabindex="0"
         >

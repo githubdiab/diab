@@ -221,14 +221,17 @@ export default {
     openModalSuccess: function()
     {
         this.$root.$refs.A.clickshow();
+        
     },
 
     async handleClick(){
+         this.$root.$refs.A.SelectFile();
       this.$store.commit('context/setLoading', true);
     await this.addUser().then(this.goback())
         .finally(() => {
           this.$store.commit('context/setLoading', false);
              this.openModalSuccess();
+          
         });
    
     

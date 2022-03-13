@@ -203,10 +203,8 @@
                       >
                       </action-dropdown>
                     </td>
-                  <td>
-                    {{ item.user_typeofsick }}
-                  </td>
-                  <td>{{ $moment(item.import_day* 1000).format('DD/MM/YYYY') }}</td>
+                  <td style="padding-left: 25px;">{{ item.user_typeofsick }}</td>
+                  <td style=" padding-left: 25px;">{{ $moment(item.import_day* 1000).format('DD/MM/YYYY') }}</td>
                   <td>{{ item.participation_package }}</td>
                   <td>{{ item.survey_type }}</td>
                   <td>{{ item.survey_name }}<br>Mã số: {{ item.survey_code }}

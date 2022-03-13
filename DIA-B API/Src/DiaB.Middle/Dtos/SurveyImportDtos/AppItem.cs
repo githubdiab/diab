@@ -27,7 +27,7 @@ namespace DiaB.Middle.Dtos.SurveyImportDtos
             [DisplayName("ngày xử lý báo cáo")]
             public DateTime? ImportDay { get; set; }
 
-            public string SurveyStatus { get; set; }
+           public string SurveyStatus { get; set; }
 
             public Guid? SurveyResultId { get; set; }
         }

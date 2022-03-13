@@ -38,11 +38,15 @@
                   <th>
                     Câu chuyện          
                   </th>
+                  <th>
+                   Mục tiêu khóa học       
+                  </th>
                 </tr>
                 <td> {{user_details[0].user_yearofbirth}} </td>
                 <td> {{user_details[0].user_phone}} </td>
                 <td> {{user_details[0].user_hoobit}} </td>
-                <td> {{user_details[0].story_success}} </td>
+                <td style="white-space: initial;padding-right: 40px;"> {{user_details[0].story_success}} </td>
+                  <td> {{user_details[0].course_goal}} </td>
               </table>
                <br>
                <br>
@@ -60,11 +64,15 @@
                   <th>
                    Kế hoạch hành động         
                   </th>
+                   <th>
+                  Đánh giá cuối khóa       
+                  </th>
                 </tr>
                 <td> {{user_details[0].user_career}} </td>
                 <td> {{user_details[0].user_province}} </td>
-                <td style="white-space: initial;"> {{user_details[0].user_address}} </td>
+                <td style="white-space: initial;padding-right: 40px;"> {{user_details[0].user_address}} </td>
                 <td> {{user_details[0].course_action}} </td>
+                 <td > {{user_details[0].course_final_rate}} </td>
               </table>
                <br>
               <p  style="font-size:16px"><b> Kết quả khảo sát </b></p>       

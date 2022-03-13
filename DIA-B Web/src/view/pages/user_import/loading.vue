@@ -74,6 +74,7 @@
                 class="btn btn-success ml-2"
                 type="button"
                 style="float: right"
+               :disabled="isSelectFile"
                 @click="$router.go(-1)"
               >
                 Hủy
@@ -82,8 +83,8 @@
                 class="btn btn-success ml-2"
                 type="button"
                 style="float: right"
-            
-                @click="NoError() , modalShow = !modalShow"
+                :disabled="isSelectFile"
+                @click="NoError()"
               
               >           
                 Validate
@@ -349,6 +350,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
         },
       ],
       data: [],
+       isSelectFile: false,
     }
     
   },
@@ -370,7 +372,9 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
       return totalcount;
     },
   },
-  created() {this.$root.$refs.A = this},
+  created() {
+    this.$root.$refs.A = this
+  },
   watch: {
     'paging.page'() {
       //this.loadData();
@@ -557,15 +561,20 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
         }
        else
        {
-           this.$bvModal.show('user-import-modal');
           
+           this.$bvModal.show('user-import-modal');
+        
        }
 
     },
      clickshow: function ()
   {
     this.$bvModal.show('user-import-modal2');
-  }  
+  } ,
+  SelectFile()
+  {
+     this.isSelectFile=true;
+  } 
   },
  
      
