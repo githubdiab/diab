@@ -40,7 +40,7 @@ namespace DiaB.WebApi.Controllers
 
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("mysqlconn");
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -73,7 +73,7 @@ namespace DiaB.WebApi.Controllers
 
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("mysqlconn");
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -104,7 +104,7 @@ namespace DiaB.WebApi.Controllers
             string query = @"select * from survey_import_results ";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("mysqlconn");
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -130,7 +130,7 @@ namespace DiaB.WebApi.Controllers
                values(@id,@is_deleted)";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("mysqlconn");
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )

@@ -31,7 +31,7 @@ namespace DiaB.WebApi.Controllers
 
             DataTable table = new DataTable();
 
-            string sqlDataSource = _configuration.GetConnectionString("mysqlconn");
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -80,7 +80,7 @@ namespace DiaB.WebApi.Controllers
             string query = @"SELECT id from survey_imports order by user_id ASC ";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("mysqlconn");
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -107,7 +107,7 @@ namespace DiaB.WebApi.Controllers
             string query = @"select * from survey_imports ";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("mysqlconn");
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
