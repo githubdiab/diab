@@ -29,14 +29,13 @@
                     label="Tên bệnh nhân"
                     placeholder="Nhập tên bệnh nhân"
                     name="userCode"
-                    :value.sync="filter.UserCode"
-                    
+                    :value.sync="filter.UserCode" 
                   ></basic-input>
                 </b-col>
-                
-                
+               
                 <b-col>
                   <basic-input
+                  
                     label="Số điện thoại"
                     placeholder="Nhập số điện thoại"
                     name="userPhone"
@@ -48,26 +47,30 @@
                    
                 
                 <b-col>
-               <label>Độ tuổi</label>                 
-                  <basic-input                 
+                     
+
+                  <b-row >                             
+                  <basic-input   
+                  
+                  label ="Độ tuổi"  
+                    style="width:100px"            
                     placeholder="Từ"
                     name="name"
                     inputType="number"
                     :value.sync="filter.Username"
                   ></basic-input>
-                   </b-col>              
-                   <b-col>
-                 <b-col></b-col>
-                   <basic-input
-                 
+                   <p style="color:white">spa</p>
+                    <basic-input
+                      label ="Độ tuổi"  
+                   style="width:100px"
                     placeholder="Đến"
                     name="name"
                     inputType="number"
                     :value.sync="filter.Username"
                   ></basic-input>
-                
-                </b-col>
-             
+                     </b-row>     
+                   </b-col>   
+                     
               </b-row>
               <b-row>
                  <b-col>
@@ -106,25 +109,52 @@
               
                 
               </b-row>
-              <b-row>
+              <b-row style="float:left"> 
+                
                   <b-col>
+                     <label>Ngày thực hiện khảo sát</label>
+                     <b-col></b-col>
+                     <b-row >
                   <basic-input
-                    label="Ngày thực hiện khảo sát"
-                    placeholder="Nhập tên khảo sát"
+                    style="width:100px"
+                    placeholder="Từ"
                     name="name"
                     :value.sync="filter.SurveyName"
+                      inputType="number"
                   ></basic-input>
-                </b-col>
-
+                <p style="color:white">spa</p>
+                   <basic-input
+                    style="width:100px;  "
+                    placeholder="Đến"
+                    name="name"
+                    :value.sync="filter.SurveyName"
+                      inputType="number"
+                  ></basic-input>
+                     </b-row>
+                    </b-col>
+                    <p style="color:white">spacespacee</p>    
                  <b-col>
+                     <label>Ngày Import</label>
+                      <b-col></b-col>  
+                      <b-row>
                   <basic-input
-                    label="Ngày Import"
-                    placeholder="Nhập tên khảo sát"
+                    style="width:100px"
+                    placeholder="Từ"
                     name="name"
                     :value.sync="filter.SurveyName"
+                      inputType="number"
                   ></basic-input>
+                   <p style="color:white">spa</p>
+                   <basic-input
+                    style="width:100px"
+                    placeholder="Đến"
+                    name="name"
+                    :value.sync="filter.SurveyName"
+                      inputType="number"
+                  ></basic-input>
+                    </b-row>
                 </b-col>
-                 
+                   
               </b-row>
             </b-container>
           </b-dropdown-form>
@@ -183,7 +213,7 @@
                   @search="searchRequest"
                   @reset="resetRequest"
                   @sortBy="sortRequest"
-                  @input="handlePageChange"
+                 
                 
               >
                 <template v-slot:body="{ item  }">
@@ -313,7 +343,7 @@ export default {
     searchParams() {
       return {
        
-     
+        
         page: this.paging.page,
         size: this.paging.pageSize,
       };
@@ -376,6 +406,7 @@ export default {
        this.$store.commit('context/setLoading', true);
     this.$api.get('SurveyImportResults/user_import', {
           params: { ...this.searchParams },
+          
         })
         .then( data  => {     
           this.staff_list = data;
@@ -393,9 +424,9 @@ export default {
         });
         
     },
-      handlePageChange(value) {
-      this.paging.page = value;
-    },
+    //   handlePageChange(value) {
+    //   this.paging.page = value;
+    // },
     
     async handleImportUser() {
       this.$nextTick(() => {

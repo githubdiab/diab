@@ -19,7 +19,11 @@ namespace DiaB.WebApi.Controllers
     public class SurveyImportDetailsController : AppController
     {
 
-
+        private readonly IConfiguration _configuration;
+        public SurveyImportDetailsController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         [HttpGet("user_code")]
 
@@ -30,12 +34,9 @@ namespace DiaB.WebApi.Controllers
             string query = @"select user_code  from account_imports where @id= id";
 
             DataTable table = new DataTable();
-            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
-
-
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
-            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
             {
                 myconn.Open();
@@ -63,13 +64,9 @@ namespace DiaB.WebApi.Controllers
             string query = @"select * from survey_import_details ";
 
             DataTable table = new DataTable();
-            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
-
-
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
-            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
-)
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource))
             {
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
@@ -92,12 +89,9 @@ namespace DiaB.WebApi.Controllers
             string query = @"select * from survey_import_details where survey_id in (select survey_imports.id from survey_imports where survey_imports.user_id = @user_id ) order by LENGTH(question_code),question_code";
 
             DataTable table = new DataTable();
-            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
-
-
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
-            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
             {
                 myconn.Open();
@@ -122,12 +116,9 @@ namespace DiaB.WebApi.Controllers
                values(@id,@is_deleted,@survey_id,@category_code,@category,@sub_category_code,@sub_category,@question_code,@question_number,@question_answer,@question_result)";
 
             DataTable table = new DataTable();
-            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
-
-
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
-            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
             {
                 myconn.Open();

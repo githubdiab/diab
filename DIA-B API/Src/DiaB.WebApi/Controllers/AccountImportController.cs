@@ -2,6 +2,7 @@
 using DiaB.Middle.Dtos.AccountImportDtos;
 using DiaB.WebApi.Controllers.Abstracts;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System;
 using System.Data;
@@ -13,6 +14,11 @@ namespace DiaB.WebApi.Controllers
     [ApiExplorerSettings(GroupName = "app")]  
     public class AccountImportController : AppController
     {
+        private readonly IConfiguration _configuration;
+        public AccountImportController(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
 
         [HttpGet("id")]
         public JsonResult Get()
@@ -24,12 +30,9 @@ namespace DiaB.WebApi.Controllers
                                  where id not in (select user_id from survey_imports order by user_id ASC) ";
 
             DataTable table = new DataTable();
-            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
-
-
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
-            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
             {
                 myconn.Open();
@@ -53,12 +56,9 @@ namespace DiaB.WebApi.Controllers
             string query = @"select * from account_imports ";
 
             DataTable table = new DataTable();
-            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-            /*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*/
-
-
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
-            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
             {
                 myconn.Open();
@@ -84,12 +84,9 @@ namespace DiaB.WebApi.Controllers
 
 
             DataTable table = new DataTable();
-            //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-
-
-
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
-            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
             {
                 myconn.Open();
@@ -123,12 +120,11 @@ namespace DiaB.WebApi.Controllers
                  ON DUPLICATE KEY UPDATE user_code=@user_code";
 
             DataTable table = new DataTable();
-        
 
 
-
+            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
             MySqlDataReader myReader;
-            using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
             {
                 myconn.Open();
