@@ -83,10 +83,9 @@
                     label="Gói tham gia"
                     placeholder="--- Chọn ---"
                     name="ParticipationPackage"
-                    :options="isGenderOpts"
+                    :options="isPackage"
                  :value.sync="filter.ParticipationPackage"
-                    :solid="false"
-                    :allowEmpty="true"
+                   
                   />
                 </b-col>
                  <b-col>
@@ -105,7 +104,7 @@
                     label="Tên khảo sát"
                     placeholder="--- Nhập tên khảo sát ---"
                     name="SurveyName"
-                    :options="isSurveyTypes"
+                    :options="isSurveyName"
                     :value.sync="filter.SurveyName"
                     :solid="false"
                     :allowEmpty="true"
@@ -282,7 +281,7 @@ export default {
 
   data() {
     return {
-      selected: [],
+      selected: '',
       paging: {
         page: 1,
         pageSize: 10,
@@ -348,13 +347,17 @@ export default {
      
       ],
       staff_list: [],
-      isGenderOpts: [
-        { id: 1, name: 'Nam' },
-        { id: 2, name: 'Nữ' },
+      isPackage: [
+        { id: 1, name: 'Gói thấu cảm' },
+        { id: 2, name: 'Gói đồng hành' },
       ],
       isSurveyTypes: [
-        { id: 'Khảo sát đầu vào', name: 'Khảo sát đầu vào' },
-        { id: 'Khảo sát đầu ra', name: 'Khảo sát đầu ra' },
+        { id: 1, name: 'Khảo sát đầu vào' },
+        { id: 2, name: 'Khảo sát đầu ra' },
+      ],
+      isSurveyName: [
+        { id: 1, name: 'Bộ câu hỏi KSĐV 1' },
+          { id: 2, name: 'Bộ câu hỏi KSĐV 2' },
       ],
     };
   },
@@ -382,17 +385,21 @@ export default {
         // age 
        {
         
-      //   if(this.filter.UserAgeFrom!==null&&this.filter.UserAgeTo!==null)
-      //  {
-      // return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) >= this.filter.UserAgeFrom &&(new Date().getFullYear() - Number(item.user_yearofbirth)) <= this.filter.UserAgeTo)
-      //  }
+        if(this.filter.UserAgeFrom!==null&&this.filter.UserAgeTo!==null)
+       {
+      return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) >= this.filter.UserAgeFrom &&(new Date().getFullYear() - Number(item.user_yearofbirth)) <= this.filter.UserAgeTo)
+       }
         if(this.filter.UserAgeFrom!==null)
        {
-      return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) === this.filter.UserAgeFrom)
+      return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) >= this.filter.UserAgeFrom)
        }
-      //   if(this.filter.UserAgeTo!==null)
+        if(this.filter.UserAgeTo!==null)
+       {
+      return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) <= this.filter.UserAgeTo)
+       }
+      //   if(this.filter.ParticipationPackage!==null)
       //  {
-      // return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) <= this.filter.UserAgeTo)
+      //  return this.staff_list.filter((item) => item.participation_package === this.filter.ParticipationPackage.selected[i].name)
       //  }
 
 
@@ -489,7 +496,8 @@ export default {
      resetFilter() {
         this.filter.Username = null,
         this.filter.UserPhone= null,
-        this.filter. UserAge= null,
+        this.filter. UserAgeFrom= null,
+        this.filter. UserAgeTo= null,
         this.filter.ParticipationPackage= null,
         this.filter.SurveyType= null,
         this.filter.SurveyName= null,

@@ -28,7 +28,7 @@
                 :class="table"
                 :column="column"
                 :data="NullItems"
-                
+                :paging="paging"
                 :tableAction="false"
                 :selectAction="false"
                 :searchAction="false"
@@ -125,14 +125,7 @@
               </template-table>
              <br>
           <div style="float: right">
-             <b-pagination
-              
-              v-model="currentPage"
-             :total-rows="tableLength"
-             :per-page="perPage"
-              aria-controls="my-table"         
-
-              ></b-pagination>
+            
                <br>
                <br>
                    <b-button
@@ -241,7 +234,7 @@ export default {
       paging: {
         page: 1,
         pageSize: 10,
-        total: 0,
+        total: 10,
       },
       filter: {
         searchKey: null,

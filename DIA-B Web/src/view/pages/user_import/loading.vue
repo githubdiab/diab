@@ -175,7 +175,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
       paging: {
         page: 1,
         pageSize: 10,
-        total: this.staff_list.length,
+        total: 0,
         
         
       //  total: 0,
