@@ -34,7 +34,7 @@ namespace DiaB.WebApi.Controllers
             string query = @"select user_code  from account_imports where @id= id";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -64,7 +64,7 @@ namespace DiaB.WebApi.Controllers
             string query = @"select * from survey_import_details ";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource))
             {
@@ -89,7 +89,7 @@ namespace DiaB.WebApi.Controllers
             string query = @"select * from survey_import_details where survey_id in (select survey_imports.id from survey_imports where survey_imports.user_id = @user_id ) order by LENGTH(question_code),question_code";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -116,7 +116,7 @@ namespace DiaB.WebApi.Controllers
                values(@id,@is_deleted,@survey_id,@category_code,@category,@sub_category_code,@sub_category,@question_code,@question_number,@question_answer,@question_result)";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )

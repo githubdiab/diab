@@ -21,7 +21,7 @@ namespace DiaB.Middle.Services
         {
             FileUploadDtos.StaffInfo result = new FileUploadDtos.StaffInfo();
             string rootFolder = "../";
-            string fileName = Guid.NewGuid().ToString() + input.file.FileName;
+            string fileName = input.file.FileName;
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
             FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
@@ -97,11 +97,12 @@ namespace DiaB.Middle.Services
 
                     }
 
-
+                   File.Delete(rootFolder+fileName);
 
                 }
             }
             return result;
+           
         }
     }
 }

@@ -23,13 +23,14 @@
          <b-dropdown-divider> </b-dropdown-divider>
           <b-dropdown-form>
             <b-container class="p-0">
+                <div>
               <b-row>
                 <b-col>
                   <basic-input
                     label="Tên bệnh nhân"
                     placeholder="Nhập tên bệnh nhân"
-                    name="userCode"
-                    :value.sync="filter.UserCode" 
+                    name="userName"
+                    :value.sync="filter.Username" 
                   ></basic-input>
                 </b-col>
                
@@ -39,47 +40,51 @@
                     label="Số điện thoại"
                     placeholder="Nhập số điện thoại"
                     name="userPhone"
-                   
+                    inputType="text"
                     :value.sync="filter.UserPhone"
                   ></basic-input>
                 </b-col>
                 
                    
-                
+                   
                 <b-col>
-                     
-
+                 
+                 <label>Độ tuổi</label>
+                 <p style="height:0px">sssssss</p>
+                <div>
                   <b-row >                             
                   <basic-input   
                   
-                  label ="Độ tuổi"  
+                 
                     style="width:100px"            
                     placeholder="Từ"
-                    name="name"
+                    name="UserAgeFrom"
                     inputType="number"
-                    :value.sync="filter.Username"
+                    :value.sync="filter.UserAgeFrom"
                   ></basic-input>
                    <p style="color:white">spa</p>
                     <basic-input
-                      label ="Độ tuổi"  
+                      
                    style="width:100px"
                     placeholder="Đến"
-                    name="name"
+                    name="UserAgeTo"
                     inputType="number"
-                    :value.sync="filter.Username"
+                    :value.sync="filter.UserAgeTo"
                   ></basic-input>
-                     </b-row>     
+                     </b-row>    
+                </div>
                    </b-col>   
-                     
+                      
               </b-row>
+               </div> 
               <b-row>
                  <b-col>
                   <basic-select
                     label="Gói tham gia"
                     placeholder="--- Chọn ---"
-                    name="surveyType"
+                    name="ParticipationPackage"
                     :options="isGenderOpts"
-                
+                 :value.sync="filter.ParticipationPackage"
                     :solid="false"
                     :allowEmpty="true"
                   />
@@ -88,7 +93,7 @@
                   <basic-select
                     label="Loại khảo sát"
                     placeholder="--- Chọn ---"
-                    name="surveyType"
+                    name="SurveyType"
                     :options="isSurveyTypes"
                     :value.sync="filter.SurveyType"
                     :solid="false"
@@ -99,9 +104,9 @@
                   <basic-select
                     label="Tên khảo sát"
                     placeholder="--- Nhập tên khảo sát ---"
-                    name="surveyType"
+                    name="SurveyName"
                     :options="isSurveyTypes"
-                    :value.sync="filter.SurveyType"
+                    :value.sync="filter.SurveyName"
                     :solid="false"
                     :allowEmpty="true"
                   />
@@ -118,17 +123,17 @@
                   <basic-input
                     style="width:100px"
                     placeholder="Từ"
-                    name="name"
-                    :value.sync="filter.SurveyName"
-                      inputType="number"
+                    name="SurveyDayFrom"
+                    :value.sync="filter.SurveyDayFrom"
+                      inputType="day"
                   ></basic-input>
                 <p style="color:white">spa</p>
                    <basic-input
                     style="width:100px;  "
                     placeholder="Đến"
-                    name="name"
-                    :value.sync="filter.SurveyName"
-                      inputType="number"
+                    name="SurveyDayTo"
+                    :value.sync="filter.SurveyDayTo"
+                      inputType="day"
                   ></basic-input>
                      </b-row>
                     </b-col>
@@ -140,16 +145,16 @@
                   <basic-input
                     style="width:100px"
                     placeholder="Từ"
-                    name="name"
-                    :value.sync="filter.SurveyName"
+                    name="ImportDayFrom"
+                    :value.sync="filter.ImportDayFrom"
                       inputType="number"
                   ></basic-input>
                    <p style="color:white">spa</p>
                    <basic-input
                     style="width:100px"
                     placeholder="Đến"
-                    name="name"
-                    :value.sync="filter.SurveyName"
+                    name="ImportDayTo"
+                    :value.sync="filter.ImportDayTo"
                       inputType="number"
                   ></basic-input>
                     </b-row>
@@ -164,7 +169,7 @@
               class="btn ml-2"
               href="#"
               tabindex="0"
-              @click="resetRequest"
+              @click="resetFilter"
             >
               <span class="svg-icon">
                 <inline-svg
@@ -177,7 +182,7 @@
               class="btn ml-2"
               href="#"
               tabindex="0"
-              @click="searchRequest"
+              @click="filtetest"
             >
               <span class="svg-icon">
                 <inline-svg src="/media/svg/icons/Neolex/Basic/filter.svg" />
@@ -205,7 +210,7 @@
               <template-table
              
                 :column="column"
-                  :data="staff_list"
+                  :data="filtetest()"
                   :paging="paging"
                   :tableAction="false"
                   :selectAction="false"
@@ -283,9 +288,20 @@ export default {
         pageSize: 10,
         total: 10,
       },
-      filter: {
-        searchKey: null,
+       filter: {
+        Username: null,
+        UserPhone: null,
+        UserAgeFrom: null,
+        UserAgeTo: null,
+        ParticipationPackage: null,
+        SurveyType: null,
+        SurveyName: null,
+        ImportDayFrom: null,
+       ImportDayTo: null,
+        SurveyDayFrom: null,
+       SurveyDayTo: null,
       },
+     
       sort: {
         by: null,
         order: null,
@@ -336,7 +352,10 @@ export default {
         { id: 1, name: 'Nam' },
         { id: 2, name: 'Nữ' },
       ],
-     
+      isSurveyTypes: [
+        { id: 'Khảo sát đầu vào', name: 'Khảo sát đầu vào' },
+        { id: 'Khảo sát đầu ra', name: 'Khảo sát đầu ra' },
+      ],
     };
   },
   computed: {
@@ -347,6 +366,39 @@ export default {
         page: this.paging.page,
         size: this.paging.pageSize,
       };
+    },
+
+     filteredMovies() {
+    //name
+       if(this.filter.Username!==null)
+       {
+      return this.staff_list.filter((item) => item.user_name === this.filter.Username)
+       }
+       //phone
+       if(this.filter.UserPhone!==null)
+       {
+      return this.staff_list.filter((item) => item.user_phone === this.filter.UserPhone)
+       }
+        // age 
+       {
+        
+      //   if(this.filter.UserAgeFrom!==null&&this.filter.UserAgeTo!==null)
+      //  {
+      // return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) >= this.filter.UserAgeFrom &&(new Date().getFullYear() - Number(item.user_yearofbirth)) <= this.filter.UserAgeTo)
+      //  }
+        if(this.filter.UserAgeFrom!==null)
+       {
+      return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) === this.filter.UserAgeFrom)
+       }
+      //   if(this.filter.UserAgeTo!==null)
+      //  {
+      // return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) <= this.filter.UserAgeTo)
+      //  }
+
+
+
+       }
+    return 0
     },
   },
   watch: {
@@ -359,6 +411,7 @@ export default {
     },
   },
   methods: {
+     
     pagingAction() {
       this.loadData();
     },
@@ -433,6 +486,34 @@ export default {
         this.$bvModal.show('user-import-modal');
       });
     },
+     resetFilter() {
+        this.filter.Username = null,
+        this.filter.UserPhone= null,
+        this.filter. UserAge= null,
+        this.filter.ParticipationPackage= null,
+        this.filter.SurveyType= null,
+        this.filter.SurveyName= null,
+        this.filter.ImportDayFrom= null,
+      this.filter.ImportDayTo= null,
+        this.filter.SurveyDayFrom= null,
+        this.filter.SurveyDayTo= null,
+        this.paging.size = 10
+      },
+
+     filtetest()
+      {
+       if((this.filter.Username||this.filter.UserPhone||this.filter.UserAgeFrom||this.filter.UserAgeTo||this.filter.ParticipationPackage
+        ||this.filter.SurveyType||this.filter.SurveyName
+        ||this.filter.ImportDayFrom||this.filter.ImportDayTo||this.filter.SurveyDayFrom||this.filter.SurveyDayTo)!==null)
+     //   if(this.filter.Username===null)
+        {
+           return this.filteredMovies;
+         
+        }
+        else
+        return this.staff_list
+      }
+    
   },
   mounted() {
    // axios.get('').then((reps)=>this.list=reps.data.data)

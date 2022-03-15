@@ -30,7 +30,7 @@ namespace DiaB.WebApi.Controllers
                                  where id not in (select user_id from survey_imports order by user_id ASC) ";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -56,7 +56,7 @@ namespace DiaB.WebApi.Controllers
             string query = @"select * from account_imports ";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -84,7 +84,7 @@ namespace DiaB.WebApi.Controllers
 
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -122,7 +122,7 @@ namespace DiaB.WebApi.Controllers
             DataTable table = new DataTable();
 
 
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )

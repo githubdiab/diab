@@ -31,7 +31,7 @@ namespace DiaB.WebApi.Controllers
         {
 
 
-            string query = @"select account_imports.user_name,account_imports.user_typeofsick,survey_imports.import_day,survey_imports.participation_package,survey_imports.survey_type,survey_imports.survey_name,survey_imports.survey_code ,account_imports.user_code,account_imports.id
+            string query = @"select account_imports.user_name, account_imports.user_phone,account_imports.user_yearofbirth,account_imports.user_typeofsick,survey_imports.import_day,survey_imports.participation_package,survey_imports.survey_type,survey_imports.survey_name,survey_imports.survey_code ,account_imports.user_code,account_imports.id
                              from survey_imports,account_imports
                              where account_imports.id = survey_imports.user_id
                               order by account_imports.create_datetime desc
@@ -40,7 +40,7 @@ namespace DiaB.WebApi.Controllers
 
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -58,9 +58,6 @@ namespace DiaB.WebApi.Controllers
             }
 
             return new JsonResult(table);
-
-
-         //   return new JsonResult(table);
         }
 
 
@@ -73,7 +70,7 @@ namespace DiaB.WebApi.Controllers
 
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -104,7 +101,7 @@ namespace DiaB.WebApi.Controllers
             string query = @"select * from survey_import_results ";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
@@ -130,7 +127,7 @@ namespace DiaB.WebApi.Controllers
                values(@id,@is_deleted)";
 
             DataTable table = new DataTable();
-            string sqlDataSource = _configuration.GetConnectionString("DiabConnection");
+            string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
 )
