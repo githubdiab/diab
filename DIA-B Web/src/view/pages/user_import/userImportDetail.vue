@@ -194,6 +194,10 @@ export default {
     id:{
       type:String,
       default:null,
+    },
+    survey_code:{
+      type:String,
+      default:null,
     }
   },
   data() {
@@ -267,7 +271,7 @@ export default {
      loadData_surveydetails() {
      
       this.$api.get('SurveyImportDetails/survey_id', {
-          params: { user_id : this.id},
+          params: { user_id : this.id , survey_code:this.survey_code},
         })
         .then( data => {
         //  this.selected = [];

@@ -135,7 +135,7 @@ export default {
   methods: {    
   async  addUser() {
 
-      for(let i=0;i<=Number(this.staff_list.length);i++)
+      for(let i=0;i<Number(this.staff_list.length);i++)
       {
         await this.$api.post('accountimport', {headers: {'Content-Type': 'application/json'}}, {
         params: {
@@ -157,10 +157,8 @@ export default {
          
         })
         
-           await  this.$api.get('accountimport/id').then(this.AddSurvey());
-
         ;;
-   //     console.log()
+
   }
 
 
@@ -170,49 +168,59 @@ export default {
 
    async AddSurvey ()
  {
-   
-    const data = await this.$api.get('accountimport/id')
-      
-   
-  
-    for(let j=0;j<=Number(this.staff_list.length);j++)
+   for(let a=0;a<=this.staff_list.length;a++)
      {
-   const survey_day = new Date(this.staff_list[j].survey_day).toISOString().slice(0, 10);
-   const import_day = new Date(this.staff_list[j].import_day).toISOString().slice(0, 10);
- 
+     await  this.$api.get('accountimport/id').then(res=>{          //get all id 
+       this.checkaccount = res
+     });
+     }
+
+   // var data = await this.$api.get('accountimport/id')
+     // console.log( this.checkaccount.length)
+   
+  for(let n=0;n< this.checkaccount.length;n++)
+    for(let j=0;j<Number(this.elimited().length);j++)
+     {
+  
+   const survey_day = new Date(this.elimited()[j].survey_day).toISOString();
+   const import_day = new Date(this.elimited()[j].import_day).toISOString();
+
+  //let toTimestamp = strDate => Date.parse(strDate)
+  if( this.checkaccount[n].user_code===Number(this.elimited()[j].user_code))
+  {
   await  this.$api.post('surveyimport',{headers: {'Content-Type': 'application/json'}}, {
   
        params: {    
 
-      user_id : data[j].id,
-      course_goal: this.staff_list[j].course_goal,
-      course_action:this.staff_list[j].course_action,
-      course_final_rate:this.staff_list[j].course_final_rate,
-      participation_package:this.staff_list[j].participation_package,
-      survey_type_code:this.staff_list[j].survey_type_code,
-      survey_type:this.staff_list[j].survey_type,
-      survey_code:this.staff_list[j].survey_code,
-      survey_name:this.staff_list[j].survey_name,
-      import_day:  import_day,
-      survey_day: survey_day
+      user_id :  this.checkaccount[n].id,
+      course_goal: this.elimited()[j].course_goal,
+      course_action:this.elimited()[j].course_action,
+      course_final_rate:this.elimited()[j].course_final_rate,
+      participation_package:this.elimited()[j].participation_package,
+      survey_type_code:this.elimited()[j].survey_type_code,
+      survey_type:this.elimited()[j].survey_type,
+      survey_code:this.elimited()[j].survey_code,
+      survey_name:this.elimited()[j].survey_name,
+      import_day:  import_day.slice(0, 10),
+      survey_day: survey_day.slice(0, 10)
         },
    
       
-      }).catch((error) => {
+      })
+      .catch((error) => {
           this.$toastr.e({
             title: 'Lỗi',
             msg: error,
           });
-        })
-    
-
-
-
-     
+        })   
      }
- 
+     }
  },
-   
+     elimited: function()
+   {  
+    
+    return this.staff_list.filter((item, pos, self) => self.findIndex(v => v.user_code === item.user_code) === pos);
+  },
  
 
     goback() {
@@ -227,7 +235,8 @@ export default {
     async handleClick(){
          this.$root.$refs.A.SelectFile();
       this.$store.commit('context/setLoading', true);
-    await this.addUser().then(this.goback())
+   // await this.addUser().then( this.AddSurvey()).then(this.goback()) ---------------1 user
+    await this.addUser().then( this.AddSurvey()).then(this.goback())
         .finally(() => {
           this.$store.commit('context/setLoading', false);
              this.openModalSuccess();
@@ -240,7 +249,7 @@ export default {
     
   },
   mounted(){
-
+      this.elimited();
   }
 }
 </script>

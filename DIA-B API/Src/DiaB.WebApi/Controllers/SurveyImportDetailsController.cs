@@ -82,11 +82,11 @@ namespace DiaB.WebApi.Controllers
 
 
         [HttpGet("survey_id")]
-        public JsonResult Get_detail(string user_id)
+        public JsonResult Get_detail(string user_id , string survey_code)
         {
 
 
-            string query = @"select * from survey_import_details where survey_id in (select survey_imports.id from survey_imports where survey_imports.user_id = @user_id ) order by LENGTH(question_code),question_code";
+            string query = @"select * from survey_import_details where survey_id in (select survey_imports.id from survey_imports where survey_imports.user_id = @user_id AND survey_code=@survey_code  ) order by LENGTH(question_code),question_code";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
@@ -98,6 +98,7 @@ namespace DiaB.WebApi.Controllers
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
                     cmd.Parameters.AddWithValue("@user_id", user_id);
+                    cmd.Parameters.AddWithValue("@survey_code", survey_code);
                     myReader = cmd.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();

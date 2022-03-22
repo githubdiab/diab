@@ -90,26 +90,23 @@ export default {
       form: {},
       validationState: {},
       error: {},
+      checkaccount:[],
     };
+    
+  },
+  mounted()
+  {
+     this.elimited();
   },
   methods: {
-   async handleClick(){
-      this.$store.commit('context/setLoading', true);
-    await this.addUser().then(this.goback())
-        .finally(() => {
-          this.$store.commit('context/setLoading', false);
-             this.openModalSuccess();
-        });
-   
-    
-     
-    },
-    async  addUser() {
+  
+     async  addUser() {
 
-      for(let i=0;i<=Number(this.staff_list.length);i++)
+      for(let i=0;i<Number(this.staff_list.length);i++)
       {
-        await this.$api.post('AccountImport', {headers: {'Content-Type': 'application/json'}}, {
-        params: {        
+        await this.$api.post('accountimport', {headers: {'Content-Type': 'application/json'}}, {
+        params: {
+            
           user_name: this.staff_list[i].user_name,
           user_code: this.staff_list[i].user_code,
           user_gender: this.staff_list[i].user_gender,
@@ -121,55 +118,75 @@ export default {
           user_province: this.staff_list[i].user_province,
           story_success: this.staff_list[i].story_success,
           user_typeofsick: this.staff_list[i].user_typeofsick,
-          year_foundout:this.staff_list[i].year_foundout,          
+          year_foundout:this.staff_list[i].year_foundout,
+           
         },
          
         })
         
-       await  this.$api.get('AccountImport/id',).then(this.AddSurvey());
-
         ;;
+
   }
 
 
 
 
    },
-
-   async AddSurvey ()
+  async AddSurvey ()
  {
-    //  await this.addUser();
-    
-    const data = await this.$api.get('AccountImport/id')
- 
-   // const n = data.length 
-        for(let j=0;j<=Number(this.staff_list.length);j++)
+   for(let a=0;a<=this.staff_list.length;a++)
      {
-        const survey_day = new Date(this.staff_list[j].survey_day).toISOString().slice(0, 10);
-        const import_day = new Date(this.staff_list[j].import_day).toISOString().slice(0, 10);
-       await  this.$api.post('SurveyImport',{headers: {'Content-Type': 'application/json'}}, {
-      params: {   
-      user_id : data[j].id,
-     // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
-      course_goal: this.staff_list[j].course_goal,
-      course_action:this.staff_list[j].course_action,
-      course_final_rate:this.staff_list[j].course_final_rate,
-      participation_package:this.staff_list[j].participation_package,
-      survey_type_code:this.staff_list[j].survey_type_code,
-      survey_type:this.staff_list[j].survey_type,
-      survey_code:this.staff_list[j].survey_code,
-      survey_name:this.staff_list[j].survey_name,
-      import_day:  import_day,
-      survey_day: survey_day
-           
-        },
-      });
-     
-   //   await axios.get('https://localhost:44380/api/surveyimport')
-    // this.AddSurveyDetails();
+     await  this.$api.get('accountimport/id').then(res=>{          //get all id 
+       this.checkaccount = res
+     });
      }
-    
+
+   // var data = await this.$api.get('accountimport/id')
+     // console.log( this.checkaccount.length)
+   
+  for(let n=0;n< this.checkaccount.length;n++)
+    for(let j=0;j<Number(this.elimited().length);j++)
+     {
+  
+   const survey_day = new Date(this.elimited()[j].survey_day).toISOString();
+   const import_day = new Date(this.elimited()[j].import_day).toISOString();
+
+  //let toTimestamp = strDate => Date.parse(strDate)
+  if( this.checkaccount[n].user_code===Number(this.elimited()[j].user_code))
+  {
+  await  this.$api.post('surveyimport',{headers: {'Content-Type': 'application/json'}}, {
+  
+       params: {    
+
+      user_id :  this.checkaccount[n].id,
+      course_goal: this.elimited()[j].course_goal,
+      course_action:this.elimited()[j].course_action,
+      course_final_rate:this.elimited()[j].course_final_rate,
+      participation_package:this.elimited()[j].participation_package,
+      survey_type_code:this.elimited()[j].survey_type_code,
+      survey_type:this.elimited()[j].survey_type,
+      survey_code:this.elimited()[j].survey_code,
+      survey_name:this.elimited()[j].survey_name,
+      import_day:  import_day.slice(0, 10),
+      survey_day: survey_day.slice(0, 10)
+        },
+   
+      
+      })
+      .catch((error) => {
+          this.$toastr.e({
+            title: 'Lỗi',
+            msg: error,
+          });
+        })   
+     }
+     }
  },
+     elimited: function()
+   {  
+    
+    return this.staff_list.filter((item, pos, self) => self.findIndex(v => v.user_code === item.user_code) === pos);
+  },
  
     goback() {
       this.$bvModal.hide('user-import-modal');
@@ -177,6 +194,15 @@ export default {
     openModalSuccess: function()
     {
         this.$root.$refs.B.clickshow();
+    },
+     async handleClick(){
+      this.$store.commit('context/setLoading', true);
+    await this.addUser().then(this.AddSurvey()).then(this.goback())
+        .finally(() => {
+          this.$store.commit('context/setLoading', false);
+             this.openModalSuccess();
+        });
+     
     },
   },
 };

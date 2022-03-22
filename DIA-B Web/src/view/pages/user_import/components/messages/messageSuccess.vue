@@ -80,24 +80,12 @@ result =uniqueValues.size;
   }
      return result
    },
-  //    elimited: function() {
-  //     return this.staff_list.filter(function(item) {
-  //       return
-  //     });
-    
-
-  // },
-
-
-
+ 
   },
 
 
   watch: {},
-  // mounted() {this.$root.$on('Modal',()=>{
-  //   this.handleClick()
-  // })},
-  
+ 
   data() {
     return {
       isMounted: false,
@@ -170,18 +158,20 @@ const data_code = await this.$api.get('AccountImport/account')        // get use
 
      for(let n=0;n<data_code.length;n++)             // vong lap user_code
      {
+     for(let m=0;m<data.length;m++)             // vong lap survey_id
+     {
      for(let k=0;k<Number(this.staff_list.length);k++)     // vong lap file excel 
      {
              
       { 
-       if((data_code[n].user_code===Number(this.staff_list[k].user_code))===true)        // so sanh user_code
+       if(data_code[n].user_code===Number(this.staff_list[k].user_code) && data[m].survey_code===this.staff_list[k].survey_code && data_code[n].user_name===this.staff_list[k].user_name && data[m].user_id===data_code[n].id )        // so sanh user_code
        {
 
       {
        await  this.$api.post('SurveyImportDetails',{headers: {'Content-Type': 'application/json'}}, {
       params: {
-       survey_id : data[n].id,
-     // user_id: '1a9d3f69-40b2-4206-b59e-dc4ea6c3a18c',
+       survey_id : data[m].id,
+    
        category_code : this.staff_list[k].category_code,
        category: this.staff_list[k].category,
        sub_category_code: this.staff_list[k].sub_category_code,
@@ -193,18 +183,13 @@ const data_code = await this.$api.get('AccountImport/account')        // get use
            
         },
       });  
-     //   console.log(true,count++,[n , k]);
-    //   console.log(number_question[n].number_question)
+    
        }
-      //  if(data_code[n].user_code!==Number(this.staff_list[k].user_code))
-      //  {
-      //  console.log(false + [n,k]);                     
-      //  }     
      }
       }
   
      }
-   
+     }
      }
  },
     goback() {

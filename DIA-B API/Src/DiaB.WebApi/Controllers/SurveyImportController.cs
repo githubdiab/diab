@@ -26,8 +26,8 @@ namespace DiaB.WebApi.Controllers
 
 
             string query = @"insert into survey_imports(id,is_deleted,user_id,course_goal,course_action,course_final_rate,participation_package,survey_type_code,survey_type,survey_code,survey_name,survey_day,import_day,creator_id,updater_id)
-               values(@id,@is_deleted,@user_id,@course_goal,@course_action,@course_final_rate,@participation_package,@survey_type_code,@survey_type,@survey_code,@survey_name,@survey_day,@import_day,@creator_id,@updater_id)";
-
+               values(@id,@is_deleted,@user_id,@course_goal,@course_action,@course_final_rate,@participation_package,@survey_type_code,@survey_type,@survey_code,@survey_name,@survey_day,@import_day,@creator_id,@updater_id)
+            ";
 
             DataTable table = new DataTable();
 
@@ -50,8 +50,8 @@ namespace DiaB.WebApi.Controllers
                     cmd.Parameters.AddWithValue("@survey_type", sur.survey_type);
                     cmd.Parameters.AddWithValue("@survey_code", sur.survey_code);
                     cmd.Parameters.AddWithValue("@survey_name", sur.survey_name);
-                    cmd.Parameters.AddWithValue("@survey_day", (sur.survey_day).ToString());
-                    cmd.Parameters.AddWithValue("@import_day", sur.import_day.ToString());
+                    cmd.Parameters.AddWithValue("@survey_day", sur.survey_day);
+                    cmd.Parameters.AddWithValue("@import_day", sur.import_day);
                     cmd.Parameters.AddWithValue("@creator_id", "cb356d0b-b62b-4418-a295-b2b71393fba6");
                     cmd.Parameters.AddWithValue("@updater_id", "cb356d0b-b62b-4418-a295-b2b71393fba6");
 
@@ -77,7 +77,7 @@ namespace DiaB.WebApi.Controllers
             /* string query = @"SELECT survey_imports.id 
                                     FROM survey_imports
                                     where id not in (select survey_id from survey_import_details) order by user_id ASC ";*/
-            string query = @"SELECT id from survey_imports order by user_id ASC ";
+            string query = @"SELECT id , survey_code , user_id from survey_imports ORDER BY update_datetime";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");

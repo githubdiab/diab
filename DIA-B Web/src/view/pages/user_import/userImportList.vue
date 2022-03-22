@@ -83,11 +83,18 @@
                     label="Gói tham gia"
                     placeholder="--- Chọn ---"
                     name="ParticipationPackage"
-                    :options="isPackage"
-                 :value.sync="filter.ParticipationPackage"
-                   
-                  />
+                  >
+                   <select >
+  <option
+    v-for="item in otal"
+    :key="item.participation_package"
+   
+  >{{ item.participation_package  }}</option>
+</select>
+                  </basic-select>
+                 
                 </b-col>
+           
                  <b-col>
                   <basic-select
                     label="Loại khảo sát"
@@ -119,20 +126,26 @@
                      <label>Ngày thực hiện khảo sát</label>
                      <b-col></b-col>
                      <b-row >
+
                   <basic-input
-                    style="width:100px"
-                    placeholder="Từ"
+                    inputType="text"
+                    style="width:175px"   
                     name="SurveyDayFrom"
-                    :value.sync="filter.SurveyDayFrom"
-                      inputType="day"
+                    placeholder="Từ"
+                    onfocus="(this.type='date')"
+                   :value.sync="filter.SurveyDayFrom"
                   ></basic-input>
+
                 <p style="color:white">spa</p>
+
                    <basic-input
-                    style="width:100px;  "
+                    style="width:175px"   
                     placeholder="Đến"
                     name="SurveyDayTo"
                     :value.sync="filter.SurveyDayTo"
-                      inputType="day"
+                    onfocus="(this.type='date')"
+                    inputType="text"
+
                   ></basic-input>
                      </b-row>
                     </b-col>
@@ -141,21 +154,28 @@
                      <label>Ngày Import</label>
                       <b-col></b-col>  
                       <b-row>
+
                   <basic-input
-                    style="width:100px"
+                 style="width:175px"   
                     placeholder="Từ"
                     name="ImportDayFrom"
                     :value.sync="filter.ImportDayFrom"
-                      inputType="number"
+                      onfocus="(this.type='date')"
+                      inputType="text"
+                    :allowEmpty="true"
                   ></basic-input>
+
                    <p style="color:white">spa</p>
                    <basic-input
-                    style="width:100px"
+
+                   style="width:175px"   
                     placeholder="Đến"
                     name="ImportDayTo"
                     :value.sync="filter.ImportDayTo"
-                      inputType="number"
+                    onfocus="(this.type='date')"
+                     inputType="text"
                   ></basic-input>
+                  
                     </b-row>
                 </b-col>
                    
@@ -238,7 +258,7 @@
                       </action-dropdown>
                     </td>
                   <td style="padding-left: 25px;">{{ item.user_typeofsick }}</td>
-                  <td style=" padding-left: 25px;">{{ $moment(item.import_day* 1000).format('DD/MM/YYYY') }}</td>
+                  <td style=" padding-left: 25px;">{{ $moment((item.import_day+86400)*1000).format('DD/MM/YYYY') }}</td>
                   <td>{{ item.participation_package }}</td>
                   <td>{{ item.survey_type }}</td>
                   <td>{{ item.survey_name }}<br>Mã số: {{ item.survey_code }}
@@ -275,6 +295,7 @@ td{
 
 <script>
 //import axios from 'axios';
+//import moment from 'vue-moment'
 export default {
   components: { 'user-import-modal': () => import('./components/Modal') },
  
@@ -347,10 +368,10 @@ export default {
      
       ],
       staff_list: [],
-      isPackage: [
-        { id: 1, name: 'Gói thấu cảm' },
-        { id: 2, name: 'Gói đồng hành' },
-      ],
+      isPackage: {}
+        // { id: 1, name: 'Gói thấu cảm' },
+        // { id: 2, name: 'Gói đồng hành' },
+      ,
       isSurveyTypes: [
         { id: 1, name: 'Khảo sát đầu vào' },
         { id: 2, name: 'Khảo sát đầu ra' },
@@ -362,6 +383,18 @@ export default {
     };
   },
   computed: {
+    stafflist_total()
+    {
+       
+       return this.staff_list.length
+      
+    },
+    otal()
+    {
+       return this.staff_list.filter((item, pos, self) => self.findIndex(v => v.participation_package === item.participation_package) === pos);
+     //  return this.staff_list.filter(item=>item.participation_package)  
+      
+    },
     searchParams() {
       return {
        
@@ -371,8 +404,8 @@ export default {
       };
     },
 
-     filteredMovies() {
-    //name
+     filteredList() {
+    //Name Filter
        if(this.filter.Username!==null)
        {
       return this.staff_list.filter((item) => item.user_name === this.filter.Username)
@@ -382,7 +415,7 @@ export default {
        {
       return this.staff_list.filter((item) => item.user_phone === this.filter.UserPhone)
        }
-        // age 
+        // AGE FILTER  
        {
         
         if(this.filter.UserAgeFrom!==null&&this.filter.UserAgeTo!==null)
@@ -397,11 +430,35 @@ export default {
        {
       return this.staff_list.filter((item) => (new Date().getFullYear() - Number(item.user_yearofbirth)) <= this.filter.UserAgeTo)
        }
-      //   if(this.filter.ParticipationPackage!==null)
-      //  {
-      //  return this.staff_list.filter((item) => item.participation_package === this.filter.ParticipationPackage.selected[i].name)
-      //  }
+     
+     /////////// IMPORT DAY FILTER
+     if ((this.filter.ImportDayFrom)&&(this.filter.ImportDayTo)!==null) 
+      {
+         return this.staff_list.filter((item) => ((new Date(item.import_day*1000).toISOString().slice(0,10)).valueOf()>=(this.filter.ImportDayFrom).valueOf()&&((new Date(item.import_day*1000).toISOString().slice(0,10)).valueOf()<=(this.filter.ImportDayTo).valueOf())))
+      }
+      if (this.filter.ImportDayFrom!==null) 
+      {
+         return this.staff_list.filter((item) => (new Date(item.import_day*1000).toISOString().slice(0,10)).valueOf()>=(this.filter.ImportDayFrom).valueOf())
+      }
+       if (this.filter.ImportDayTo!==null) 
+      {
+         return this.staff_list.filter((item) => (new Date(item.import_day*1000).toISOString().slice(0,10)).valueOf()<=(this.filter.ImportDayTo).valueOf())
+      }
 
+       /////////// SURVEY DAY FILTER
+     if ((this.filter.SurveyDayFrom)&&(this.filter.SurveyDayTo)!==null) 
+      {
+         return this.staff_list.filter((item) => ((new Date(item.survey_day*1000).toISOString().slice(0,10)).valueOf()>=(this.filter.SurveyDayFrom).valueOf()&&((new Date(item.survey_day*1000).toISOString().slice(0,10)).valueOf()<=(this.filter.SurveyDayTo).valueOf())))
+      }
+      if (this.filter.SurveyDayFrom!==null) 
+      {
+         return this.staff_list.filter((item) => (new Date(item.survey_day*1000).toISOString().slice(0,10)).valueOf()>=(this.filter.SurveyDayFrom).valueOf())
+      }
+       if (this.filter.SurveyDayTo!==null) 
+      {
+         return this.staff_list.filter((item) => (new Date(item.survey_day*1000).toISOString().slice(0,10)).valueOf()<=(this.filter.SurveyDayTo).valueOf())
+      }
+       
 
 
        }
@@ -412,7 +469,7 @@ export default {
       paging: {
       handler() {
         this.loadData();  
-       this.handlePageChange();
+      // this.handlePageChange();
       },
       deep: true,
     },
@@ -423,20 +480,14 @@ export default {
       this.loadData();
     },
   
-    createItem() {
-      this.$router.push({
-        name: 'windown_import',
-        params: {
-          form_type: 'create',
-        },
-      });
-    },
+    
     viewItem(item) {
       this.$router.push({
         name: 'user_import_detail',
         params: {
           user_code : item.user_code,
-          id : item.id
+          id : item.id,
+          survey_code :  item.survey_code
         },
       });
     },
@@ -469,7 +520,12 @@ export default {
           
         })
         .then( data  => {     
-          this.staff_list = data;
+          this.staff_list = data; 
+        // this.isPackage=data.map(value=>value.user_name)
+       //  this.isPackage=data
+       ///  console.log(this.isPackage)
+             //     console.log(this.isSurveyTypes)
+
        //    this.paging.total = data.total;
         //  console.log("staff "+this.staff_list , data)
         
@@ -506,6 +562,7 @@ export default {
         this.filter.SurveyDayFrom= null,
         this.filter.SurveyDayTo= null,
         this.paging.size = 10
+        
       },
 
      filtetest()
@@ -515,11 +572,15 @@ export default {
         ||this.filter.ImportDayFrom||this.filter.ImportDayTo||this.filter.SurveyDayFrom||this.filter.SurveyDayTo)!==null)
      //   if(this.filter.Username===null)
         {
-           return this.filteredMovies;
+                                
+           return this.filteredList;
          
         }
-        else
+        else{
+                           //     
+
         return this.staff_list
+        }
       }
     
   },

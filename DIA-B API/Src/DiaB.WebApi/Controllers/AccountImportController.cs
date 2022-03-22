@@ -25,10 +25,8 @@ namespace DiaB.WebApi.Controllers
         {
 
 
-            string query = @"SELECT account_imports.id 
-                                 FROM account_imports
-                                 where id not in (select user_id from survey_imports order by user_id ASC) ";
-
+            string query = @"SELECT id , user_code FROM account_imports order by create_datetime desc ";
+            //  where id not in (select user_id from survey_imports order by user_id ASC)
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
@@ -53,7 +51,7 @@ namespace DiaB.WebApi.Controllers
         {
 
 
-            string query = @"select * from account_imports ";
+            string query = @"select id , user_code , user_name from account_imports order by id asc ";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
@@ -118,6 +116,7 @@ namespace DiaB.WebApi.Controllers
             string query = @"insert into account_imports(id,is_deleted,user_code,user_name,user_gender,user_yearofbirth,user_career,user_phone,user_hoobit,user_address,user_province,story_success,user_typeofsick,year_foundout,creator_id,updater_id)
                values(@id,@is_deleted,@user_code,@user_name,@user_gender,@user_yearofbirth,@user_career,@user_phone,@user_hoobit,@user_address,@user_province,@story_success,@user_typeofsick,@year_foundout,@creator_id,@updater_id)
                  ON DUPLICATE KEY UPDATE user_code=@user_code";
+           // ON DUPLICATE KEY UPDATE user_code = @user_code";
 
             DataTable table = new DataTable();
 

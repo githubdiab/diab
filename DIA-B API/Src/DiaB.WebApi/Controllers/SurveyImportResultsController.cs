@@ -27,19 +27,22 @@ namespace DiaB.WebApi.Controllers
         }
          
         [HttpGet("user_import")]
-        public JsonResult Get_userimport(int size)
+        public JsonResult Get_userimport()
         {
 
 
-            string query = @"select account_imports.user_name, account_imports.user_phone,account_imports.user_yearofbirth,account_imports.user_typeofsick,survey_imports.import_day,survey_imports.participation_package,survey_imports.survey_type,survey_imports.survey_name,survey_imports.survey_code ,account_imports.user_code,account_imports.id
+            string query = @"select account_imports.user_name, account_imports.user_phone,account_imports.user_yearofbirth,account_imports.user_typeofsick,survey_imports.import_day,survey_imports.survey_day,survey_imports.participation_package,survey_imports.survey_type,survey_imports.survey_name,survey_imports.survey_code ,account_imports.user_code,account_imports.id
                              from survey_imports,account_imports
-                             where account_imports.id = survey_imports.user_id
-                              order by account_imports.create_datetime desc
-                              LIMIT @size";
-                             
+                            where account_imports.id = survey_imports.user_id
+                          order by survey_imports.create_datetime desc
+
+                               ";
+          //  
 
 
-            DataTable table = new DataTable();
+
+
+DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
@@ -48,7 +51,7 @@ namespace DiaB.WebApi.Controllers
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
-                    cmd.Parameters.AddWithValue("@size", size);
+                 //  cmd.Parameters.AddWithValue("@size", size);
                     myReader = cmd.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();

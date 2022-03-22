@@ -90,7 +90,7 @@
                  
                  <td>
                     <p    v-show="item.user_gender.length==0" style="color:red">{{ "Thiếu thông tin bắt buộc: Giới tính"}}</p> 
-                    <p    v-show="item.user_gender.length==0" style="color:red">{{ "Thiếu thông tin bắt buộc: Số điện thoại"}}</p> 
+                    <p    v-show="item.user_phone.length==0" style="color:red">{{ "Thiếu thông tin bắt buộc: Số điện thoại"}}</p> 
                     <p    v-show="item.user_name.length==0" style="color:red">{{  "Thiếu thông tin bắt buộc: Họ tên"}}</p>           
                     <p    v-show="item.user_address.length==0" style="color:red">{{ "Thiếu thông tin bắt buộc: địa chỉ"}}</p>                   
                     <p    v-show="item.user_code.length==0" style="color:red">{{" Thiếu thông tin bắt buộc: Mã số"}}</p>                    

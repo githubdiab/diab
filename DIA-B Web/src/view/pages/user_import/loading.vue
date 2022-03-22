@@ -262,7 +262,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
 
         {
           key: 'story_success',
-          label: 'Câu chuyện thành công',
+          label: 'Câu chuyện',
           sortable: false,
         },
         {
@@ -366,7 +366,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
    
 
     tableLength: function () {
-     
+    //  return this.staff_list.filter((item) => item.participation_package )
       let totalcount = this.staff_list.length;
     //  var totalcount = this.column[2].key
       return totalcount;
