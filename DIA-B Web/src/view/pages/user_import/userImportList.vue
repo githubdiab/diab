@@ -45,9 +45,7 @@
                     :value.sync="filter.UserPhone"
                   ></basic-input>
                 </b-col>
-                
-                   
-                   
+               
                 <b-col>
                  
                  <label>Độ tuổi</label>
@@ -87,7 +85,7 @@
                   >
                    <select >
   <option
-    v-for="item in otal"
+    v-for="item in staff_list"
     :key="item"
    
   >{{ item  }}</option>
@@ -237,10 +235,7 @@
                   :searchAction="false"
                   @search="searchRequest"
                   @reset="resetRequest"
-              
-                 :sort-desc="true"
-               
-                
+                     
               >
                 <template v-slot:body="{ item  }"
                

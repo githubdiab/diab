@@ -157,7 +157,7 @@
     </b-container>
         <user-import-modal v-bind:staff_list="elimited" />
         <user-import-modal2  v-bind:staff_list="elimited" />
-
+       <user-import-modal_checkrecord v-bind:staff_list="elimited"/>
   </div>
 
 
@@ -221,7 +221,10 @@ td{
 export default {
   components: { 'user-import-modal': () => import('./messages/messageContinue.vue'),
   
-            'user-import-modal2': () => import('./messages/messageSuccess.vue')  },
+            'user-import-modal2': () => import('./messages/messageSuccess.vue')  ,
+
+            'user-import-modal_checkrecord': () => import('./messages/messageCheckRecord.vue') 
+            },
 
   props: {
     staff_list: {
@@ -375,26 +378,36 @@ result =uniqueValues.size;
   methods: {
     message_success()
   {
-    this.$bvModal.show('user-import-modal');
- 
-     
-       
-       ;
+    this.$bvModal.show('user-import-modal');  
         
   },
+
+   clickshow_checkrecord: function ()
+  {
+  
+    this.$bvModal.show('user-import-modal_checkrecord');
+    this.$bvModal.hide('user-import-modal2');
+  } ,
+
+ clickhide: function ()
+  {
+    this.$bvModal.hide('user-import-modal2');
+  } ,
+
+   clickshow: function ()
+  {
+    this.$bvModal.show('user-import-modal2');
+  } ,
 
   SelectFile()
   {
      this.isSelectFile=true;
   } ,
-  hidemodal()
+
+   NotselectFile()
   {
-   this.$bvModal.hide('user-import-modal2');
-  },
-   clickshow: function ()
-  {
-    this.$bvModal.show('user-import-modal2');
-  }  
+     this.isSelectFile=false;
+  } 
 
   }
   }
