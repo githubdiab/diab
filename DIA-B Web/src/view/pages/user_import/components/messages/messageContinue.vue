@@ -36,6 +36,7 @@
           @click="goback()"
           tabindex="0"
           style="width:90px"
+          
         >
         
           Huỷ
@@ -47,6 +48,7 @@
           href="#"
           @click="handleClick()"
           tabindex="0"
+          
         >
         <span class="svg-icon">
             <inline-svg src="/media/svg/import/tick.svg" />
@@ -100,7 +102,7 @@ export default {
   },
   methods: {
   
-     async  addUser() {
+      async  addUser() {
 
       for(let i=0;i<Number(this.staff_list.length);i++)
       {
@@ -128,21 +130,23 @@ export default {
 
   }
 
-
-
-
    },
-  async AddSurvey ()
+
+   
+   async AddSurvey ()
  {
+
    for(let a=0;a<=this.staff_list.length;a++)
      {
-     await  this.$api.get('accountimport/id').then(res=>{          //get all id 
-       this.checkaccount = res
-     });
-     }
 
-   // var data = await this.$api.get('accountimport/id')
-     // console.log( this.checkaccount.length)
+     await  this.$api.get('accountimport/id').then(res=>{          //get all id 
+       this.checkaccount = res     
+     });
+     
+     }
+       await  this.$api.get('surveyimport/id').then(res=>{          //get survey_code , user_id
+       this.checksurvey = res});
+  // console.log(this.checksurvey)
    
   for(let n=0;n< this.checkaccount.length;n++)
     for(let j=0;j<Number(this.elimited().length);j++)
@@ -152,8 +156,23 @@ export default {
    const import_day = new Date(this.elimited()[j].import_day).toISOString();
 
   //let toTimestamp = strDate => Date.parse(strDate)
+
   if( this.checkaccount[n].user_code===Number(this.elimited()[j].user_code))
   {
+    const a = this.checksurvey.filter((item)=> item.user_id===this.checkaccount[n].id )
+    const b = this.checksurvey.filter((item)=> item.survey_code===this.elimited()[j].survey_code)
+   
+   if(a.length>0 && b.length>0)      // check duplicate survey_imports
+    { 
+    //  //console.log(this.checksurvey[j].survey_code ,this.checksurvey[j].user_id,this.checkaccount[n].id)
+    //   console.log(this.checksurvey.filter((item)=> item.user_id===this.checkaccount[n].id ))
+    //   console.log(this.checksurvey.filter((item)=> item.survey_code===this.elimited()[j].survey_code))
+
+            this.openModalCheckRecord();
+          
+  }
+ else
+ {
   await  this.$api.post('surveyimport',{headers: {'Content-Type': 'application/json'}}, {
   
        params: {    
@@ -180,6 +199,7 @@ export default {
           });
         })   
      }
+  }
      }
  },
      elimited: function()
@@ -196,6 +216,7 @@ export default {
         this.$root.$refs.B.clickshow();
     },
      async handleClick(){
+        this.$root.$refs.B.SelectFile();
       this.$store.commit('context/setLoading', true);
     await this.addUser().then(this.AddSurvey()).then(this.goback())
         .finally(() => {

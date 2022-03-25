@@ -6,6 +6,7 @@
           id="dropdown-right dropdown-form"
           class="dropdown-form-filter"
           no-caret
+      
           right
         >
           <template #button-content>
@@ -87,9 +88,9 @@
                    <select >
   <option
     v-for="item in otal"
-    :key="item.participation_package"
+    :key="item"
    
-  >{{ item.participation_package  }}</option>
+  >{{ item  }}</option>
 </select>
                   </basic-select>
                  
@@ -236,12 +237,15 @@
                   :searchAction="false"
                   @search="searchRequest"
                   @reset="resetRequest"
-                  @sortBy="sortRequest"
-                 
+              
+                 :sort-desc="true"
+               
                 
               >
-                <template v-slot:body="{ item  }">
-             
+                <template v-slot:body="{ item  }"
+               
+                >
+                      
                   <td>
                     {{ item.user_name }}
                   </td>
@@ -322,10 +326,10 @@ export default {
        SurveyDayTo: null,
       },
      
-      sort: {
-        by: null,
-        order: null,
-      },
+      // sort: {
+      //   by: null,
+      //   order: null,
+      // },
       list:{undefined}
       ,
       column: [
@@ -380,6 +384,7 @@ export default {
         { id: 1, name: 'Bộ câu hỏi KSĐV 1' },
           { id: 2, name: 'Bộ câu hỏi KSĐV 2' },
       ],
+     
     };
   },
   computed: {
@@ -398,7 +403,7 @@ export default {
     searchParams() {
       return {
        
-        
+          // sortBy: this.sort.by ? `${this.sort.by} ${this.sort.order}` : null,
         page: this.paging.page,
         size: this.paging.pageSize,
       };
@@ -464,6 +469,8 @@ export default {
        }
     return 0
     },
+
+    
   },
   watch: {
       paging: {
@@ -475,7 +482,8 @@ export default {
     },
   },
   methods: {
-     
+
+
     pagingAction() {
       this.loadData();
     },
@@ -510,9 +518,26 @@ export default {
       });
       this.loadData();
     },
-    sortRequest() {
-      return;
+
+      dateSort(a, b) {
+      let date1 = new Date(a.survey_day).getTime();
+      let date2 = new Date(b.survey_day).getTime();
+      
+      return date1 - date2;
     },
+    //   sortRequest(sortData) {
+    //   this.sort = {
+    //     by: sortData.column,
+    //     order: sortData.order,
+    //   };
+    //   return;
+    // },
+  //    sortedData() {
+  //    return this.staff_list.sort(function(a, b) {
+  //       return a.name > b.name;
+  //    });
+  // },
+
     loadData() {
        this.$store.commit('context/setLoading', true);
     this.$api.get('SurveyImportResults/user_import', {
@@ -521,10 +546,10 @@ export default {
         })
         .then( data  => {     
           this.staff_list = data; 
-        // this.isPackage=data.map(value=>value.user_name)
+         this.isPackage=data.map(value=>value.participation_package)
        //  this.isPackage=data
        ///  console.log(this.isPackage)
-             //     console.log(this.isSurveyTypes)
+                  console.log(this.isPackage)
 
        //    this.paging.total = data.total;
         //  console.log("staff "+this.staff_list , data)

@@ -132,7 +132,7 @@
                 class="btn btn-success ml-2"
                 id="Button"
                 type="button"
-               
+                :disabled="isSelectFile"
                 @click="message_success()"
               >
                 Tiếp tục
@@ -142,7 +142,7 @@
                 class="btn btn-success ml-2"
                 id="Button"
                 type="button"
-                 
+                 :disabled="isSelectFile"
                 @click="$router.go(-2)"
               >
                 Hủy
@@ -277,7 +277,7 @@ export default {
         },
       ],
       data: [],
-    
+      isSelectFile: false,
     
       
        
@@ -382,6 +382,11 @@ result =uniqueValues.size;
        ;
         
   },
+
+  SelectFile()
+  {
+     this.isSelectFile=true;
+  } ,
   hidemodal()
   {
    this.$bvModal.hide('user-import-modal2');

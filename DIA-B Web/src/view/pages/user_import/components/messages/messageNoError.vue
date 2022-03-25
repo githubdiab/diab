@@ -128,6 +128,7 @@ export default {
      
      data:[],
      checkaccount:[],
+    checksurvey:[],
     };
    
   },
@@ -135,23 +136,23 @@ export default {
   methods: {    
   async  addUser() {
 
-      for(let i=0;i<Number(this.staff_list.length);i++)
+      for(let i=0;i<Number(this.elimited().length);i++)
       {
         await this.$api.post('accountimport', {headers: {'Content-Type': 'application/json'}}, {
         params: {
             
-          user_name: this.staff_list[i].user_name,
-          user_code: this.staff_list[i].user_code,
-          user_gender: this.staff_list[i].user_gender,
-          user_yearofbirth: this.staff_list[i].user_yearofbirth,
-          user_career: this.staff_list[i].user_career,
-          user_phone: this.staff_list[i].user_phone,
-          user_hoobit: this.staff_list[i].user_hoobit,
-          user_address: this.staff_list[i].user_address,
-          user_province: this.staff_list[i].user_province,
-          story_success: this.staff_list[i].story_success,
-          user_typeofsick: this.staff_list[i].user_typeofsick,
-          year_foundout:this.staff_list[i].year_foundout,
+          user_name: this.elimited()[i].user_name,
+          user_code: this.elimited()[i].user_code,
+          user_gender: this.elimited()[i].user_gender,
+          user_yearofbirth: this.elimited()[i].user_yearofbirth,
+          user_career: this.elimited()[i].user_career,
+          user_phone: this.elimited()[i].user_phone,
+          user_hoobit: this.elimited()[i].user_hoobit,
+          user_address: this.elimited()[i].user_address,
+          user_province: this.elimited()[i].user_province,
+          story_success: this.elimited()[i].story_success,
+          user_typeofsick: this.elimited()[i].user_typeofsick,
+          year_foundout:this.elimited()[i].year_foundout,
            
         },
          
@@ -168,15 +169,18 @@ export default {
 
    async AddSurvey ()
  {
-   for(let a=0;a<=this.staff_list.length;a++)
-     {
-     await  this.$api.get('accountimport/id').then(res=>{          //get all id 
-       this.checkaccount = res
-     });
-     }
 
-   // var data = await this.$api.get('accountimport/id')
-     // console.log( this.checkaccount.length)
+   for(let a=0;a<=Number(this.elimited().length);a++)
+     {
+
+     await  this.$api.get('accountimport/id').then(res=>{          //get all id 
+       this.checkaccount = res     
+     });
+     
+     }
+       await  this.$api.get('surveyimport/id').then(res=>{          //get survey_code , user_id
+       this.checksurvey = res});
+  // console.log(this.checksurvey)
    
   for(let n=0;n< this.checkaccount.length;n++)
     for(let j=0;j<Number(this.elimited().length);j++)
@@ -186,8 +190,23 @@ export default {
    const import_day = new Date(this.elimited()[j].import_day).toISOString();
 
   //let toTimestamp = strDate => Date.parse(strDate)
+
   if( this.checkaccount[n].user_code===Number(this.elimited()[j].user_code))
   {
+    const a = this.checksurvey.filter((item)=> item.user_id===this.checkaccount[n].id )
+    const b = this.checksurvey.filter((item)=> item.survey_code===this.elimited()[j].survey_code)
+   
+   if(a.length>0 && b.length>0)      // check duplicate survey_imports
+    { 
+     //console.log(this.checksurvey[j].survey_code ,this.checksurvey[j].user_id,this.checkaccount[n].id)
+      // console.log(this.checksurvey.filter((item)=> item.user_id===this.checkaccount[n].id ))
+      // console.log(this.checksurvey.filter((item)=> item.survey_code===this.elimited()[j].survey_code))
+
+            this.openModalCheckRecord();
+          
+  }
+ else
+ {
   await  this.$api.post('surveyimport',{headers: {'Content-Type': 'application/json'}}, {
   
        params: {    
@@ -214,6 +233,7 @@ export default {
           });
         })   
      }
+  }
      }
  },
      elimited: function()
@@ -223,20 +243,37 @@ export default {
   },
  
 
-    goback() {
-      this.$bvModal.hide('user-import-modal');
+   
+     openModalCheckRecord: function()
+    {
+        this.$root.$refs.A.clickshow_checkrecord();
+       this.CloseModalSuccess();
+      
+        
     },
+
+    CloseModalSuccess: function()
+    {
+        this.$root.$refs.A.clickhide();
+        
+    },
+
     openModalSuccess: function()
     {
         this.$root.$refs.A.clickshow();
         
+    },
+    goback()
+    {
+      this.$bvModal.hide('user-import-modal')
+    //  this.$root.$refs.A.NotselectFile();
     },
 
     async handleClick(){
          this.$root.$refs.A.SelectFile();
       this.$store.commit('context/setLoading', true);
    // await this.addUser().then( this.AddSurvey()).then(this.goback()) ---------------1 user
-    await this.addUser().then( this.AddSurvey()).then(this.goback())
+    await this.addUser().then(this.AddSurvey()).then(this.goback())
         .finally(() => {
           this.$store.commit('context/setLoading', false);
              this.openModalSuccess();

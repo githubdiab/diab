@@ -77,7 +77,7 @@ namespace DiaB.WebApi.Controllers
             /* string query = @"SELECT survey_imports.id 
                                     FROM survey_imports
                                     where id not in (select survey_id from survey_import_details) order by user_id ASC ";*/
-            string query = @"SELECT id , survey_code , user_id from survey_imports ORDER BY update_datetime";
+            string query = @"SELECT id , survey_code , user_id  from survey_imports ORDER BY update_datetime";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
@@ -97,6 +97,68 @@ namespace DiaB.WebApi.Controllers
             return new JsonResult(table);
         }
 
+
+        [HttpGet("only_id")]
+
+        public JsonResult GetOnlyID(string user_code,string survey_code)
+        {
+
+
+            /* string query = @"SELECT survey_imports.id 
+                                    FROM survey_imports
+                                    where id not in (select survey_id from survey_import_details) order by user_id ASC ";*/
+            string query = @"SELECT id from survey_imports where user_id in (select id from account_imports where user_code = @user_code) and survey_code = @survey_code";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("Default");
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    cmd.Parameters.AddWithValue("@user_code", user_code);
+                    cmd.Parameters.AddWithValue("@survey_code", survey_code);
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
+        [HttpGet("survey_id_result")]
+
+        public JsonResult Get_id_result(string id)
+        {
+
+
+            /* string query = @"SELECT survey_imports.id 
+                                    FROM survey_imports
+                                    where id not in (select survey_id from survey_import_details) order by user_id ASC ";*/
+            string query = @"SELECT survey_result_id from survey_imports where id=@id ";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("Default");
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    cmd.Parameters.AddWithValue("@id", id);
+                  
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
 
 
         [HttpGet("survey")]
@@ -127,35 +189,7 @@ namespace DiaB.WebApi.Controllers
 
 
 
-        /*  [HttpPut]
-          public JsonResult Put(AccountImport acc)
-          {
-
-
-              string query = @"update Department set DepartmentName=@DepartmentName where DepartmentId=@DepartmentId ";
-
-              DataTable table = new DataTable();
-              //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-              *//*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*//*
-
-
-              MySqlDataReader myReader;
-              using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
-  )
-              {
-                  myconn.Open();
-                  using (MySqlCommand cmd = new MySqlCommand(query, myconn))
-                  {
-                      cmd.Parameters.AddWithValue("@DepartmentId", acc.DepartmentId);
-                      cmd.Parameters.AddWithValue("@DepartmentName", acc.DepartmentName);
-                      myReader = cmd.ExecuteReader();
-                      table.Load(myReader);
-                      myReader.Close();
-                      myconn.Close();
-                  }
-              }
-              return new JsonResult("Update Success");
-          }*/
+       
 
         /*   [HttpDelete]
            public JsonResult Delete(Department dep)

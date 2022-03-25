@@ -149,6 +149,34 @@ namespace DiaB.WebApi.Controllers
         }
 
         /*  [HttpPut]
+          public JsonResult Put(SurveyImportDetails sid)
+          {
+
+
+              string query = @"update survey_import_details set";
+
+              DataTable table = new DataTable();
+
+              string sqlDataSource = _configuration.GetConnectionString("Default");
+              MySqlDataReader myReader;
+              using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
+  )
+              {
+                  myconn.Open();
+                  using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                  {
+                      cmd.Parameters.AddWithValue("@DepartmentId", acc.DepartmentId);
+                      cmd.Parameters.AddWithValue("@DepartmentName", acc.DepartmentName);
+                      myReader = cmd.ExecuteReader();
+                      table.Load(myReader);
+                      myReader.Close();
+                      myconn.Close();
+                  }
+              }
+              return new JsonResult("Update Success");
+          }*/
+
+        /*  [HttpPut]
           public JsonResult Put(AccountImport acc)
           {
 
@@ -178,34 +206,33 @@ namespace DiaB.WebApi.Controllers
               return new JsonResult("Update Success");
           }*/
 
-        /*   [HttpDelete]
-           public JsonResult Delete(Department dep)
-           {
+        [HttpDelete]
+        public JsonResult Delete(string survey_id)
+        {
+            //  string get_id = @"SELECT id from survey_imports where user_id in (select id from account_imports where user_code = @user_code) and survey_code = @survey_code";
 
+            string query = @"delete from survey_import_details where survey_id = @survey_id";
 
-               string query = @"Delete from Department where DepartmentId=@DepartmentId ";
-
-               DataTable table = new DataTable();
-               //  string sqlDataSource = _configuration.GetConnectionString("sqlconn");
-               *//*  MySqlConnection myconn = new MySqlConnection("server=localhost;userid=root;password=Root12345;database=diab_stg;Port=3306"*//*
-
-
-               MySqlDataReader myReader;
-               using (MySqlConnection myconn = new MySqlConnection("server=127.0.0.1;userid=root;password=Root12345;database=diab_stg;Port=3306")
-   )
-               {
-                   myconn.Open();
-                   using (MySqlCommand cmd = new MySqlCommand(query, myconn))
-                   {
-                       cmd.Parameters.AddWithValue("@DepartmentId", dep.DepartmentId);
-                       myReader = cmd.ExecuteReader();
-                       table.Load(myReader);
-                       myReader.Close();
-                       myconn.Close();
-                   }
-               }
-               return new JsonResult("Delete Successfully");
-           }*/
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("Default");
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
+)
+            {
+               
+                    myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    cmd.Parameters.AddWithValue("@survey_id", survey_id);
+                 
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+            }
+            return new JsonResult("Delete Successfully");
+        }
 
     }
 }

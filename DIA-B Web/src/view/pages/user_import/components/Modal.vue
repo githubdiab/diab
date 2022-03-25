@@ -32,7 +32,7 @@
         >
           Huỷ
         </b-button>
-
+        <p style="color:white">^</p>
         <b-button
           class="btn btn-success ml-2"
           href="#"
