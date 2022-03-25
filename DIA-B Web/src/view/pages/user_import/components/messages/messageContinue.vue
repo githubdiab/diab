@@ -153,7 +153,7 @@ export default {
      {
   
    const survey_day = new Date(this.elimited()[j].survey_day).toISOString();
-   const import_day = new Date(this.elimited()[j].import_day).toISOString();
+  // const import_day = new Date(this.elimited()[j].import_day).toISOString();
 
   //let toTimestamp = strDate => Date.parse(strDate)
 
@@ -186,7 +186,7 @@ export default {
       survey_type:this.elimited()[j].survey_type,
       survey_code:this.elimited()[j].survey_code,
       survey_name:this.elimited()[j].survey_name,
-      import_day:  import_day.slice(0, 10),
+     // import_day:  import_day.slice(0, 10),
       survey_day: survey_day.slice(0, 10)
         },
    

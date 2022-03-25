@@ -431,7 +431,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].user_code ==''||this.staff_list[i].user_code.length>10)
+          if(this.staff_list[i].user_code =='')
          {        
           mess_error='error'
          }
@@ -483,7 +483,7 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].story_success ==''|| this.staff_list[i].story_success.length>1000)
+          if(this.staff_list[i].story_success =='')
          {        
           mess_error='error'
          }
@@ -495,10 +495,10 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].course_final_rate =='')
-         {        
-          mess_error='error'
-         }
+        //   if(this.staff_list[i].course_final_rate =='')
+        //  {        
+        //   mess_error='error'
+        //  }
           if(this.staff_list[i].user_typeofsick =='')
          {        
           mess_error='error'
@@ -531,10 +531,10 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].import_day ==''||this.staff_list[i].import_day=='Invalid date')
-         {        
-          mess_error='error'
-         }
+        //   if(this.staff_list[i].import_day ==''||this.staff_list[i].import_day=='Invalid date')
+        //  {        
+        //   mess_error='error'
+        //  }
           if(this.staff_list[i].question_code =='')
          {        
           mess_error='error'
@@ -547,10 +547,10 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-           if(this.staff_list[i].question_result =='')
-         {        
-          mess_error='error'
-         }
+        //    if(this.staff_list[i].question_result =='')
+        //  {        
+        //   mess_error='error'
+        //  }
 
         
         

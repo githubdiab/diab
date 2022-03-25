@@ -16,7 +16,7 @@ namespace DiaB.Middle.Dtos.FileUploadDtos
             public string user_name { get; set; }
             public string user_gender { get; set; }
 
-            public int user_yearofbirth { get; set; }
+            public string user_yearofbirth { get; set; }
             public string survey_type { get; set; }
             public string survey_name { get; set; }
             public string survey_code { get; set; }
@@ -49,7 +49,7 @@ namespace DiaB.Middle.Dtos.FileUploadDtos
             public string sub_category { get; set; }
             public string question_code { get; set; }
             public string question_number { get; set; }
-            public int question_result { get; set; }
+            public string question_result { get; set; }
             public string question_answer { get; set; }
 
 

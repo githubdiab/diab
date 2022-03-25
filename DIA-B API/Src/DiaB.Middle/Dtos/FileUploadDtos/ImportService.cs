@@ -62,7 +62,7 @@ namespace DiaB.Middle.Services
                             survey_code = (worksheet.Cells[row, 5].Value ?? string.Empty).ToString().Trim(),
                             survey_name = (worksheet.Cells[row, 6].Value ?? string.Empty).ToString().Trim(),
                           
-                            user_yearofbirth = Int32.Parse(worksheet.Cells[row, 7].Value.ToString()),
+                            user_yearofbirth = (worksheet.Cells[row, 7].Value ?? string.Empty).ToString().Trim(),
                             user_gender = (worksheet.Cells[row, 8].Value ?? string.Empty).ToString().Trim(),
                             user_phone = (worksheet.Cells[row, 9].Value ?? string.Empty).ToString().Trim(),
                             survey_day = (worksheet.Cells[row, 10].Value ?? string.Empty).ToString().Trim(),
@@ -92,7 +92,7 @@ namespace DiaB.Middle.Services
                             question_code = (worksheet.Cells[row, 28].Value ?? string.Empty).ToString().Trim(),
                             question_number = (worksheet.Cells[row, 29].Value ?? string.Empty).ToString().Trim(),
                             question_answer = (worksheet.Cells[row, 30].Value ?? string.Empty).ToString().Trim(),
-                            question_result = Int32.Parse(worksheet.Cells[row, 31].Value.ToString()),
+                            question_result = (worksheet.Cells[row, 31].Value ?? string.Empty).ToString().Trim(),
                         });
 
                     }

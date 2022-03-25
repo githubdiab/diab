@@ -77,21 +77,28 @@
               </b-row>
                </div> 
               <b-row>
-                 <b-col>
+                  <b-col >
                   <basic-select
                     label="Gói tham gia"
                     placeholder="--- Chọn ---"
                     name="ParticipationPackage"
-                  >
-                   <select >
+                    :options="isPackage"
+                    :value.sync="filter.ParticipationPackage"
+                    :solid="false"
+                    :allowEmpty="true"
+                  />
+                  <!-- <label>Gói tham gia</label>
+<select class="multiselect__tags" aria-label="Default select example"  v-model="selected" :value.sync="filter.ParticipationPackage" >
+  <option>--Chọn--</option>
+
   <option
-    v-for="item in staff_list"
-    :key="item"
-   
-  >{{ item  }}</option>
+  v-for="item in otal" :key="item" >
+  {{item}}
+
+  </option>
+
 </select>
-                  </basic-select>
-                 
+{{selected.valueOf()}} -->
                 </b-col>
            
                  <b-col>
@@ -301,7 +308,7 @@ export default {
 
   data() {
     return {
-      selected: '',
+      selected: {},
       paging: {
         page: 1,
         pageSize: 10,
@@ -367,9 +374,10 @@ export default {
      
       ],
       staff_list: [],
-      isPackage: {}
-        // { id: 1, name: 'Gói thấu cảm' },
-        // { id: 2, name: 'Gói đồng hành' },
+      isPackage: [
+         { id: 1, name: 'Gói thấu cảm' },
+         { id: 2, name: 'Gói đồng hành' },
+      ]
       ,
       isSurveyTypes: [
         { id: 1, name: 'Khảo sát đầu vào' },
@@ -387,13 +395,20 @@ export default {
     {
        
        return this.staff_list.length
-      
-    },
-    otal()
-    {
-       return this.staff_list.filter((item, pos, self) => self.findIndex(v => v.participation_package === item.participation_package) === pos);
+       
+    }, 
+    otal() 
+    { 
+       return this.isPackage.filter((item, pos, self) => self.findIndex(v => v === item) === pos);
      //  return this.staff_list.filter(item=>item.participation_package)  
-      
+     //  return this.NotNullItems.filter(item => this.NullItems.every(item2 => item2.user_code!= item.user_code));
+
+
+     
+    },
+     text() {
+      console.log( this.isPackage)
+        return this.isPackage;
     },
     searchParams() {
       return {
@@ -458,9 +473,13 @@ export default {
       {
          return this.staff_list.filter((item) => (new Date(item.survey_day*1000).toISOString().slice(0,10)).valueOf()<=(this.filter.SurveyDayTo).valueOf())
       }
+       if (this.filter.ParticipationPackage==="--Chọn--") 
+      {
+         return this.staff_list.filter((item) => item.participation_package == this.selected.valueOf())
+      }
        
 
-
+// {{selected.valueOf()}}
        }
     return 0
     },
@@ -541,11 +560,11 @@ export default {
         })
         .then( data  => {     
           this.staff_list = data; 
-         this.isPackage=data.map(value=>value.participation_package)
-       //  this.isPackage=data
+    //    this.isPackage=data.map(value=>value.participation_package)
+        // this.isPackage=data
        ///  console.log(this.isPackage)
                   console.log(this.isPackage)
-
+   console.log(this.isSurveyTypes)
        //    this.paging.total = data.total;
         //  console.log("staff "+this.staff_list , data)
         
@@ -601,7 +620,7 @@ export default {
 
         return this.staff_list
         }
-      }
+      },
     
   },
   mounted() {

@@ -197,7 +197,7 @@ export default {
        question_code:this.staff_list[k].question_code,
        question_number:this.staff_list[k].question_number,
        question_answer:this.staff_list[k].question_answer,
-       question_result:this.staff_list[k].question_result,
+       question_result:0,
       }
         },
       )}

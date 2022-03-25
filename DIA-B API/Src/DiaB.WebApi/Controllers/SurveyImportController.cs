@@ -23,7 +23,7 @@ namespace DiaB.WebApi.Controllers
         [HttpPost]
         public JsonResult Post(SurveyImport sur)
         {
-
+            DateTime today = DateTime.Today;
 
             string query = @"insert into survey_imports(id,is_deleted,user_id,course_goal,course_action,course_final_rate,participation_package,survey_type_code,survey_type,survey_code,survey_name,survey_day,import_day,creator_id,updater_id)
                values(@id,@is_deleted,@user_id,@course_goal,@course_action,@course_final_rate,@participation_package,@survey_type_code,@survey_type,@survey_code,@survey_name,@survey_day,@import_day,@creator_id,@updater_id)
@@ -44,14 +44,15 @@ namespace DiaB.WebApi.Controllers
                     cmd.Parameters.AddWithValue("@user_id", sur.user_id);
                     cmd.Parameters.AddWithValue("@course_goal", sur.course_goal);
                     cmd.Parameters.AddWithValue("@course_action", sur.course_action);
-                    cmd.Parameters.AddWithValue("@course_final_rate", sur.course_final_rate);
+                    cmd.Parameters.AddWithValue("@course_final_rate"," ");
                     cmd.Parameters.AddWithValue("@participation_package", sur.participation_package);
                     cmd.Parameters.AddWithValue("@survey_type_code", sur.survey_type_code);
                     cmd.Parameters.AddWithValue("@survey_type", sur.survey_type);
                     cmd.Parameters.AddWithValue("@survey_code", sur.survey_code);
                     cmd.Parameters.AddWithValue("@survey_name", sur.survey_name);
                     cmd.Parameters.AddWithValue("@survey_day", sur.survey_day);
-                    cmd.Parameters.AddWithValue("@import_day", sur.import_day);
+                //    cmd.Parameters.AddWithValue("@import_day", sur.import_day);
+                    cmd.Parameters.AddWithValue("@import_day", DateTime.Now.ToString("yyyy-MM-dd"));
                     cmd.Parameters.AddWithValue("@creator_id", "cb356d0b-b62b-4418-a295-b2b71393fba6");
                     cmd.Parameters.AddWithValue("@updater_id", "cb356d0b-b62b-4418-a295-b2b71393fba6");
 
