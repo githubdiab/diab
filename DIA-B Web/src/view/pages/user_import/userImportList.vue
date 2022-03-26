@@ -264,7 +264,9 @@
                       </action-dropdown>
                     </td>
                   <td style="padding-left: 25px;">{{ item.user_typeofsick }}</td>
-                  <td style=" padding-left: 25px;">{{ $moment((item.import_day+86400)*1000).format('DD/MM/YYYY') }}</td>
+                  <!-- <td style=" padding-left: 25px;">{{ $moment((item.import_day)*1000).format('DD/MM/YYYY') }}</td> -->
+                  <td style=" padding-left: 25px;">{{ $moment((item.survey_day+86400)*1000).format('DD/MM/YYYY') }}</td>
+
                   <td>{{ item.participation_package }}</td>
                   <td>{{ item.survey_type }}</td>
                   <td>{{ item.survey_name }}<br>Mã số: {{ item.survey_code }}
@@ -375,42 +377,36 @@ export default {
       ],
       staff_list: [],
       isPackage: [
-         { id: 1, name: 'Gói thấu cảm' },
-         { id: 2, name: 'Gói đồng hành' },
+         
+        // { id: 2, name: 'Gói đồng hành' },
       ]
+      // isPackage2: [
+      //   //  { id: 1, name: 'Gói thấu cảm' },
+      //   //  { id: 2, name: 'Gói đồng hành' },
+      // ]
       ,
       isSurveyTypes: [
-        { id: 1, name: 'Khảo sát đầu vào' },
-        { id: 2, name: 'Khảo sát đầu ra' },
+        { id: 0, name: 'Khảo sát đầu vào' },
+        { id: 1, name: 'Khảo sát đầu ra' },
       ],
       isSurveyName: [
-        { id: 1, name: 'Bộ câu hỏi KSĐV 1' },
-          { id: 2, name: 'Bộ câu hỏi KSĐV 2' },
+        
       ],
      
     };
   },
   computed: {
+     
     stafflist_total()
     {
        
        return this.staff_list.length
        
     }, 
-    otal() 
-    { 
-       return this.isPackage.filter((item, pos, self) => self.findIndex(v => v === item) === pos);
-     //  return this.staff_list.filter(item=>item.participation_package)  
-     //  return this.NotNullItems.filter(item => this.NullItems.every(item2 => item2.user_code!= item.user_code));
-
-
-     
-    },
-     text() {
-      console.log( this.isPackage)
-        return this.isPackage;
-    },
+   
+   
     searchParams() {
+      
       return {
        
           // sortBy: this.sort.by ? `${this.sort.by} ${this.sort.order}` : null,
@@ -473,9 +469,23 @@ export default {
       {
          return this.staff_list.filter((item) => (new Date(item.survey_day*1000).toISOString().slice(0,10)).valueOf()<=(this.filter.SurveyDayTo).valueOf())
       }
-       if (this.filter.ParticipationPackage==="--Chọn--") 
+       if (this.filter.ParticipationPackage!==null) 
       {
-         return this.staff_list.filter((item) => item.participation_package == this.selected.valueOf())
+         
+          return this.staff_list.filter((item) => item.participation_package === this.isPackage[this.filter.ParticipationPackage].name)
+         
+      }
+      if (this.filter.SurveyName!==null) 
+      {
+         
+          return this.staff_list.filter((item) => item.survey_name === this.isSurveyName[this.filter.SurveyName].name)
+         
+      }
+
+       if (this.filter.SurveyType!==null) 
+      {
+        return this.staff_list.filter((item) => item.survey_type === this.isSurveyTypes[this.filter.SurveyType].name)
+         
       }
        
 
@@ -494,6 +504,7 @@ export default {
       },
       deep: true,
     },
+     
   },
   methods: {
 
@@ -560,13 +571,7 @@ export default {
         })
         .then( data  => {     
           this.staff_list = data; 
-    //    this.isPackage=data.map(value=>value.participation_package)
-        // this.isPackage=data
-       ///  console.log(this.isPackage)
-                  console.log(this.isPackage)
-   console.log(this.isSurveyTypes)
-       //    this.paging.total = data.total;
-        //  console.log("staff "+this.staff_list , data)
+  
         
         }).catch((error) => {
           this.$toastr.e({
@@ -603,7 +608,7 @@ export default {
         this.paging.size = 10
         
       },
-
+     
      filtetest()
       {
        if((this.filter.Username||this.filter.UserPhone||this.filter.UserAgeFrom||this.filter.UserAgeTo||this.filter.ParticipationPackage
@@ -611,20 +616,51 @@ export default {
         ||this.filter.ImportDayFrom||this.filter.ImportDayTo||this.filter.SurveyDayFrom||this.filter.SurveyDayTo)!==null)
      //   if(this.filter.Username===null)
         {
-                                
+                        this.addID()         
            return this.filteredList;
          
         }
         else{
                            //     
-
+        this.addID()
         return this.staff_list
         }
       },
-    
+
+
+  elimited: function()
+   {    
+    return this.staff_list.filter((item, pos, self) => self.findIndex(v => v.participation_package === item.participation_package) === pos);
+    },
+
+        elimited2: function()
+   {    
+    return this.staff_list.filter((item, pos, self) => self.findIndex(v => v.survey_name === item.survey_name) === pos);
+    },
+
+     addID()
+      {
+      
+        for(let v=0;v<Number(this.elimited().length);v++)
+        {
+           this.isPackage[v]={'id':[v],'name':this.elimited()[v].participation_package}
+        
+        }
+        for(let v=0;v<Number(this.elimited2().length);v++)
+        {
+
+           this.isSurveyName[v]={'id':[v],'name':this.elimited2()[v].survey_name}
+        }
+   
+       
+       
+      
+      },
+   
   },
   mounted() {
    // axios.get('').then((reps)=>this.list=reps.data.data)
+  
      this.loadData()
     
   },

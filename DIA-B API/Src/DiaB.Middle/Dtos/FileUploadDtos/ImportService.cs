@@ -91,7 +91,7 @@ namespace DiaB.Middle.Services
                             import_day = (worksheet.Cells[row, 27].Value ?? string.Empty).ToString().Trim(),
                             question_code = (worksheet.Cells[row, 28].Value ?? string.Empty).ToString().Trim(),
                             question_number = (worksheet.Cells[row, 29].Value ?? string.Empty).ToString().Trim(),
-                            question_answer = (worksheet.Cells[row, 30].Value ?? string.Empty).ToString().Trim(),
+                            question_answer =(worksheet.Cells[row, 30].Value ?? string.Empty).ToString().Trim(),
                             question_result = (worksheet.Cells[row, 31].Value ?? string.Empty).ToString().Trim(),
                         });
 

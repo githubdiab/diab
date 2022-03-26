@@ -27,7 +27,7 @@ namespace DiaB.WebApi.Controllers
         }
          
         [HttpGet("user_import")]
-        public JsonResult Get_userimport()
+        public JsonResult Get_userimport(int size)
         {
 
 
@@ -35,7 +35,7 @@ namespace DiaB.WebApi.Controllers
                              from survey_imports,account_imports
                             where account_imports.id = survey_imports.user_id
                           order by survey_imports.create_datetime desc
-
+                          LIMIT @size
                                ";
           //  
 
@@ -51,7 +51,7 @@ DataTable table = new DataTable();
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
-                 //  cmd.Parameters.AddWithValue("@size", size);
+                   cmd.Parameters.AddWithValue("@size", size);
                     myReader = cmd.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
