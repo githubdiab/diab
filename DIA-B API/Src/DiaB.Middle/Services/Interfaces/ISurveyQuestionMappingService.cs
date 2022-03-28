@@ -8,6 +8,6 @@ namespace DiaB.Middle.Services.Interfaces
 {
     public interface ISurveyQuestionMappingService : ICoreService
     {
-        Task<IList<SurveyQuestionMappingEntity>> GetQuestionByPrefix(string questionIdPrefix, ActionContext context = null);
+        Task<IList<SurveyQuestionMappingEntity>> GetQuestionByPrefix(string questionIdPrefix, SurveyImportEntity surveyImportEntity, ActionContext context = null);
     }
 }

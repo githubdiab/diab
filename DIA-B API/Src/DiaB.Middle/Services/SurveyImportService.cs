@@ -1,10 +1,11 @@
-using CpTech.Core.Common.Dtos;
+﻿using CpTech.Core.Common.Dtos;
 using CpTech.Core.Middle.Dtos;
 using DiaB.Data.Database.Entities.Import;
 using DiaB.Data.Repositories.Interfaces;
 using DiaB.Middle.Abstracts;
 using DiaB.Middle.Dtos.SurveyImportDtos;
 using DiaB.Middle.Services.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,10 +17,12 @@ namespace DiaB.Middle.Services
 {
     public class SurveyImportService : BaseService<SurveyImportEntity>, ISurveyImportService
     {
+        private readonly ILogger<SurveyImportService> logger;
         public ISurveyImportResultService SurveyImportResultService { get; set; }
-        public SurveyImportService(IAppRepo<SurveyImportEntity> repo)
+        public SurveyImportService(IAppRepo<SurveyImportEntity> repo, ILogger<SurveyImportService> logger)
             : base(repo)
         {
+            this.logger = logger;
         }
 
         protected override IQueryable<SurveyImportEntity> FilterQuery(IQueryable<SurveyImportEntity> query, ICoreFilterDto input, IActionContext context)
@@ -163,7 +166,8 @@ namespace DiaB.Middle.Services
                     resultList.Add(surveyImportResultId);
                 } catch (Exception ex)
                 {
-
+                    logger.LogError("Phân loại khách hàng có lỗi ");
+                    logger.LogError(ex.StackTrace);
                 }
             }
 

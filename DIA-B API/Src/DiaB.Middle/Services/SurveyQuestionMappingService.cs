@@ -20,9 +20,9 @@ namespace DiaB.Middle.Services
         {
         }
 
-        public async Task<IList<SurveyQuestionMappingEntity>> GetQuestionByPrefix(string questionIdPrefix, ActionContext context = null)
+        public async Task<IList<SurveyQuestionMappingEntity>> GetQuestionByPrefix(string questionIdPrefix, SurveyImportEntity surveyImportEntity, ActionContext context = null)
         {
-           var result = await this.GetListEntity(q => q.Where(r => !r.IsDeleted && r.QuestionId.Contains(questionIdPrefix)), context);
+           var result = await this.GetListEntity(q => q.Where(r => !r.IsDeleted && r.SurveyCode == surveyImportEntity.SurveyCode && r.QuestionCode.Contains(questionIdPrefix)), context);
 
             return result.ToList();
         }

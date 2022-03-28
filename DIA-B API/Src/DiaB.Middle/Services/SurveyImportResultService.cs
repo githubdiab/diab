@@ -184,11 +184,11 @@ namespace DiaB.Middle.Services
             // BMI
             var BmiVal = 0.0;
             var BmiPhanloai = "";
-            var questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TTA0001CH", context);
+            var questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TTA001", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var TTA0001CH04 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "TTA0001CH04" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "TTA00105" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var TTA0001CH04Val = 0.0;
                 if (TTA0001CH04 != null)
                 {
@@ -196,7 +196,7 @@ namespace DiaB.Middle.Services
                 }
 
                 var TTA0001CH05 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "TTA0001CH05" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "TTA00106" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var TTA0001CH05Val = 0.0;
                 if (TTA0001CH05 != null)
                 {
@@ -221,15 +221,15 @@ namespace DiaB.Middle.Services
             // HbA1C
             var Hba1cVal = 0.0;
             var Hba1cPhanloai = "";
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TTA0001CH08", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TTA00110", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var TTA0001CH08 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "TTA0001CH08" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "TTA00110" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var TTA0001CH08Val = 0.0;
                 if (TTA0001CH08 != null)
                 {
-                    double.TryParse(TTA0001CH08.QuestionAnswer, out TTA0001CH08Val);
+                    double.TryParse(TTA0001CH08.QuestionAnswer.Replace("%", ""), out TTA0001CH08Val);
                 }
 
                 Hba1cVal = TTA0001CH08Val;
@@ -250,7 +250,7 @@ namespace DiaB.Middle.Services
 
             // Bệnh lý: KTD001CH01 ~ KTD001CH10
             var KtBlVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTD001", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTD", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted 
@@ -270,7 +270,7 @@ namespace DiaB.Middle.Services
           
             // Theo dõi chỉ số: KTT001CH01 ~ KTT001CH05
             var KtTdcsVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTT001", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTT", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
@@ -290,7 +290,7 @@ namespace DiaB.Middle.Services
 
             // Dinh duong
             var KtDdVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTN001", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTN", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
@@ -310,7 +310,7 @@ namespace DiaB.Middle.Services
 
             // Vận động
             var KtVdVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTE001", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTE", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
@@ -350,11 +350,11 @@ namespace DiaB.Middle.Services
 
             // Khả năng tự chăm sóc - Chế độ ăn uống
             var KntcsCdauVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CSN001CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CSN001", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var CSN001CH01 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CSN001CH01" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CSN00101" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSN001CH01Val = 0.0;
                 if (CSN001CH01 != null)
                 {
@@ -362,7 +362,7 @@ namespace DiaB.Middle.Services
                 }
 
                 var CSN001CH02 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CSN001CH02" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CSN00102" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSN001CH02Val = 0.0;
                 if (CSN001CH02 != null)
                 {
@@ -370,7 +370,7 @@ namespace DiaB.Middle.Services
                 }
 
                 var CSN001CH03 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CSN001CH03" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CSN00103" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSN001CH03Val = 0.0;
                 if (CSN001CH03 != null)
                 {
@@ -378,7 +378,7 @@ namespace DiaB.Middle.Services
                 }
 
                 var CSN001CH04 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CSN001CH04" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CSN00104" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSN001CH04Val = 0.0;
                 if (CSN001CH04 != null)
                 {
@@ -399,11 +399,11 @@ namespace DiaB.Middle.Services
 
             // Khả năng tự chăm sóc - Chế độ vận động
             var KntcsCdvdVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CSE001CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CSE001", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var CSE001CH01 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CSE001CH01" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CSE00101" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSE001CH0Val = 0.0;
                 if (CSE001CH01 != null)
                 {
@@ -411,7 +411,7 @@ namespace DiaB.Middle.Services
                 }
 
                 var CSE001CH02 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CSE001CH02" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CSE00102" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSE001CH02Val = 0.0;
                 if (CSE001CH02 != null)
                 {
@@ -431,11 +431,11 @@ namespace DiaB.Middle.Services
 
             // Khả năng tự chăm sóc - Theo dõi đường huyết
             var KntcsTddhVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CST001CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CST001", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var CST001CH01 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CST001CH01" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CST00101" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CST001CH01Val = 0.0;
                 if (CST001CH01 != null)
                 {
@@ -443,7 +443,7 @@ namespace DiaB.Middle.Services
                 }
 
                 var CST001CH02 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CST001CH02" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CST00102" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CST001CH02Val = 0.0;
                 if (CST001CH02 != null)
                 {
@@ -463,11 +463,11 @@ namespace DiaB.Middle.Services
 
             // Khả năng tự chăm sóc - Đo đường huyết
             var KntcsCsbcVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CSC001CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CST001", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var CSC001CH11 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CSC001CH11" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CST00101" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSC001CH11Val = 0.0;
                 if (CSC001CH11 != null)
                 {
@@ -475,7 +475,7 @@ namespace DiaB.Middle.Services
                 }
 
                 var CSC001CH12 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionId == "CSC001CH12" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CST00102" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSC001CH12Val = 0.0;
                 if (CSC001CH12 != null)
                 {
@@ -517,7 +517,7 @@ namespace DiaB.Middle.Services
 
             // Mức độ rào cản - Chế độ ăn uống
             var MdrcCdauVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RCN001CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RSN", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var outTemp = 0.0;
@@ -537,7 +537,7 @@ namespace DiaB.Middle.Services
 
             // Mức độ rào cản - Chế độ vận động
             var MdrcCdvdVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RCE001CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RSE", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var outTemp = 0.0;
@@ -557,7 +557,7 @@ namespace DiaB.Middle.Services
 
             // Mức độ rào cản - Dùng thuốc
             var MdrcDtVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RCA001CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RSA", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var outTemp = 0.0;
@@ -577,7 +577,7 @@ namespace DiaB.Middle.Services
 
             // Mức độ rào cản - Đường huyết
             var MdrcTddhVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RCT001CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("RST", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var outTemp = 0.0;
@@ -613,7 +613,7 @@ namespace DiaB.Middle.Services
 
             // Khả năng điều chỉnh tâm lý - Gánh nặng cảm xúc
             var KndctlGncxVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA001CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA001", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var outTemp = 0.0;
@@ -633,7 +633,7 @@ namespace DiaB.Middle.Services
 
             // Khả năng điều chỉnh tâm lý - Căng thẳng liên quan đến bác sĩ
             var KndctlCtlqdbsVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA002CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA002", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var outTemp = 0.0;
@@ -653,7 +653,7 @@ namespace DiaB.Middle.Services
 
             // Khả năng điều chỉnh tâm lý - Gánh nặng về tuân thủ điều trị
             var KndctlGnvttdtVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA003CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA003", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var outTemp = 0.0;
@@ -673,7 +673,7 @@ namespace DiaB.Middle.Services
 
             // Khả năng điều chỉnh tâm lý - Gánh nặng về tuân thủ điều trị
             var KndctlCttcmqhVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA004CH", context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("TLA004", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var outTemp = 0.0;
@@ -710,13 +710,13 @@ namespace DiaB.Middle.Services
             // Động lực thay đổi - Động lực thay đổi bên trong
             var DltdDltdbtVal = 0.0;
             var DltdDltdbnVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("DLA001CH", context);
-            string[] dongLucthayDoiBenTrongQuestion = new string[] { "DLA001CH02", "DLA001CH03", "DLA001CH07", "DLA001CH10", "DLA001CH13", "DLA001CH16", "DLA001CH18", "DLA001CH19"};
-            string[] dongLucthayDoiBenNgoaiQuestion = new string[] { "DLA001CH01", "DLA001CH04", "DLA001CH05", "DLA001CH06", "DLA001CH08", "DLA001CH09", "DLA001CH11", "DLA001CH12", "DLA001CH14", "DLA001CH15", "DLA001CH17"};
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("DLA", surveyImportEntity, context);
+            //string[] dongLucthayDoiBenTrongQuestion = new string[] { "DLA00102", "DLA00103", "DLA00107", "DLA00110", "DLA00113", "DLA00116", "DLA001CH18", "DLA001CH19"};
+            //string[] dongLucthayDoiBenNgoaiQuestion = new string[] { "DLA001CH01", "DLA001CH04", "DLA001CH05", "DLA001CH06", "DLA001CH08", "DLA001CH09", "DLA001CH11", "DLA001CH12", "DLA001CH14", "DLA001CH15", "DLA001CH17"};
             if (questions.Count > 0)
             {
-                var questions1 = questions.Where(r => dongLucthayDoiBenTrongQuestion.Contains(r.QuestionId)).ToList();
-                var questions2 = questions.Where(r => dongLucthayDoiBenNgoaiQuestion.Contains(r.QuestionId)).ToList();
+                var questions1 = questions.Where(r => r.QuestionCode.Contains("DLA001")).ToList();
+                var questions2 = questions.Where(r => r.QuestionCode.Contains("DLA002")).ToList();
 
                 var outTemp = 0.0;
                 var sum1 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted && Double.TryParse(r.QuestionAnswer, out outTemp) && outTemp > 0

@@ -27,7 +27,7 @@ namespace DiaB.Middle.Services
             FileInfo file = new FileInfo(Path.Combine(rootFolder, fileName));
             using (var stream = new MemoryStream())
             {
-                input.file.CopyToAsync(stream);
+                input.file.CopyTo(stream);
                 using (var package = new ExcelPackage(stream))
                 {
                      package.SaveAs(file);
