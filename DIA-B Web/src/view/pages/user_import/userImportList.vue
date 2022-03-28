@@ -242,7 +242,7 @@
                   :searchAction="false"
                   @search="searchRequest"
                   @reset="resetRequest"
-                     
+                  
               >
                 <template v-slot:body="{ item  }"
                
@@ -376,22 +376,13 @@ export default {
      
       ],
       staff_list: [],
-      isPackage: [
-         
-        // { id: 2, name: 'Gói đồng hành' },
-      ]
-      // isPackage2: [
-      //   //  { id: 1, name: 'Gói thấu cảm' },
-      //   //  { id: 2, name: 'Gói đồng hành' },
-      // ]
-      ,
+      isPackage: [],
+     isSurveyName: [],   
       isSurveyTypes: [
         { id: 0, name: 'Khảo sát đầu vào' },
         { id: 1, name: 'Khảo sát đầu ra' },
       ],
-      isSurveyName: [
-        
-      ],
+    
      
     };
   },
