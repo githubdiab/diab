@@ -45,8 +45,8 @@
                 <td> {{user_details[0].user_yearofbirth}} </td>
                 <td> {{user_details[0].user_phone}} </td>
                 <td> {{user_details[0].user_hoobit}} </td>
-                <td style="white-space: initial;padding-right: 40px;"> {{user_details[0].story_success}} </td>
-                  <td> {{user_details[0].course_goal}} </td>
+                <td> {{user_details[0].story_success}} </td>
+                  <td > {{user_details[0].course_goal}} </td>
               </table>
                <br>
                <br>
@@ -70,7 +70,7 @@
                 </tr>
                 <td> {{user_details[0].user_career}} </td>
                 <td> {{user_details[0].user_province}} </td>
-                <td style="white-space: initial;padding-right: 40px;"> {{user_details[0].user_address}} </td>
+                <td> {{user_details[0].user_address}} </td>
                 <td> {{user_details[0].course_action}} </td>
                  <td > {{user_details[0].course_final_rate}} </td>
               </table>
@@ -93,7 +93,7 @@
                  
              
                    <td  style="text-align: left">{{ item.question_number }}</td>
-                  <td  style="text-align: left">{{ item.question_answer }}</td>
+                  <td  style="text-align: left;padding-left: 30px;">{{ item.question_answer }}</td>
                
                 </template>
               </template-table>
@@ -129,6 +129,9 @@ td {
   text-overflow: ellipsis;
   //text-align: center;
   width: 50px;
+
+  white-space: initial;
+  padding-right: 40px;
 }
 .information{
 text-decoration: gray;
