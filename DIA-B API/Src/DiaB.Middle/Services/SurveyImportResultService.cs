@@ -253,10 +253,16 @@ namespace DiaB.Middle.Services
             questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTD", surveyImportEntity, context);
             if (questions.Count > 0)
             {
+                var countQuestion = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                        && questions.Any(m => m.QuestionCode == r.QuestionCode)).Count();
                 var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted 
                         && questions.Any(m => m.QuestionCode == r.QuestionCode && m.QuestionAnswer == r.QuestionAnswer)).Count();
 
-                KtBlVal = Math.Round(((countQuestionTrue * 10.0) / questions.Count), 1);
+                if (countQuestion > 0)
+                {
+                    KtBlVal = Math.Round(((countQuestionTrue * 10.0) / countQuestion), 1);
+                }
+                
                 KtVal += KtBlVal;
 
                 rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Kiến thức", "Bệnh lý", KtBlVal, context);
@@ -273,10 +279,15 @@ namespace DiaB.Middle.Services
             questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTT", surveyImportEntity, context);
             if (questions.Count > 0)
             {
+                var countQuestion = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                       && questions.Any(m => m.QuestionCode == r.QuestionCode)).Count();
                 var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
                         && questions.Any(m => m.QuestionCode == r.QuestionCode && m.QuestionAnswer == r.QuestionAnswer)).Count();
 
-                KtTdcsVal = Math.Round(((countQuestionTrue * 10.0) / questions.Count), 1);
+                if (countQuestion > 0)
+                {
+                    KtTdcsVal = Math.Round(((countQuestionTrue * 10.0) / countQuestion), 1);
+                }
                 KtVal += KtTdcsVal;
 
                 rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Kiến thức", "Theo dõi chỉ số", KtTdcsVal, context);
@@ -293,10 +304,15 @@ namespace DiaB.Middle.Services
             questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTN", surveyImportEntity, context);
             if (questions.Count > 0)
             {
+                var countQuestion = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                       && questions.Any(m => m.QuestionCode == r.QuestionCode)).Count();
                 var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
                         && questions.Any(m => m.QuestionCode == r.QuestionCode && m.QuestionAnswer == r.QuestionAnswer)).Count();
 
-                KtDdVal = Math.Round(((countQuestionTrue * 10.0) / questions.Count), 1);
+                if (countQuestion > 0)
+                {
+                    KtDdVal = Math.Round(((countQuestionTrue * 10.0) / countQuestion), 1);
+                }
                 KtVal += KtDdVal;
 
                 rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Kiến thức", "Dinh dưỡng", KtDdVal, context);
@@ -313,10 +329,15 @@ namespace DiaB.Middle.Services
             questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("KTE", surveyImportEntity, context);
             if (questions.Count > 0)
             {
+                var countQuestion = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
+                       && questions.Any(m => m.QuestionCode == r.QuestionCode)).Count();
                 var countQuestionTrue = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
                         && questions.Any(m => m.QuestionCode == r.QuestionCode && m.QuestionAnswer == r.QuestionAnswer)).Count();
 
-                KtVdVal = Math.Round(((countQuestionTrue * 10.0) / questions.Count), 1);
+                if (countQuestion > 0)
+                {
+                    KtVdVal = Math.Round(((countQuestionTrue * 10.0) / countQuestion), 1);
+                }
                 KtVal += KtVdVal;
 
                 rangeValue = await this.ISurveyRangeValueService.GetRangeValueByCategory("Kiến thức", "Vận động", KtVdVal, context);
@@ -461,13 +482,13 @@ namespace DiaB.Middle.Services
                 }
             }
 
-            // Khả năng tự chăm sóc - Đo đường huyết
+            // Khả năng tự chăm sóc - Chăm sóc bàn chân
             var KntcsCsbcVal = 0.0;
-            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CST001", surveyImportEntity, context);
+            questions = await this.SurveyQuestionMappingService.GetQuestionByPrefix("CSA002", surveyImportEntity, context);
             if (questions.Count > 0)
             {
                 var CSC001CH11 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionCode == "CST00101" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CSA00201" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSC001CH11Val = 0.0;
                 if (CSC001CH11 != null)
                 {
@@ -475,7 +496,7 @@ namespace DiaB.Middle.Services
                 }
 
                 var CSC001CH12 = surveyImportEntity.SurveyImportDetails.Where(r => !r.IsDeleted
-                        && questions.Any(m => m.QuestionCode == "CST00102" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
+                        && questions.Any(m => m.QuestionCode == "CSA00202" && m.QuestionCode == r.QuestionCode)).FirstOrDefault();
                 var CSC001CH12Val = 0.0;
                 if (CSC001CH12 != null)
                 {
