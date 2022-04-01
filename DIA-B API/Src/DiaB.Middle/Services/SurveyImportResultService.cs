@@ -1043,7 +1043,7 @@ namespace DiaB.Middle.Services
 
                     if (entity.KntcsVal <= 3)
                     {
-                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgBlue };
+                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgRed };
                     }
                     else if (entity.KntcsVal <= 7)
                     {
