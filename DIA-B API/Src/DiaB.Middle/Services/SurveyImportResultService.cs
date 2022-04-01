@@ -980,10 +980,15 @@ namespace DiaB.Middle.Services
                 {
                     var chartShape = range.Descendants<SolidFill>().First();
 
-                    if (entity.Hba1cVal < 7)
+                    if (entity.Hba1cVal <= 7)
                     {
                         chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgBlue };
-                    } else
+                    }
+                    else if(entity.Hba1cVal <= 8)
+                    {
+                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgYellow };
+                    }
+                    else
                     {
                         chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgRed };
                     }
@@ -999,12 +1004,16 @@ namespace DiaB.Middle.Services
                     {
                         chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgYellow };
                     }
-                    else if(entity.BmiVal > 23)
-                    {
-                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgRed };
-                    } else
+                    else if(entity.BmiVal <= 23)
                     {
                         chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgBlue };
+                    }
+                    else if (entity.BmiVal < 25)
+                    {
+                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgYellow };
+                    } else
+                    {
+                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgRed };
                     }
                 }
 
@@ -1013,13 +1022,13 @@ namespace DiaB.Middle.Services
                 {
                     var chartShape = range.Descendants<SolidFill>().First();
 
-                    if (entity.KtVal < 9)
-                    {
-                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgYellow };
-                    }
-                    else if (entity.KtVal > 10)
+                    if (entity.KtVal <= 5)
                     {
                         chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgRed };
+                    }
+                    else if (entity.KtVal <= 7)
+                    {
+                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgYellow };
                     }
                     else
                     {
@@ -1032,13 +1041,13 @@ namespace DiaB.Middle.Services
                 {
                     var chartShape = range.Descendants<SolidFill>().First();
 
-                    if (entity.KntcsVal < 5)
+                    if (entity.KntcsVal <= 3)
+                    {
+                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgBlue };
+                    }
+                    else if (entity.KntcsVal <= 7)
                     {
                         chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgYellow };
-                    }
-                    else if (entity.KntcsVal > 10)
-                    {
-                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgRed };
                     }
                     else
                     {
@@ -1051,13 +1060,13 @@ namespace DiaB.Middle.Services
                 {
                     var chartShape = range.Descendants<SolidFill>().First();
 
-                    if (entity.MdrcVal < 2)
-                    {
-                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgYellow };
-                    }
-                    else if (entity.MdrcVal > 5)
+                    if (entity.MdrcVal <= 6)
                     {
                         chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgRed };
+                    }
+                    else if (entity.MdrcVal <= 9)
+                    {
+                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgYellow };
                     }
                     else
                     {
@@ -1070,17 +1079,17 @@ namespace DiaB.Middle.Services
                 {
                     var chartShape = range.Descendants<SolidFill>().First();
 
-                    if (entity.KndctlVal < 1)
+                    if (entity.KndctlVal <= 3)
+                    {
+                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgBlue };
+                    }
+                    else if (entity.KndctlVal <= 7)
                     {
                         chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgYellow };
                     }
-                    else if (entity.KndctlVal > 3)
-                    {
-                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgRed };
-                    }
                     else
                     {
-                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgBlue };
+                        chartShape.RgbColorModelHex = new RgbColorModelHex() { Val = bgRed };
                     }
                 }
 
