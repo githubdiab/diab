@@ -191,7 +191,7 @@ td{
 export default {
  props:{
     user_code: {
-      type: Number,
+      type: String,
       default: null,
     },
     id:{
@@ -271,8 +271,11 @@ export default {
   
   },
   methods: {
-     loadData_surveydetails() {
+   async loadData_surveydetails() {
      
+    await this.$api.put('SurveyImportChangeText/change_numbers',{headers: {'Content-Type': 'application/json'}})  // change numbers to text
+
+
       this.$api.get('SurveyImportDetails/survey_id', {
           params: { user_id : this.id , survey_code:this.survey_code},
         })
@@ -284,13 +287,11 @@ export default {
         })
        
     },
+
      loadData_details() {
      
-      this.$api.get('SurveyImportResults/details',{
-         params: { user_code : this.user_code },
-         
-        })
-        .then( data  => {
+
+      this.$api.get('SurveyImportResults/details',{params: { user_code : this.user_code },}).then( data  => {
        //   this.selected = [];
       //   this.data = data.items || [];
       //    this.paging.total = data.total;

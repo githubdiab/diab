@@ -86,7 +86,7 @@ namespace DiaB.WebApi.Controllers
         {
 
 
-            string query = @"select * from survey_import_details where survey_id in (select survey_imports.id from survey_imports where survey_imports.user_id = @user_id AND survey_code=@survey_code  ) order by LENGTH(question_code),question_code";
+            string query = @"select * from survey_import_details where survey_id in (select survey_imports.id from survey_imports where survey_imports.user_id = @user_id AND survey_code=@survey_code  ) order by category_code desc";
 
             DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
@@ -234,5 +234,32 @@ namespace DiaB.WebApi.Controllers
             return new JsonResult("Delete Successfully");
         }
 
+
+        [HttpGet("change_number")]
+
+        public JsonResult Get_change_number()
+        {
+
+
+            string query = @"select * from survey_import_change_numbers ";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("Default");
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource))
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
+
+       
     }
 }

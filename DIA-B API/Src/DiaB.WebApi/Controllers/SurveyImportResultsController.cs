@@ -27,22 +27,21 @@ namespace DiaB.WebApi.Controllers
         }
          
         [HttpGet("user_import")]
-        public JsonResult Get_userimport(int size)
+        public JsonResult Get_userimport(int size,string orderby ,int offset)
         {
 
 
-            string query = @"select account_imports.user_name, account_imports.user_phone,account_imports.user_yearofbirth,account_imports.user_typeofsick,survey_imports.import_day,survey_imports.survey_day,survey_imports.participation_package,survey_imports.survey_type,survey_imports.survey_name,survey_imports.survey_code ,account_imports.user_code,account_imports.id
+            string query = @"select account_imports.user_name, account_imports.user_phone,account_imports.user_yearofbirth,account_imports.user_typeofsick,survey_imports.import_day,survey_imports.survey_day,survey_imports.participation_package,survey_imports.survey_type,survey_imports.survey_name,survey_imports.survey_code ,account_imports.user_code,account_imports.id 
                              from survey_imports,account_imports
                             where account_imports.id = survey_imports.user_id
-                          order by survey_imports.create_datetime desc
-                          LIMIT @size
-                               ";
+                           group by survey_imports.id
+                          order by survey_imports.update_datetime " + @orderby+ " LIMIT @offset,@size ";
           //  
 
 
 
 
-DataTable table = new DataTable();
+            DataTable table = new DataTable();
             string sqlDataSource = _configuration.GetConnectionString("Default");
             MySqlDataReader myReader;
             using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
@@ -51,7 +50,9 @@ DataTable table = new DataTable();
                 myconn.Open();
                 using (MySqlCommand cmd = new MySqlCommand(query, myconn))
                 {
-                   cmd.Parameters.AddWithValue("@size", size);
+                    cmd.Parameters.AddWithValue("@orderby", orderby);
+                    cmd.Parameters.AddWithValue("@size", size);
+                    cmd.Parameters.AddWithValue("@offset", offset);
                     myReader = cmd.ExecuteReader();
                     table.Load(myReader);
                     myReader.Close();
@@ -65,7 +66,7 @@ DataTable table = new DataTable();
 
 
         [HttpGet("details")]
-        public JsonResult Get_all(int user_code)
+        public JsonResult Get_all(string user_code)
         {
 
 
@@ -94,7 +95,36 @@ DataTable table = new DataTable();
 
             return new JsonResult(table);
         }
+        [HttpGet("GetTotal")]
+        public JsonResult GetTotal()
+        {
 
+
+            string query = @"select count(*) as CountTotal from survey_imports , account_imports where account_imports.id = survey_imports.user_id  ";
+
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("Default");
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+
+            }
+
+
+
+            return new JsonResult(table);
+        }
 
         [HttpGet]
         public JsonResult Get()
@@ -212,6 +242,33 @@ DataTable table = new DataTable();
                }
                return new JsonResult("Delete Successfully");
            }*/
+
+        [HttpGet("user_name")]
+        public JsonResult Get_userName(string survey_result_id)
+        {
+            //   SELECT user_name FROM account_imports where id = (select survey_imports.user_id from survey_imports where survey_imports.survey_result_id = '9ecd9e5d-d21e-42f1-95c4-08da4868fb0b') ;
+
+
+            string query = @"SELECT user_name FROM account_imports where id = (select survey_imports.user_id from survey_imports where survey_imports.survey_result_id =@survey_result_id) ";
+
+            DataTable table = new DataTable();
+            string sqlDataSource = _configuration.GetConnectionString("Default");
+            MySqlDataReader myReader;
+            using (MySqlConnection myconn = new MySqlConnection(sqlDataSource)
+)
+            {
+                myconn.Open();
+                using (MySqlCommand cmd = new MySqlCommand(query, myconn))
+                {
+                    cmd.Parameters.AddWithValue("@survey_result_id", survey_result_id);
+                    myReader = cmd.ExecuteReader();
+                    table.Load(myReader);
+                    myReader.Close();
+                    myconn.Close();
+                }
+            }
+            return new JsonResult(table);
+        }
 
     }
 }

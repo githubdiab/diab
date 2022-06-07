@@ -22,5 +22,8 @@ namespace DiaB.Middle.Dtos.AccountImportDtos
         public string question_number { get; set; }
         public string question_answer { get; set; }
         public int question_result { get; set; }
+
+
+
     }
 }

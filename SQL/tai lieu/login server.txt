@@ -1,0 +1,21 @@
+
+o instanceName: Stage
+o instanceUserLogin: stackops
+o instancePassword: 2e9gejXV6Z
+o sshPort: 234
+o wanIp: 103.245.249.162
+
+
+mysql password : heC7cUm3tx8FG4zbgqWAHHPDYUS2bFRd
+
+
+systax : 
+1. Xem list các docker đang chạy trên máy : docker container ls
+2.Access vào mysql và query data : docker exec -it mysql bash
+3.・Login vào mysql của docker mysql và dùng database diab_stgtool : mysql -u root -p diab_stgtool
+4.・Check xem đang thao tác trên database nào : SELECT database(); 
+5. ・Chạy câu lệnh bên dưới để backup db vào file diab_stgtool _20220318.sql  : mysqldump -u root -p diab_stgtool > diab_stgtool_20220318.sql
+
+6. Copy DB từ docker về máy host : docker cp mysql:/diab_stgtool_20220318.sql /home/stackops/stgtool/database/
+
+ 

@@ -148,6 +148,7 @@ result =uniqueValues.size;
   async AddSurveyDetails ()
  {
 
+//const change_Text_to_Number = await this.$api.get('SurveyImportDetails/change_number') // get range to change text to number
 
  const data = await this.$api.get('SurveyImport/id')         // lay tat ca survey_id tu survey_imports
      
@@ -164,10 +165,25 @@ const data_code = await this.$api.get('AccountImport/account')        // get use
      {
              
       { 
-       if(data_code[n].user_code===Number(this.staff_list[k].user_code) && data[m].survey_code===this.staff_list[k].survey_code && data_code[n].user_name===this.staff_list[k].user_name && data[m].user_id===data_code[n].id )        // so sanh user_code
+       if(Number(data_code[n].user_code)===Number(this.staff_list[k].user_code) && data[m].survey_code===this.staff_list[k].survey_code && data_code[n].user_name===this.staff_list[k].user_name && data[m].user_id===data_code[n].id )        // so sanh user_code
        {
 
       {
+        // var question_answer_TL_ChangeTextToNum=this.staff_list[k].question_answer;
+        // for(let v=0;v<18;v++)     // thay doi tu text sang range 'TL' , 'DL' , 'RS' 
+        //   {
+        //   if(this.staff_list[k].category_code===change_Text_to_Number[v].category_code)
+        //   {
+        //     if(this.staff_list[k].question_answer===change_Text_to_Number[v].description_answer)
+        //     {
+        //     question_answer_TL_ChangeTextToNum = change_Text_to_Number[v].convert_number_range
+
+        //   //   console.log(this.staff_list[k].question_answer,change_Text_to_Number[v].description_answer)
+        //     }
+            
+        //   }     
+        //   }
+         
        await  this.$api.post('SurveyImportDetails',{headers: {'Content-Type': 'application/json'}}, {
       params: {
        survey_id : data[m].id,
@@ -179,6 +195,7 @@ const data_code = await this.$api.get('AccountImport/account')        // get use
        question_code:this.staff_list[k].question_code,
        question_number:this.staff_list[k].question_number,
        question_answer:this.staff_list[k].question_answer,
+      //  question_answer:question_answer_TL_ChangeTextToNum,
        question_result: 0,
            
         },

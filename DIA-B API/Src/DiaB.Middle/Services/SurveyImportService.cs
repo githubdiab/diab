@@ -121,7 +121,7 @@ namespace DiaB.Middle.Services
             return await this.GetPage<SurveyImportDtos.AppItem>(filter, context);
         }
 
-        public async Task<SurveyImportDtos.AppItem> GetSurveyImportById(int userCode, string surveyCode, ActionContext context = null)
+        public async Task<SurveyImportDtos.AppItem> GetSurveyImportById(string userCode, string surveyCode, ActionContext context = null)
         {
             var surveyImport = await this.GetEntity(del => del.Where(r => !r.IsDeleted &&  r.SurveyCode == surveyCode && r.AccountImport.UserCode == userCode), context);
 

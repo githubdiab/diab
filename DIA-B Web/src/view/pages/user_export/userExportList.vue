@@ -457,7 +457,13 @@ export default {
       let ids = [item.surveyResultId];
       this.downloadReport(ids);
     },
-    exportFileSelect() {
+
+   exportFileSelect() 
+
+    {
+
+    
+
       let ids = this.selected
         .filter((e) => e.surveyResultId)
         .map((e) => {
@@ -468,7 +474,10 @@ export default {
           title: 'Lỗi!',
           msg: 'Vui lòng hãy chọn ít nhất một báo cáo đã xử lý rồi',
         });
-      } else {
+
+      } 
+      
+      else {
         this.downloadReport(ids);
       }
     },
@@ -479,7 +488,7 @@ export default {
         let param = {
           ids: ids,
         };
-
+       await this.$api.put('SurveyImportChangeText/change_text',{headers: {'Content-Type': 'application/json'}})  // change text to numbers
         await this.$api
           .post(`Admin/SurveyImport/result`, param)
           .then(({ data }) => {
@@ -506,23 +515,30 @@ export default {
       }
     },
     async downloadReport(ids) {
+
       this.loading = true;
       try {
         let param = {
-          ids: ids,
+          ids: ids,         
         };
+
+         const Named_user  = await this.$api.get('SurveyImportResults/user_name',{params: { survey_result_id : ids[0] },})  // get user_name 
+
+          //  console.log(user_name,"::::",ids[0])
         await this.$api
           .post(`Admin/SurveyImport/result/download`, param, {
             responseType: 'blob',
           })
           .then((res) => {
+
             let fileDonwload = window.URL.createObjectURL(res);
             var docUrl = document.createElement('a');
             docUrl.href = fileDonwload;
             if (ids.length == 1) {
-              docUrl.setAttribute('download', 'bao_cao_dau_ra.docx');
+          
+              docUrl.setAttribute('download','baocaodauvao_'+Named_user[0].user_name.replace(/\s/g, '')+'.docx');   // remove space of username
             } else {
-              docUrl.setAttribute('download', 'bao_cao_dau_ra.zip');
+              docUrl.setAttribute('download', 'baocaodauvao.zip');
             }
 
             document.body.appendChild(docUrl);

@@ -1,0 +1,34 @@
+INSERT INTO [ClientRedirectUris]([RedirectUri] ,[ClientId]) VALUES  ('http://stgtool.diab.com.vn/callback.html',5);
+INSERT INTO [ClientRedirectUris]([RedirectUri] ,[ClientId]) VALUES  ('https://stgtool.diab.com.vn/callback.html',5);
+INSERT INTO [ClientPostLogoutRedirectUris]([PostLogoutRedirectUri],[ClientId]) VALUES ('http://stgtool.diab.com.vn',5);
+INSERT INTO [ClientPostLogoutRedirectUris]([PostLogoutRedirectUri],[ClientId]) VALUES ('https://stgtool.diab.com.vn',5);
+
+
+
+insert into [Clients]([Enabled],[ClientId],[ProtocolType],[RequireClientSecret],[ClientName],[Description],[ClientUri],[LogoUri],[RequireConsent],[AllowRememberConsent],[AlwaysIncludeUserClaimsInIdToken],[RequirePkce],[AllowPlainTextPkce],[RequireRequestObject],[AllowAccessTokensViaBrowser],[FrontChannelLogoutUri],[FrontChannelLogoutSessionRequired],[BackChannelLogoutUri],[BackChannelLogoutSessionRequired],[AllowOfflineAccess],[IdentityTokenLifetime],[AllowedIdentityTokenSigningAlgorithms],[AccessTokenLifetime],[AuthorizationCodeLifetime],[ConsentLifetime],[AbsoluteRefreshTokenLifetime],[SlidingRefreshTokenLifetime],[RefreshTokenUsage],[UpdateAccessTokenClaimsOnRefresh],[RefreshTokenExpiration],[AccessTokenType],[EnableLocalLogin],[IncludeJwtId],[AlwaysSendClientClaims],[ClientClaimsPrefix],[PairWiseSubjectSalt],[Created],[Updated],[LastAccessed],[UserSsoLifetime],[UserCodeType],[DeviceCodeLifetime],[NonEditable]) values (1,'6718E4F1-0EBC-4607-896D-DB0B27C85999','oidc',1,'DiaB Web Client',null,null,null,0,1,1,1,0,0,1,null,1,null,1,0,300,null,1800,300,null,2592000,1296000,1,0,1,0,1,1,0,'client_',null,'2021-12-27T08:53:51',null,null,null,null,300,0);
+
+insert into [dbo].[ClientScopes]([Scope],[ClientId]) values ('phone',5);
+insert into [dbo].[ClientScopes]([Scope],[ClientId]) values ('openid',5);
+insert into [dbo].[ClientScopes]([Scope],[ClientId]) values ('profile',5);
+insert into [dbo].[ClientScopes]([Scope],[ClientId]) values ('address',5);
+insert into [dbo].[ClientScopes]([Scope],[ClientId]) values ('IdentityServerApi',5);
+insert into [dbo].[ClientScopes]([Scope],[ClientId]) values ('DiaB',5);
+insert into [dbo].[ClientScopes]([Scope],[ClientId]) values ('email',5);
+
+insert into [dbo].[ClientSecrets]([Description],[Value],[Expiration],[Type],[Created],[ClientId]) values (null,'Stg+ESavNsRRS3lQVuPKA5TZg4m2jOGbdf345ndj5WA=',null,'SharedSecret','2021-12-27T08:53:51',5);
+insert into [dbo].[AspNetUsers]([Id],[UserName],[NormalizedUserName],[Email],[NormalizedEmail],[EmailConfirmed],[PasswordHash],[SecurityStamp],[ConcurrencyStamp],[PhoneNumber],[PhoneNumberConfirmed],[TwoFactorEnabled],[LockoutEnd],[LockoutEnabled],[AccessFailedCount],[IsActive],[OtpRequestCount],[OtpRequestDate],[IsMobileAccount],[ActivatedDate],[CreatedDate],[FirstLinkedAccount],[MustChangePassword],[GoogleEmail]) values ('cb356d0b-b62b-4418-a295-b2b71393fba6','admin01','ADMIN01','admin01@gmail.com','ADMIN01@GMAIL.COM',1,'AQAAAAEAACcQAAAAEBvGko1hs0x+al54rrHFpTo4C1+7vJoRWAV8XG2Z5W24l9Mgqou+LnEAbqoLPnz1jg==','RSXSXLRGFRNTO5QN4EVROQIPP3UN6LRN','4eed2896-29d8-4faa-9be2-47121bf06d10','000000000',0,0,null,1,0,1,0,'1899/12/30',0,null,'1899/12/30',null,0,null);
+insert into [dbo].[AspNetUserRoles]([UserId],[RoleId]) values ('cb356d0b-b62b-4418-a295-b2b71393fba6','f0033f52-a8d8-4885-ad2f-10932b02d2a6');
+
+
+
+update ClientPostLogoutRedirectUris set [PostLogoutRedirectUri] = 'http://stgtool.diab.com.vn' WHERE ID =30
+update ClientPostLogoutRedirectUris set [PostLogoutRedirectUri] = 'https://stgtool.diab.com.vn' WHERE ID =31
+
+
+insert into [dbo].[ClientCorsOrigins]([Origin],[ClientId]) values ('http://api.stgtool.diab.com.vn',5);
+insert into [dbo].[ClientCorsOrigins]([Origin],[ClientId]) values ('http://is.stgtool.diab.com.vn',5);
+insert into [dbo].[ClientCorsOrigins]([Origin],[ClientId]) values ('http://stgtool.diab.com.vn',5);
+insert into [dbo].[ClientCorsOrigins]([Origin],[ClientId]) values ('https://api.stgtool.diab.com.vn',5);
+insert into [dbo].[ClientCorsOrigins]([Origin],[ClientId]) values ('https://stgtool.diab.com.vn',5);
+insert into [dbo].[ClientCorsOrigins]([Origin],[ClientId]) values ('https://stgtool.diab.com.vn',5);
+

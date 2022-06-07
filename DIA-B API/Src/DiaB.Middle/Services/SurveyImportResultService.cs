@@ -835,7 +835,7 @@ namespace DiaB.Middle.Services
 
 
             var directoryInfo = Directory.CreateDirectory(Path.Combine(CommonConstant.ReportWorkPath, DateTime.UtcNow.ToString("yyyyMMddHHmmssfff")));
-            var templatePath = Path.Combine(CommonConstant.ReportTemplatePath, "bao_cao_dau_ra.docx");
+            var templatePath = Path.Combine(CommonConstant.ReportTemplatePath, "bao_cao_dau_vao.docx");
             var physicalPath = string.Empty;
             foreach (Guid id in input.Ids)
             {
@@ -860,14 +860,14 @@ namespace DiaB.Middle.Services
 
             if (input.Ids.Count == 1)
             {
-                response.FileReportTitle = "bao_cao_dau_ra.docx";
+                response.FileReportTitle = "bao_cao_dau_vao.docx";
                 response.FileReport = new FileStream(physicalPath, FileMode.Open, FileAccess.Read);
             } else
             {
                 var zipPath = Path.Combine(CommonConstant.ReportWorkPath, directoryInfo.Name + ".zip");
                 ZipFile.CreateFromDirectory(directoryInfo.FullName, zipPath);
 
-                response.FileReportTitle = "bao_cao_dau_ra.zip";
+                response.FileReportTitle = "bao_cao_dau_vao.zip";
                 response.FileReport = new FileStream(zipPath, FileMode.Open, FileAccess.Read);
             }
 

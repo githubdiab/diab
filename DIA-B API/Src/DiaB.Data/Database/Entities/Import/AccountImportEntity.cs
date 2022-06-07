@@ -10,7 +10,7 @@ namespace DiaB.Data.Database.Entities.Import
     public class AccountImportEntity : ModelEntity<AccountImportEntity>
     {
         [Required]
-        public int UserCode { get; set; }
+        public string UserCode { get; set; }
 
         public string UserName { get; set; }
 

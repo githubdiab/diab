@@ -62,17 +62,17 @@
                    <p    v-show="item.survey_code.length==0">{{"survey_code"}}</p>  
                    <p    v-show="item.user_yearofbirth.length==0">{{"user_yearofbirth"}}</p>  
                    <p    v-show="item.survey_day.length==0">{{"survey_day"}}</p>  
-                   <p    v-show="item.user_province.length==0">{{"user_province"}}</p>  
+                   <!-- <p    v-show="item.user_province.length==0">{{"user_province"}}</p>  
                    <p    v-show="item.user_career.length==0">{{"user_career"}}</p>  
-                   <p    v-show="item.user_hoobit.length==0">{{"user_hoobit"}}</p>  
-                   <p    v-show="item.story_success.length==0">{{"story_success"}}</p>  
-                   <p    v-show="item.course_goal.length==0">{{"course_goal"}}</p>  
-                   <p    v-show="item.course_action.length==0">{{"course_action"}}</p>  
+                   <p    v-show="item.user_hoobit.length==0">{{"user_hoobit"}}</p>   -->
+                   <!-- <p    v-show="item.story_success.length==0">{{"story_success"}}</p>   -->
+                   <!-- <p    v-show="item.course_goal.length==0">{{"course_goal"}}</p>   -->
+                   <!-- <p    v-show="item.course_action.length==0">{{"course_action"}}</p>   -->
                   <!-- <p    v-show="item.course_final_rate.length==0">{{"course_final_rate"}}</p>   -->
                    <p    v-show="item.user_typeofsick.length==0">{{"user_typeofsick"}}</p>  
                    <p    v-show="item.year_foundout.length==0">{{"year_foundout"}}</p>  
                    <p    v-show="item.participation_package.length==0">{{"participation_package"}}</p>  
-                   <p    v-show="item.survey_type_code.length==0">{{"survey_type_code"}}</p>  
+                   <!-- <p    v-show="item.survey_type_code.length==0">{{"survey_type_code"}}</p>   -->
                    <p    v-show="item.category_code.length==0">{{"category_code"}}</p>  
                    <p    v-show="item.category.length==0">{{"category"}}</p>  
                    <p    v-show="item.sub_category_code.length==0">{{"sub_category_code"}}</p>  
@@ -99,17 +99,17 @@
                     <p    v-show="item.survey_code.length==0" style="color:red">{{" Thiếu Mã khảo sát"}}</p>   
                     <p    v-show="item.user_yearofbirth.length==0" style="color:red">{{" Thiếu thông tin bắt buộc: Năm sinh"}}</p>     
                     <p    v-show="item.survey_day.length==0" style="color:red">{{"Thiếu Ngày thực hiện khảo sát"}}</p>  
-                    <p    v-show="item.user_province.length==0" style="color:red">{{"Thiếu Tỉnh thành"}}</p>  
+                    <!-- <p    v-show="item.user_province.length==0" style="color:red">{{"Thiếu Tỉnh thành"}}</p>  
                     <p    v-show="item.user_career.length==0" style="color:red">{{" Thiếu Nghề nghiệp"}}</p>  
-                    <p    v-show="item.user_hoobit.length==0" style="color:red">{{"Thiếu Sở thích"}}</p>  
-                    <p    v-show="item.story_success.length==0" style="color:red">{{" Thiếu Câu chuyện thành công"}}</p>  
+                    <p    v-show="item.user_hoobit.length==0" style="color:red">{{"Thiếu Sở thích"}}</p>   -->
+                    <!-- <p    v-show="item.story_success.length==0" style="color:red">{{" Thiếu Câu chuyện người dùng"}}</p>  
                     <p    v-show="item.course_goal.length==0" style="color:red">{{" Thiếu Mục tiêu khóa học"}}</p>  
-                    <p    v-show="item.course_action.length==0" style="color:red">{{" Thiếu Kế hoạch hành động"}}</p>  
+                    <p    v-show="item.course_action.length==0" style="color:red">{{" Thiếu Kế hoạch hành động"}}</p>   -->
                     <!-- <p    v-show="item.course_final_rate.length==0" style="color:red">{{" Thiếu Đánh giá cuối khóa"}}</p>   -->
                     <p    v-show="item.user_typeofsick.length==0" style="color:red">{{"Thiếu Loại bệnh"}}</p>  
                     <p    v-show="item.year_foundout.length==0" style="color:red">{{"Thiếu thông tin bắt buộc: Năm phát hiện"}}</p>  
                     <p    v-show="item.participation_package.length==0" style="color:red">{{"Thiếu Gói tham gia"}}</p>  
-                    <p    v-show="item.survey_type_code.length==0" style="color:red">{{"Thiếu Mã loại khảo sát"}} </p>  
+                    <!-- <p    v-show="item.survey_type_code.length==0" style="color:red">{{"Thiếu Mã loại khảo sát"}} </p>   -->
                     <p    v-show="item.category_code.length==0" style="color:red">{{"Thiếu Mã category"}}</p>  
                     <p    v-show="item.category.length==0" style="color:red">{{"Thiếu Category"}}</p>  
                     <p    v-show="item.sub_category_code.length==0" style="color:red">{{"Thiếu Mã Subcategory"}}</p>  
@@ -307,11 +307,21 @@ export default {
       return totalcount;
     },
     
+    // NullItems: function() {
+    //   return this.staff_list.filter(function(item) {
+    //     if(item.user_name == '' || item.user_code=='' ||item.user_gender=='' || item.user_address==''||item.survey_type==''||item.survey_name==''
+    //     ||item.survey_code==''||item.user_yearofbirth==''||item.survey_day=='Invalid date'||item.user_yearofbirth==''||item.user_province==''
+    //     ||item.user_career==''||item.user_hoobit==''||item.story_success==''||item.course_goal==''||item.course_action==''||item.course_final_rate==''
+    //     ||item.user_typeofsick==''||item.year_foundout==''||item.participation_package==''||item.survey_type_code==''||item.category_code==''
+    //     ||item.category==''||item.sub_category_code==''||item.sub_category==''||item.import_day=='Invalid date'||item.question_code==''
+    //     ||item.question_number==''||item.question_answer==''||item.question_result=='')
+    //     return item;
+    //   });
+    // },
     NullItems: function() {
       return this.staff_list.filter(function(item) {
         if(item.user_name == '' || item.user_code=='' ||item.user_gender=='' || item.user_address==''||item.survey_type==''||item.survey_name==''
-        ||item.survey_code==''||item.user_yearofbirth==''||item.survey_day=='Invalid date'||item.user_yearofbirth==''||item.user_province==''
-        ||item.user_career==''||item.user_hoobit==''||item.story_success==''||item.course_goal==''||item.course_action==''||item.course_final_rate==''
+        ||item.survey_code==''||item.user_yearofbirth==''||item.survey_day=='Invalid date'||item.user_yearofbirth==''       
         ||item.user_typeofsick==''||item.year_foundout==''||item.participation_package==''||item.survey_type_code==''||item.category_code==''
         ||item.category==''||item.sub_category_code==''||item.sub_category==''||item.import_day=='Invalid date'||item.question_code==''
         ||item.question_number==''||item.question_answer==''||item.question_result=='')

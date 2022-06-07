@@ -455,7 +455,8 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].user_phone ==''||this.staff_list[i].user_phone.length!=10)
+       //   if(this.staff_list[i].user_phone ==''||this.staff_list[i].user_phone.length!=10)
+          if(this.staff_list[i].user_phone =='')
          {        
           mess_error='error'
          }
@@ -463,38 +464,38 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].user_province =='')
-         {        
-          mess_error='error'
-         }
+        //   if(this.staff_list[i].user_province =='')
+        //  {        
+        //   mess_error='error'
+        //  }
           if(this.staff_list[i].stt =='')
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].user_career =='')
-         {        
-          mess_error='error'
-         }
-          if(this.staff_list[i].user_hoobit =='')
-         {        
-          mess_error='error'
-         }
+        //   if(this.staff_list[i].user_career =='')
+        //  {        
+        //   mess_error='error'
+        //  }
+        //   if(this.staff_list[i].user_hoobit =='')
+        //  {        
+        //   mess_error='error'
+        //  }
           if(this.staff_list[i].user_address =='')
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].story_success =='')
-         {        
-          mess_error='error'
-         }
-          if(this.staff_list[i].course_goal =='')
-         {        
-          mess_error='error'
-         }
-          if(this.staff_list[i].course_action =='')
-         {        
-          mess_error='error'
-         }
+        //   if(this.staff_list[i].story_success =='')
+        //  {        
+        //   mess_error='error'
+        //  }
+        //   if(this.staff_list[i].course_goal =='')
+        //  {        
+        //   mess_error='error'
+        //  }
+        //   if(this.staff_list[i].course_action =='')
+        //  {        
+        //   mess_error='error'
+        //  }
         //   if(this.staff_list[i].course_final_rate =='')
         //  {        
         //   mess_error='error'
@@ -511,10 +512,10 @@ components: { 'user-import-modal': () => import('./components/messages/messageNo
          {        
           mess_error='error'
          }
-          if(this.staff_list[i].survey_type_code =='')
-         {        
-          mess_error='error'
-         }
+        //   if(this.staff_list[i].survey_type_code =='')
+        //  {        
+        //   mess_error='error'
+        //  }
           if(this.staff_list[i].category_code =='')
          {        
           mess_error='error'

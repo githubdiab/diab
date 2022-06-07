@@ -18,7 +18,7 @@ namespace DiaB.Middle.Dtos.AccountImportDtos
         public string creator_id { get; set; }
         public string updater_id { get; set; }
 
-        public int user_code { get; set; }
+        public string user_code { get; set; }
         public string user_name { get; set; }
         public string user_gender { get; set; }
         public int user_yearofbirth { get; set; }

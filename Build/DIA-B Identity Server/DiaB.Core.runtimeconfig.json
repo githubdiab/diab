@@ -3,7 +3,10 @@
     "tfm": "netcoreapp3.1",
     "framework": {
       "name": "Microsoft.AspNetCore.App",
-      "version": "3.1.22"
+      "version": "3.1.21"
+    },
+    "configProperties": {
+      "System.Reflection.Metadata.MetadataUpdater.IsSupported": false
     }
   }
 }

@@ -35,7 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Template\bao_cao_dau_ra.docx">
+    <None Update="Template\bao_cao_dau_vao.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

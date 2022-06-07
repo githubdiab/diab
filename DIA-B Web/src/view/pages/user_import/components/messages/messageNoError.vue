@@ -191,7 +191,7 @@ export default {
 
   //let toTimestamp = strDate => Date.parse(strDate)
 
-  if( this.checkaccount[n].user_code===Number(this.elimited()[j].user_code))
+  if( Number(this.checkaccount[n].user_code)===Number(this.elimited()[j].user_code))
   {
     const a = this.checksurvey.filter((item)=> item.user_id===this.checkaccount[n].id )
     const b = this.checksurvey.filter((item)=> item.survey_code===this.elimited()[j].survey_code)
@@ -207,6 +207,17 @@ export default {
   }
  else
  {
+   var survey_type_code_KIND = 'Khác'
+
+   if(this.elimited()[j].survey_code.slice(0,4)==='KSDV')
+   {
+       survey_type_code_KIND = 'KSDV'
+   }
+   if(this.elimited()[j].survey_code.slice(0,4)==='KSDR')
+   {
+        survey_type_code_KIND = 'KSDR'
+   }
+   
   await  this.$api.post('surveyimport',{headers: {'Content-Type': 'application/json'}}, {
   
        params: {    
@@ -215,10 +226,12 @@ export default {
       course_goal: this.elimited()[j].course_goal,
       course_action:this.elimited()[j].course_action,
       course_final_rate:this.elimited()[j].course_final_rate,
-      participation_package:this.elimited()[j].participation_package,
-      survey_type_code:this.elimited()[j].survey_type_code,
+      participation_package:this.elimited()[j].participation_package,   
       survey_type:this.elimited()[j].survey_type,
       survey_code:this.elimited()[j].survey_code,
+      survey_type_code:survey_type_code_KIND,
+    //  survey_type_code:this.elimited()[j].survey_code.slice(0,4),
+    //   survey_type_code: this.elimited()[j].survey_type_code,
       survey_name:this.elimited()[j].survey_name,
     //  import_day:  import_day.slice(0, 10),
       survey_day: survey_day.slice(0, 10)

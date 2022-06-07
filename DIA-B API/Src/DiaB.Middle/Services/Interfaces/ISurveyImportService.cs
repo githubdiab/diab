@@ -12,7 +12,7 @@ namespace DiaB.Middle.Services.Interfaces
     {
         Task<List<SurveyImportDtos.AppItem>> GetAll(ActionContext context);
         Task<IPagingData<SurveyImportDtos.AppItem>> GetPage(SurveyImportDtos.AppFilter input, ActionContext context);
-        Task<SurveyImportDtos.AppItem> GetSurveyImportById(int userCode, string surveyCode, ActionContext context);
+        Task<SurveyImportDtos.AppItem> GetSurveyImportById(string userCode, string surveyCode, ActionContext context);
         Task<IList<Guid>> CreateSurveyImportResult(SurveyImportDtos.AppInput input, ActionContext context);
     }
 }
