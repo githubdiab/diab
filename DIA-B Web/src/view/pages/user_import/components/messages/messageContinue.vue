@@ -104,6 +104,7 @@ export default {
 
       for(let i=0;i<Number(this.elimited().length);i++)
       {
+        
         await this.$api.post('accountimport', {headers: {'Content-Type': 'application/json'}}, {
         params: {
             
@@ -157,7 +158,7 @@ export default {
 
   //let toTimestamp = strDate => Date.parse(strDate)
 
-  if( this.checkaccount[n].user_code===Number(this.elimited()[j].user_code))
+  if( Number(this.checkaccount[n].user_code)===Number(this.elimited()[j].user_code))
   {
     const a = this.checksurvey.filter((item)=> item.user_id===this.checkaccount[n].id )
     const b = this.checksurvey.filter((item)=> item.survey_code===this.elimited()[j].survey_code)

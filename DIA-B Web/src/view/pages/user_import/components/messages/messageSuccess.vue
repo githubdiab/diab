@@ -169,20 +169,7 @@ const data_code = await this.$api.get('AccountImport/account')        // get use
        {
 
       {
-        // var question_answer_TL_ChangeTextToNum=this.staff_list[k].question_answer;
-        // for(let v=0;v<18;v++)     // thay doi tu text sang range 'TL' , 'DL' , 'RS' 
-        //   {
-        //   if(this.staff_list[k].category_code===change_Text_to_Number[v].category_code)
-        //   {
-        //     if(this.staff_list[k].question_answer===change_Text_to_Number[v].description_answer)
-        //     {
-        //     question_answer_TL_ChangeTextToNum = change_Text_to_Number[v].convert_number_range
-
-        //   //   console.log(this.staff_list[k].question_answer,change_Text_to_Number[v].description_answer)
-        //     }
-            
-        //   }     
-        //   }
+      
          
        await  this.$api.post('SurveyImportDetails',{headers: {'Content-Type': 'application/json'}}, {
       params: {
@@ -196,7 +183,7 @@ const data_code = await this.$api.get('AccountImport/account')        // get use
        question_number:this.staff_list[k].question_number,
        question_answer:this.staff_list[k].question_answer,
       //  question_answer:question_answer_TL_ChangeTextToNum,
-       question_result: 0,
+       question_result:0,
            
         },
       });  

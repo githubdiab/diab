@@ -321,10 +321,10 @@ export default {
     NullItems: function() {
       return this.staff_list.filter(function(item) {
         if(item.user_name == '' || item.user_code=='' ||item.user_gender=='' || item.user_address==''||item.survey_type==''||item.survey_name==''
-        ||item.survey_code==''||item.user_yearofbirth==''||item.survey_day=='Invalid date'||item.user_yearofbirth==''       
-        ||item.user_typeofsick==''||item.year_foundout==''||item.participation_package==''||item.survey_type_code==''||item.category_code==''
-        ||item.category==''||item.sub_category_code==''||item.sub_category==''||item.import_day=='Invalid date'||item.question_code==''
-        ||item.question_number==''||item.question_answer==''||item.question_result=='')
+        ||item.survey_code==''||item.user_yearofbirth==''||item.survey_day=='Invalid date'||item.user_yearofbirth==''    
+        ||item.user_typeofsick==''||item.year_foundout==''||item.participation_package==''||item.category_code==''
+        ||item.category==''||item.sub_category_code==''||item.sub_category==''||item.question_code==''
+        ||item.question_number==''||item.question_answer=='')
         return item;
       });
     },
@@ -332,17 +332,17 @@ export default {
       
       return this.staff_list.filter(function(item) {
          if(( item.user_name !=''&& item.user_code!=''&&item.user_gender!=''&& item.user_address!=''&&item.survey_type!=''&&item.survey_name!=
-        ''&&item.survey_code!=''&&item.user_yearofbirth!=''&&item.survey_day!='Invalid date'&&item.user_yearofbirth!=''&&item.user_province!=
-        ''&&item.user_career!=''&&item.user_hoobit!=''&&item.story_success!=''&&item.course_goal!=''&&item.course_action!=''&&item.course_final_rate!=
-        ''&&item.user_typeofsick!=''&&item.year_foundout!=''&&item.participation_package!=''&&item.survey_type_code!=''&&item.category_code!=
-        ''&&item.category!=''&&item.sub_category_code!=''&&item.sub_category!=''&&item.import_day!='Invalid date'&&item.question_code!=
-        ''&&item.question_number!=''&&item.question_answer!=''&&item.question_result!=''))
+        ''&&item.survey_code!=''&&item.user_yearofbirth!=''&&item.survey_day!='Invalid date'&&item.user_yearofbirth!=
+        ''&&item.user_typeofsick!=''&&item.year_foundout!=''&&item.participation_package!=''&&item.category_code!=
+        ''&&item.category!=''&&item.sub_category!=''&&item.question_code!=
+        ''&&item.question_number!=''&&item.question_answer!=''))
       return item;
       });
     },
     elimited: function()
    {  
- console.log(this.NotNullItems.filter(item => this.NullItems.every(item2 => item2.user_code!= item.user_code)));
+    //  console.log(this.NullItems,"not null:"+this.NotNullItems)
+ //console.log(this.NotNullItems.filter(item => this.NullItems.every(item2 =>item2.user_code!= item.user_code)));
 
    return this.NotNullItems.filter(item => this.NullItems.every(item2 => item2.user_code!= item.user_code));
   },
